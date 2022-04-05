@@ -9,6 +9,8 @@ use std::time::Duration;
 mod components;
 use components::*;
 
+mod tictactoe;
+
 fn main() {
     let mut rng = rand::thread_rng();
     // types::Color
