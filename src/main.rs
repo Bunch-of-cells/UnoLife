@@ -10,6 +10,8 @@ mod components;
 use components::*;
 
 mod tictactoe;
+use tictactoe::*;
+
 
 fn main() {
     let mut rng = rand::thread_rng();

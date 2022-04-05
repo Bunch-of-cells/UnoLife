@@ -1,11 +1,12 @@
 use std::{error::Error, fmt::Display};
 
-mod ai;
+pub mod ai;
+pub use ai::*;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Board {
-    cells: [[Option<Mark>; 3]; 3],
-    turn: Mark,
+    pub cells: [[Option<Mark>; 3]; 3],
+    pub turn: Mark,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
