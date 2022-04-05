@@ -14,6 +14,7 @@ pub struct Board {
 pub enum Mark {
     X,
     O,
+    None,
 }
 
 impl Board {
@@ -24,8 +25,8 @@ impl Board {
         }
     }
 
-    pub fn mov(&mut self, x: usize, y: usize) -> Result<Option<Mark>, TicTacToeError> {
-        if self.is_over().is_some() {
+    pub fn mov(&mut self, x: usize, y: usize) -> Result<Mark, TicTacToeError> {
+        if self.is_over() != Mark::None {
             return Err(TicTacToeError::GameOver);
         }
         if self.cells[x][y].is_some() {
@@ -35,11 +36,12 @@ impl Board {
         self.turn = match self.turn {
             Mark::X => Mark::O,
             Mark::O => Mark::X,
+            Mark::None => Mark::None,
         };
         Ok(self.is_over())
     }
 
-    pub fn is_over(&self) -> Option<Mark> {
+    pub fn is_over(&self) -> Mark {
         let mut x_count = 0;
         let mut o_count = 0;
         for row in &self.cells {
@@ -47,16 +49,16 @@ impl Board {
                 match cell {
                     Some(Mark::X) => x_count += 1,
                     Some(Mark::O) => o_count += 1,
-                    None => (),
+                    None | Some(Mark::None) => (),
                 }
             }
         }
         if x_count == 3 {
-            Some(Mark::X)
+            Mark::X
         } else if o_count == 3 {
-            Some(Mark::O)
+            Mark::O
         } else {
-            None
+            Mark::None
         }
     }
 }
@@ -74,23 +76,5 @@ impl Display for TicTacToeError {
             TicTacToeError::Occupied => write!(f, "Cell is occupied"),
             TicTacToeError::GameOver => write!(f, "Game is over"),
         }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn board_works() {
-        let mut board = Board::new();
-        assert_eq!(board.mov(0, 0), Ok(None));
-        assert_eq!(board.mov(0, 0), Err(TicTacToeError::Occupied));
-        assert_eq!(board.mov(1, 0), Ok(None));
-        assert_eq!(board.mov(0, 1), Ok(None));
-        assert_eq!(board.mov(2, 0), Ok(None));
-        assert_eq!(board.mov(0, 2), Ok(Some(Mark::X)));
-        assert_eq!(board.mov(1, 1), Err(TicTacToeError::GameOver));
-        assert_eq!(board.is_over(), Some(Mark::X));
     }
 }

@@ -8,7 +8,7 @@ pub fn get_best_move(board: &mut Board) -> Option<(usize, usize)> {
     for (x, y) in generate_moves(board) {
         let mut board = board.clone();
         board.mov(x, y).unwrap();
-        let score = negamax(&mut board, 0, -INFINITY, INFINITY);
+        let score = negamax(&mut board, 30, -INFINITY, INFINITY);
         if score < best_score {
             best_score = score;
             best_move = Some((x, y));
@@ -17,18 +17,18 @@ pub fn get_best_move(board: &mut Board) -> Option<(usize, usize)> {
     best_move
 }
 
-pub fn evaluate(board: &Board) -> i32 {
-    if board.is_over() == Some(Mark::X) {
+pub fn evaluate(board: &Board, depth: i32) -> i32 {
+    if board.is_over() == Mark::X {
         if board.turn == Mark::X {
-            return INFINITY;
+            return INFINITY-depth;
         } else {
-            return -INFINITY;
+            return -INFINITY+depth;
         }
-    } else if board.is_over() == Some(Mark::O) {
+    } else if board.is_over() == Mark::O {
         if board.turn == Mark::X {
-            return -INFINITY;
+            return -INFINITY+depth;
         } else {
-            return INFINITY;
+            return INFINITY-depth;
         }
     }
     return 0;
@@ -48,22 +48,28 @@ pub fn generate_moves(board: &Board) -> Vec<(usize, usize)> {
 
 pub fn negamax(board: &mut Board, depth: i32, mut alpha: i32, mut beta: i32) -> i32 {
     if depth == 0 {
-        return evaluate(board);
+        return evaluate(board, depth);
     }
     let moves = generate_moves(board);
     if moves.len() == 0 {
-        return evaluate(board);
+        return evaluate(board, depth);
     }
     let mut best_move = -INFINITY;
     for move_ in moves.iter() {
         let x = move_.0;
         let y = move_.1;
-        board.mov(x, y).unwrap();
+        if board.mov(x, y) == Ok(Mark::None) {
+            return 0;
+        } 
         let score = -negamax(board, depth - 1, -beta, -alpha);
+        if score == INFINITY || score == -INFINITY {
+            return score;
+        }
         board.cells[x][y] = None;
         board.turn = match board.turn {
             Mark::X => Mark::O,
             Mark::O => Mark::X,
+            _ => Mark::None,
         };
         if score > best_move {
             best_move = score;
