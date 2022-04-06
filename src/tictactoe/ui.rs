@@ -1,16 +1,15 @@
 use super::Board;
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
-use crate::Event;
-use crate::tictactoe::{Mark, negamax_root};
-use piston_window::*;
-use find_folder::*;
 use crate::components::button::*;
+use crate::tictactoe::{negamax_root, Mark};
+use crate::Event;
+use piston_window::*;
 
 pub fn draw_text(
     ctx: &Context,
     graphics: &mut G2d,
     glyphs: &mut Glyphs,
-    color: [f32;4],
+    color: [f32; 4],
     pos: Pos,
     text: &str,
     font_size: u32,
@@ -73,12 +72,32 @@ impl MiniApp for TicTacToeApp {
         // println!("x: {} y: {}", self.hover_pos[0], self.hover_pos[1]);
 
         let left_click = event.press_args() == Some(Button::Mouse(MouseButton::Left));
-        
+
         // init buttons
-        let mut reset_button = UIButton::new("Reset", [115.0 / 255.0, 115.0 / 255.0, 115.0 / 255.0, 1.0], [1.0, 1.0, 1.0, 1.0], 30, Pos { x: 989.0, y: 169.0 }, 180.0, 60.0);
-        
-        let ai_text = if self.playing_ai { "Play Human" } else { "Play AI" };
-        let mut ai_button = UIButton::new(ai_text, [115.0 / 255.0, 115.0 / 255.0, 115.0 / 255.0, 1.0], [1.0, 1.0, 1.0, 1.0], 20, Pos { x: 989.0, y: 285.0 }, 180.0, 60.0);
+        let mut reset_button = UIButton::new(
+            "Reset",
+            [115.0 / 255.0, 115.0 / 255.0, 115.0 / 255.0, 1.0],
+            [1.0, 1.0, 1.0, 1.0],
+            30,
+            Pos { x: 989.0, y: 169.0 },
+            180.0,
+            60.0,
+        );
+
+        let ai_text = if self.playing_ai {
+            "Play Human"
+        } else {
+            "Play AI"
+        };
+        let mut ai_button = UIButton::new(
+            ai_text,
+            [115.0 / 255.0, 115.0 / 255.0, 115.0 / 255.0, 1.0],
+            [1.0, 1.0, 1.0, 1.0],
+            20,
+            Pos { x: 989.0, y: 285.0 },
+            180.0,
+            60.0,
+        );
         // handle button events
         if reset_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
@@ -110,7 +129,7 @@ impl MiniApp for TicTacToeApp {
 
                     if left_click {
                         self.state.make_move(y, x); // Does nothing if illegal move
-                        // if playing against AI, make a move
+                                                    // if playing against AI, make a move
                         if self.playing_ai {
                             let move_ = negamax_root(&mut self.state);
                             self.state.make_move(move_.0, move_.1);
@@ -128,11 +147,35 @@ impl MiniApp for TicTacToeApp {
             // Draw texts
             let result = self.state.is_over();
             if result == Mark::X {
-                draw_text(&c, g, glyphs, [0.0, 0.0, 0.0, 1.0], Pos { x: 575.0, y: 67.0 }, "You win!", 40);
+                draw_text(
+                    &c,
+                    g,
+                    glyphs,
+                    [0.0, 0.0, 0.0, 1.0],
+                    Pos { x: 575.0, y: 67.0 },
+                    "You win!",
+                    40,
+                );
             } else if result == Mark::O {
-                draw_text(&c, g, glyphs, [0.0, 0.0, 0.0, 1.0], Pos { x: 575.0, y: 67.0 }, "You lose!", 40);
+                draw_text(
+                    &c,
+                    g,
+                    glyphs,
+                    [0.0, 0.0, 0.0, 1.0],
+                    Pos { x: 575.0, y: 67.0 },
+                    "You lose!",
+                    40,
+                );
             } else if self.state.is_draw() {
-                draw_text(&c, g, glyphs, [0.0, 0.0, 0.0, 1.0], Pos { x: 575.0, y: 67.0 }, "You Drew!", 40);
+                draw_text(
+                    &c,
+                    g,
+                    glyphs,
+                    [0.0, 0.0, 0.0, 1.0],
+                    Pos { x: 575.0, y: 67.0 },
+                    "You Drew!",
+                    40,
+                );
             }
 
             // Draw buttons

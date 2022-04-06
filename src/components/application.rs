@@ -1,4 +1,4 @@
-use piston_window::{Event, PistonWindow, Glyphs, Key};
+use piston_window::{Event, Glyphs, PistonWindow};
 
 pub trait MiniApp {
     const NAME: &'static str;

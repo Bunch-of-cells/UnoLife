@@ -1,6 +1,5 @@
-use crate::components::application::{MiniApp};
-use piston_window::{*, types::Color, };
 use crate::tictactoe::ui::*;
+use piston_window::{types::Color, *};
 
 pub struct UIButton {
     pub text: String,
@@ -40,10 +39,24 @@ impl UIButton {
             ctx.transform,
             graphics,
         );
-        draw_text(ctx, graphics, glyphs, self.text_color, Pos { x: self.pos.x + self.width / 4.0 - self.size as f64, y: self.pos.y + self.height / 1.5 }, &self.text, self.size);
+        draw_text(
+            ctx,
+            graphics,
+            glyphs,
+            self.text_color,
+            Pos {
+                x: self.pos.x + self.width / 4.0 - self.size as f64,
+                y: self.pos.y + self.height / 1.5,
+            },
+            &self.text,
+            self.size,
+        );
     }
 
     pub fn is_over(&self, x: f64, y: f64) -> bool {
-        x > self.pos.x && x < self.pos.x + self.width && y > self.pos.y && y < self.pos.y + self.height
+        x > self.pos.x
+            && x < self.pos.x + self.width
+            && y > self.pos.y
+            && y < self.pos.y + self.height
     }
 }

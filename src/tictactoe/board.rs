@@ -83,7 +83,7 @@ impl Board {
                 return Mark::X;
             } else if o_count == 3 {
                 return Mark::O;
-            } 
+            }
         }
 
         for col in 0..3 {

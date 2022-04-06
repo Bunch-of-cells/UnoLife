@@ -5,9 +5,9 @@ use piston_window::*;
 
 mod components;
 mod tictactoe;
+mod wordle;
 
 use crate::tictactoe::ui::TicTacToeApp;
-
 
 fn main() {
     let mut window: PistonWindow = WindowSettings::new(
@@ -23,7 +23,8 @@ fn main() {
     let mut ttt_app = TicTacToeApp::new();
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
-            .for_folder("assets").unwrap();
+        .for_folder("assets")
+        .unwrap();
     let mut glyphs = window.load_font(assets.join("Roboto-Black.ttf")).unwrap();
 
     let mut events = Events::new(EventSettings::new());
