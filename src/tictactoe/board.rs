@@ -51,6 +51,22 @@ impl Board {
         self.turn = self.turn.invert();
     }
 
+    pub fn reset(&mut self) {
+        self.cells = [[Mark::None; 3]; 3];
+        self.turn = Mark::X;
+    }
+
+    pub fn is_draw(&self) -> bool {
+        for x in 0..3 {
+            for y in 0..3 {
+                if self.cells[x][y] == Mark::None {
+                    return false;
+                }
+            }
+        }
+        true
+    }
+
     pub fn is_over(&self) -> Mark {
         for row in 0..3 {
             let mut x_count = 0;

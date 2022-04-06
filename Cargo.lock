@@ -450,6 +450,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "find_folder"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9f6d018fb95a0b59f854aed68ecd96ce2b80af7911b92b1fed3c4b1fa516b91b"
+
+[[package]]
 name = "flate2"
 version = "1.0.22"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1713,6 +1719,7 @@ dependencies = [
 name = "timathon"
 version = "0.1.0"
 dependencies = [
+ "find_folder",
  "piston_window",
  "rand",
 ]
