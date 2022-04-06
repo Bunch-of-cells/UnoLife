@@ -24,9 +24,12 @@ impl MiniApp for MainMenu {
         }
         // println!("x: {} y: {}", self.hover_pos[0], self.hover_pos[1]);
 
+        // init variables
+        let size = window.size();
+
         // init buttons
-        let mut home_button = UIButton::new(" Home", [1.0, 1.0, 1.0, 1.0], [0.0, 0.0, 0.0, 1.0], 30, Pos { x: 50.0, y: 10.0 }, 115.0, 85.0);
-        let mut settings_button = UIButton::new("Settings", [1.0, 1.0, 1.0, 1.0], [0.0, 0.0, 0.0, 1.0], 30, Pos { x: 200.0, y: 10.0 }, 150.0, 85.0);
+        let mut home_button = UIButton::new("Home", [1.0, 1.0, 1.0, 1.0], [0.0, 0.0, 0.0, 1.0], 30, Pos { x: 30.0, y: 10.0 }, 115.0, 70.0);
+        let mut settings_button = UIButton::new("Settings", [1.0, 1.0, 1.0, 1.0], [0.0, 0.0, 0.0, 1.0], 30, Pos { x: 160.0, y: 10.0 }, 150.0, 70.0);
 
         let left_click = event.press_args() == Some(Button::Mouse(MouseButton::Left));
 
@@ -35,24 +38,25 @@ impl MiniApp for MainMenu {
             if left_click {
                 self.tab = 0;
             } else {
-                home_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.75];
+                home_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
             }
         } else if settings_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
                 self.tab = 1;
             } else {
-                settings_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.75];
+                settings_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
             }
         }
 
         window.draw_2d(event, |c, g, device| {
-            clear([184.0 / 255.0, 183.0 / 255.0, 180.0 / 255.0, 1.0], g);
+            clear([66.0 / 255.0, 139.0 / 255.0, 1.0, 1.0], g);
 
             // draw taskbar
+             
             {
                 rectangle(
                     [1.0, 1.0, 1.0, 1.0],
-                    [0.0, 0.0, 1280.0, 100.0],
+                    [0.0, 0.0, size.width, 85.0],
                     c.transform,
                     g,
                 );

@@ -75,19 +75,19 @@ impl MiniApp for TicTacToeApp {
 
         // init buttons
         let mut reset_button = UIButton::new(
-            "Reset",
-            [115.0 / 255.0, 115.0 / 255.0, 115.0 / 255.0, 1.0],
+            "   Reset",
+            [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
             [1.0, 1.0, 1.0, 1.0],
             30,
             Pos { x: 989.0, y: 169.0 },
-            180.0,
+            160.0,
             60.0,
         );
 
         let ai_text = if self.playing_ai {
-            "Play Human"
+            " Play Human"
         } else {
-            "Play AI"
+            "      Play AI"
         };
         let mut ai_button = UIButton::new(
             ai_text,
@@ -95,7 +95,7 @@ impl MiniApp for TicTacToeApp {
             [1.0, 1.0, 1.0, 1.0],
             20,
             Pos { x: 989.0, y: 285.0 },
-            180.0,
+            160.0,
             60.0,
         );
 
@@ -155,7 +155,7 @@ impl MiniApp for TicTacToeApp {
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
                     Pos { x: 575.0, y: 67.0 },
-                    "You win!",
+                    "Lime wins!",
                     40,
                 );
             } else if result == Mark::O {
@@ -164,8 +164,8 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 575.0, y: 67.0 },
-                    "You lose!",
+                    Pos { x: 560.0, y: 67.0 },
+                    "Purple wins!",
                     40,
                 );
             } else if self.state.is_draw() {
@@ -174,8 +174,8 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 575.0, y: 67.0 },
-                    "You Drew!",
+                    Pos { x: 550.0, y: 67.0 },
+                    "It's a draw!",
                     40,
                 );
             }

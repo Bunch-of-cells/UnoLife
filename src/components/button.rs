@@ -45,7 +45,7 @@ impl UIButton {
             glyphs,
             self.text_color,
             Pos {
-                x: self.pos.x + self.width / 4.0 - self.size as f64,
+                x: self.pos.x + self.width / 8.5 - self.text.len() as f64,
                 y: self.pos.y + self.height / 1.5,
             },
             &self.text,
