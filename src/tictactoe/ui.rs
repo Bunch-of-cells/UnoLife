@@ -70,7 +70,7 @@ impl MiniApp for TicTacToeApp {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
         }
-        println!("x: {} y: {}", self.hover_pos[0], self.hover_pos[1]);
+        // println!("x: {} y: {}", self.hover_pos[0], self.hover_pos[1]);
 
         let left_click = event.press_args() == Some(Button::Mouse(MouseButton::Left));
         
@@ -124,13 +124,15 @@ impl MiniApp for TicTacToeApp {
 
         window.draw_2d(event, |c, g, device| {
             clear([1.0; 4], g);
-            let mut left_click = false;
 
             // Draw texts
-            if self.state.is_over() == Mark::X {
+            let result = self.state.is_over();
+            if result == Mark::X {
                 draw_text(&c, g, glyphs, [0.0, 0.0, 0.0, 1.0], Pos { x: 575.0, y: 67.0 }, "You win!", 40);
-            } else if self.state.is_over() == Mark::O {
+            } else if result == Mark::O {
                 draw_text(&c, g, glyphs, [0.0, 0.0, 0.0, 1.0], Pos { x: 575.0, y: 67.0 }, "You lose!", 40);
+            } else if self.state.is_draw() {
+                draw_text(&c, g, glyphs, [0.0, 0.0, 0.0, 1.0], Pos { x: 575.0, y: 67.0 }, "You Drew!", 40);
             }
 
             // Draw buttons

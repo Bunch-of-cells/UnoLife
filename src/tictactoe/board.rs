@@ -56,6 +56,17 @@ impl Board {
         self.turn = Mark::X;
     }
 
+    pub fn is_draw(&self) -> bool {
+        for x in 0..3 {
+            for y in 0..3 {
+                if self.cells[x][y] == Mark::None {
+                    return false;
+                }
+            }
+        }
+        true
+    }
+
     pub fn is_over(&self) -> Mark {
         for row in 0..3 {
             let mut x_count = 0;
@@ -72,7 +83,7 @@ impl Board {
                 return Mark::X;
             } else if o_count == 3 {
                 return Mark::O;
-            }
+            } 
         }
 
         for col in 0..3 {
