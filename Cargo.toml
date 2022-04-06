@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 piston_window = "*"
+find_folder = "*"
 rand = "0.8.5"
