@@ -98,6 +98,7 @@ impl MiniApp for TicTacToeApp {
             180.0,
             60.0,
         );
+
         // handle button events
         if reset_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
@@ -128,9 +129,10 @@ impl MiniApp for TicTacToeApp {
                     self.hover_sq = (x, y);
 
                     if left_click {
+                        let is_free = self.state.cells[y][x] == Mark::None;
                         self.state.make_move(y, x); // Does nothing if illegal move
-                                                    // if playing against AI, make a move
-                        if self.playing_ai {
+                        // if playing against AI, make a move
+                        if self.playing_ai && is_free {
                             let move_ = negamax_root(&mut self.state);
                             self.state.make_move(move_.0, move_.1);
                         }

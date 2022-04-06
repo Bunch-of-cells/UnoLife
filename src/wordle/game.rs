@@ -1,15 +1,20 @@
-use rand::prelude::IteratorRandom;
 use std::fs;
+use rand::prelude::IteratorRandom;
 
-pub struct Game<const GUESSES: usize = 6> {
+const GUESSES: usize = 6;
+
+pub struct Game {
     word: String,
     guesses: [Option<Guess>; GUESSES],
     tries: usize,
 }
 
-impl<const GUESSES: usize> Game<GUESSES> {
+impl Game {
     pub fn new() -> Self {
-        let words = fs::read_to_string("wordle_list.txt").unwrap();
+        let assets = find_folder::Search::ParentsThenKids(3, 3)
+        .for_folder("assets")
+        .unwrap();
+        let words = fs::read_to_string(assets.join("wordle_list.txt")).unwrap();
         let word = words
             .split_whitespace()
             .choose(&mut rand::thread_rng())
