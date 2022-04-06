@@ -20,23 +20,6 @@ fn main() {
     .build()
     .unwrap();
     let mut ttt_app = TicTacToeApp::new();
-    ttt_app.state.cells = [
-        [
-            tictactoe::Mark::O,
-            tictactoe::Mark::X,
-            tictactoe::Mark::None,
-        ],
-        [
-            tictactoe::Mark::None,
-            tictactoe::Mark::O,
-            tictactoe::Mark::None,
-        ],
-        [
-            tictactoe::Mark::None,
-            tictactoe::Mark::X,
-            tictactoe::Mark::X,
-        ],
-    ];
 
     let mut events = Events::new(EventSettings::new());
     while let Some(event) = events.next(&mut window) {
