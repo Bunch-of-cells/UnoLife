@@ -1,44 +1,34 @@
 use super::{Board, Mark};
 
-pub const INFINITY: i32 = i32::MAX;
+pub const INFINITY: i32 = i32::MAX - 100;
 
-pub fn get_best_move(board: &mut Board) -> Option<(usize, usize)> {
-    let mut best_score = INFINITY;
-    let mut best_move = None;
-    for (x, y) in generate_moves(board) {
-        let mut board = board.clone();
-        board.mov(x, y).unwrap();
-        let score = negamax(&mut board, 30, -INFINITY, INFINITY);
-        if score < best_score {
-            best_score = score;
-            best_move = Some((x, y));
-        }
-    }
-    best_move
-}
-
-pub fn evaluate(board: &Board, depth: i32) -> i32 {
-    if board.is_over() == Mark::X {
+pub fn evaluate(board: &Board, ply: i32) -> i32 {
+    let res = board.is_over();
+    if res == Mark::X {
         if board.turn == Mark::X {
-            return INFINITY-depth;
+            INFINITY - ply
         } else {
-            return -INFINITY+depth;
+            -INFINITY + ply
         }
-    } else if board.is_over() == Mark::O {
+    } else if res == Mark::O {
         if board.turn == Mark::X {
-            return -INFINITY+depth;
+            -INFINITY + ply
         } else {
-            return INFINITY-depth;
+            INFINITY - ply
         }
+    } else {
+        0
     }
-    return 0;
 }
 
 pub fn generate_moves(board: &Board) -> Vec<(usize, usize)> {
     let mut moves = Vec::new();
+    if board.is_over() != Mark::None {
+        return moves;
+    }
     for x in 0..3 {
         for y in 0..3 {
-            if board.cells[x][y].is_none() {
+            if board.cells[x][y] == Mark::None {
                 moves.push((x, y));
             }
         }
@@ -46,33 +36,58 @@ pub fn generate_moves(board: &Board) -> Vec<(usize, usize)> {
     moves
 }
 
-pub fn negamax(board: &mut Board, depth: i32, mut alpha: i32, mut beta: i32) -> i32 {
-    if depth == 0 {
-        return evaluate(board, depth);
-    }
+pub fn negamax_root(board: &mut Board) -> (usize, usize) {
     let moves = generate_moves(board);
-    if moves.len() == 0 {
-        return evaluate(board, depth);
+    if moves.is_empty() {
+        // Should never happen
+        return (0, 0);
     }
-    let mut best_move = -INFINITY;
+    let mut best_score = -INFINITY;
+    let mut best_move: (usize, usize) = (0, 0);
+
+    let mut alpha = -INFINITY;
+    let beta = INFINITY;
+
     for move_ in moves.iter() {
         let x = move_.0;
         let y = move_.1;
-        if board.mov(x, y) == Ok(Mark::None) {
-            return 0;
-        } 
-        let score = -negamax(board, depth - 1, -beta, -alpha);
-        if score == INFINITY || score == -INFINITY {
-            return score;
+
+        board.make_move(x, y);
+        let score = -negamax(board, -beta, -alpha, 1);
+        board.undo_move(x, y);
+
+        if score > best_score {
+            best_score = score;
+            best_move = *move_;
         }
-        board.cells[x][y] = None;
-        board.turn = match board.turn {
-            Mark::X => Mark::O,
-            Mark::O => Mark::X,
-            _ => Mark::None,
-        };
-        if score > best_move {
-            best_move = score;
+        if score > alpha {
+            alpha = score;
+            if score >= beta {
+                break;
+            }
+        }
+    }
+    best_move
+}
+
+pub fn negamax(board: &mut Board, mut alpha: i32, beta: i32, ply: i32) -> i32 {
+    let moves = generate_moves(board);
+    if moves.is_empty() {
+        return evaluate(board, ply);
+    }
+
+    let mut best_score = -INFINITY;
+    for move_ in moves.iter() {
+        let x = move_.0;
+        let y = move_.1;
+
+        let e = board.make_move(x, y);
+        debug_assert!(e.is_none());
+        let score = -negamax(board, -beta, -alpha, ply + 1);
+        board.undo_move(x, y);
+
+        if score > best_score {
+            best_score = score;
         }
         if score > alpha {
             alpha = score;
@@ -81,5 +96,5 @@ pub fn negamax(board: &mut Board, depth: i32, mut alpha: i32, mut beta: i32) -> 
             }
         }
     }
-    return alpha;
+    alpha
 }
