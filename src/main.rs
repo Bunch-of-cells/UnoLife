@@ -1,13 +1,12 @@
 extern crate piston_window;
-
 use crate::components::application::MiniApp;
+use menu::ui::MainMenu;
 use piston_window::*;
 
 mod components;
 mod tictactoe;
 mod wordle;
-
-use crate::tictactoe::ui::TicTacToeApp;
+mod menu;
 
 fn main() {
     let mut window: PistonWindow = WindowSettings::new(
@@ -20,7 +19,8 @@ fn main() {
     .resizable(false)
     .build()
     .unwrap();
-    let mut ttt_app = TicTacToeApp::new();
+
+    let mut main_menu = MainMenu::new();
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -29,6 +29,6 @@ fn main() {
 
     let mut events = Events::new(EventSettings::new());
     while let Some(event) = events.next(&mut window) {
-        ttt_app.render(&mut window, &event, &mut glyphs);
+        main_menu.render(&mut window, &event, &mut glyphs);
     }
 }
