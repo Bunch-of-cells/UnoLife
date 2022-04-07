@@ -215,28 +215,43 @@ impl MiniApp for WordleApp {
             // Draw the board
             let ctx = c.trans(CENTER_X + 80.0, TOP_PAD);
 
-            for (y, guesses) in self.state.guesses().iter().flatten().enumerate() {
-                for (x, char_guess) in guesses.result().iter().enumerate() {
-                    let clr = guess_to_clr(*char_guess);
-                    let rect = math::margin_rectangle(
-                        [
-                            SQUARE_SIZE * (x as f64),
-                            SQUARE_SIZE * (y as f64),
-                            SQUARE_SIZE,
-                            SQUARE_SIZE,
-                        ],
-                        4.0,
-                    );
-                    rectangle(clr, rect, ctx.transform, g);
-                    draw_text(
-                        &c,
-                        g,
-                        glyphs,
-                        [0.0, 0.0, 0.0, 1.0],
-                        Pos { x: x as f64, y: y as f64 },
-                        &char_guess.char.to_string(),
-                        18,
-                    );
+            for (y, guesses) in self.state.guesses().iter().enumerate() {
+                if let Some(guesses) = guesses {
+                    for (x, char_guess) in guesses.result().iter().enumerate() {
+                        let clr = guess_to_clr(*char_guess);
+                        let rect = math::margin_rectangle(
+                            [
+                                SQUARE_SIZE * (x as f64),
+                                SQUARE_SIZE * (y as f64),
+                                SQUARE_SIZE,
+                                SQUARE_SIZE,
+                            ],
+                            4.0,
+                        );
+                        rectangle(clr, rect, ctx.transform, g);
+                        draw_text(
+                            &c,
+                            g,
+                            glyphs,
+                            [0.0, 0.0, 0.0, 1.0],
+                            Pos { x: x as f64, y: y as f64 },
+                            &char_guess.char.to_string(),
+                            18,
+                        );
+                    }
+                } else {
+                    for x in 0..5 {
+                        let rect = math::margin_rectangle(
+                            [
+                                SQUARE_SIZE * (x as f64),
+                                SQUARE_SIZE * (y as f64),
+                                SQUARE_SIZE,
+                                SQUARE_SIZE,
+                            ],
+                            4.0,
+                        );
+                        rectangle([150.0 / 255.0, 246.0 / 255.0, 188.0 / 255.0, 1.0], rect, ctx.transform, g);
+                    }
                 }
             }
 
