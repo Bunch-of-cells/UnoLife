@@ -34,31 +34,31 @@ impl MiniApp for MainMenu {
 
         // init buttons
         let mut home_button = UIButton::new(
-            "Home",
+            " Home",
             [1.0, 1.0, 1.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
             24,
-            Pos { x: 30.0, y: 10.0 },
-            92.0,
-            56.0,
+            Pos { x: 30.0, y: 0.0 },
+            102.0,
+            85.0,
         );
         let mut games_button = UIButton::new(
-            "Games",
+            " Games",
             [1.0, 1.0, 1.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
             24,
-            Pos { x: 160.0, y: 10.0 },
-            100.0,
-            56.0,
+            Pos { x: 140.0, y: 0.0 },
+            115.0,
+            85.0,
         );
         let mut settings_button = UIButton::new(
-            "Settings",
+            " Settings",
             [1.0, 1.0, 1.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
             24,
-            Pos { x: 300.0, y: 10.0 },
-            116.0,
-            56.0,
+            Pos { x: 270.0, y: 0.0 },
+            126.0,
+            85.0,
         );
 
         let mut ttt_button = UIButton::new(
@@ -118,6 +118,15 @@ impl MiniApp for MainMenu {
                 rectangle(
                     [1.0, 1.0, 1.0, 1.0],
                     [0.0, 0.0, size.width, 85.0],
+                    c.transform,
+                    g,
+                );
+
+                // draw black line sepperating the task bar from the content
+                line(
+                    [0.0, 0.0, 0.0, 1.0],
+                    0.5,
+                    [0.0, 85.0, size.width, 85.0],
                     c.transform,
                     g,
                 );
