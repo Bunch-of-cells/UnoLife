@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 use rand::prelude::IteratorRandom;
-use std::{collections::HashMap, error::Error, fmt::Display, fs, iter::Flatten};
+use std::{collections::HashMap, error::Error, fmt::Display, fs};
 
 const GUESSES: usize = 6;
 lazy_static! {
@@ -50,8 +50,8 @@ impl Game {
         Ok(GuessResult::Wrong)
     }
 
-    pub fn guesses(&self) -> Flatten<std::slice::Iter<'_, Option<Guess>>> {
-        self.guesses.iter().flatten()
+    pub fn guesses(&self) -> &[Option<Guess>] {
+        &self.guesses
     }
 }
 

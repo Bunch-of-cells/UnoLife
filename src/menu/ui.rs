@@ -18,10 +18,7 @@ impl MainMenu {
             hover_pos: [0.0, 0.0],
             tab: 0,
             // make list that contains all apps
-            apps: vec![
-                Box::new(TicTacToeApp::new()),
-                Box::new(WordleApp::new()),
-            ],
+            apps: vec![Box::new(TicTacToeApp::new()), Box::new(WordleApp::new())],
         }
     }
 }
