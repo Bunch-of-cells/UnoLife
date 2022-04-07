@@ -34,6 +34,7 @@ fn guess_to_clr(guess: CharGuess) -> [f32; 4] {
 
 impl MiniApp for WordleApp {
     fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs) {
+        let mut text = None; // text
         if let Some(Button::Keyboard(press)) = event.press_args() {
             match press {
                 Key::Backspace | Key::Delete => {
@@ -43,49 +44,19 @@ impl MiniApp for WordleApp {
                     let result = self.state.guess(self.guess.clone());
                     match result {
                         Err(error) => {
-                            window.draw_2d(event, |c, g, _| {
-                                clear([1.0; 4], g);
-                                draw_text(
-                                    &c,
-                                    g,
-                                    glyphs,
-                                    [0.0, 0.0, 0.0, 1.0],
-                                    Pos { x: 450.0, y: 528.0 },
-                                    &error.to_string(),
-                                    32,
-                                );
-                            });
+                            text = Some(error.to_string());  // setting text
                         }
                         Ok(GuessResult::GameOver(word)) => {
-                            window.draw_2d(event, |c, g, _| {
-                                clear([1.0; 4], g);
-                                draw_text(
-                                    &c,
-                                    g,
-                                    glyphs,
-                                    [0.0, 0.0, 0.0, 1.0],
-                                    Pos { x: 450.0, y: 528.0 },
-                                    &format!("Ran outta tries, try next time bud, word was {word}"),
-                                    32,
-                                );
-                            });
+                            text = Some(format!("Ran outta tries, try next time bud, word was {word}"));
+                            self.guess.clear();
                         }
                         Ok(GuessResult::Right) => {
-                            window.draw_2d(event, |c, g, _| {
-                                clear([1.0; 4], g);
-                                draw_text(
-                                    &c,
-                                    g,
-                                    glyphs,
-                                    [0.0, 0.0, 0.0, 1.0],
-                                    Pos { x: 450.0, y: 528.0 },
-                                    "Ya got it champ!",
-                                    32,
-                                );
-                            });
+                            text = Some("Ya got it champ".to_string());
+                            self.guess.clear();
                         }
                         _ => (),
                     }
+                    println!("{}", self.guess)
                 }
                 Key::A => {
                     if self.guess.len() < 5 {
@@ -223,6 +194,19 @@ impl MiniApp for WordleApp {
 
         window.draw_2d(event, |c, g, device| {
             clear([1.0; 4], g);
+
+            if let Some(ref text) = text {  // No text here
+                println!("{text}");
+                draw_text(
+                    &c,
+                    g,
+                    glyphs,
+                    [0.0, 0.0, 0.0, 1.0],
+                    Pos { x: 450.0, y: 528.0 },
+                    text,
+                    32,
+                );
+            }
 
             // Draw the board
             let ctx = c.trans(CENTER_X + 80.0, TOP_PAD);
