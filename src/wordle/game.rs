@@ -14,7 +14,7 @@ lazy_static! {
 }
 
 pub struct Game {
-    word: &'static str,
+    pub word: &'static str,
     guesses: [Option<Guess>; GUESSES],
     tries: usize,
 }
