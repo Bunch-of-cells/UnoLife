@@ -34,7 +34,7 @@ pub struct TicTacToeApp {
     pub state: Board,
     pub hover_pos: [f64; 2],
     pub hover_sq: (usize, usize),
-    pub playing_ai: bool,
+    pub playing_ai: u8,
 }
 
 impl TicTacToeApp {
@@ -43,7 +43,7 @@ impl TicTacToeApp {
             state: Board::new(),
             hover_pos: [0.0, 0.0],
             hover_sq: (6, 6),
-            playing_ai: true,
+            playing_ai: 0,
         }
     }
 }
@@ -58,7 +58,7 @@ fn mark_to_clr(mark: super::Mark) -> [f32; 4] {
     match mark {
         super::Mark::X => [160.0 / 255.0, 237.0 / 255.0, 138.0 / 255.0, 1.0],
         super::Mark::O => [233.0 / 255.0, 138.0 / 255.0, 237.0 / 255.0, 1.0],
-        _ => [240.0 / 255.0, 226.0 / 255.0, 168.0 / 255.0, 1.0],
+        _ => [250.0 / 255.0, 246.0 / 255.0, 188.0 / 255.0, 1.0],
     }
 }
 
@@ -74,27 +74,29 @@ impl MiniApp for TicTacToeApp {
 
         // init buttons
         let mut reset_button = UIButton::new(
-            "   Reset",
+            "  Restart",
             [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
             [1.0, 1.0, 1.0, 1.0],
             30,
             Pos { x: 989.0, y: 169.0 },
-            160.0,
+            170.0,
             60.0,
         );
 
-        let ai_text = if self.playing_ai {
-            " Play Human"
+        let ai_text = if self.playing_ai == 1 {
+            "Mode: Purple vs AI"
+        } else if self.playing_ai == 2 {
+            "Mode: Lime vs AI"
         } else {
-            "      Play AI"
+            "Mode: Man vs Man"
         };
         let mut ai_button = UIButton::new(
             ai_text,
             [115.0 / 255.0, 115.0 / 255.0, 115.0 / 255.0, 1.0],
             [1.0, 1.0, 1.0, 1.0],
-            20,
+            18,
             Pos { x: 989.0, y: 285.0 },
-            160.0,
+            230.0,
             60.0,
         );
 
@@ -102,6 +104,10 @@ impl MiniApp for TicTacToeApp {
         if reset_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
                 self.state.reset();
+                if self.playing_ai == (self.state.turn as u8 + 1) {
+                    let move_ = negamax_root(&mut self.state);
+                    self.state.make_move(move_.0, move_.1);
+                }
             } else {
                 reset_button.width += 6.0;
                 reset_button.pos.x -= 3.0;
@@ -111,7 +117,11 @@ impl MiniApp for TicTacToeApp {
             }
         } else if ai_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
-                self.playing_ai = !self.playing_ai;
+                if self.playing_ai != 2 {
+                    self.playing_ai += 1;
+                } else {
+                    self.playing_ai = 0;
+                }
             } else {
                 ai_button.width += 6.0;
                 ai_button.pos.x -= 3.0;
@@ -135,11 +145,13 @@ impl MiniApp for TicTacToeApp {
 
                     if left_click {
                         let is_free = self.state.cells[y][x] == Mark::None;
-                        self.state.make_move(y, x); // Does nothing if illegal move
-                                                    // if playing against AI, make a move
-                        if self.playing_ai && is_free {
-                            let move_ = negamax_root(&mut self.state);
-                            self.state.make_move(move_.0, move_.1);
+                        if is_free {
+                            self.state.make_move(y, x);
+                            // if playing against AI, make a move
+                            if self.playing_ai == (self.state.turn as u8 + 1) {
+                                let move_ = negamax_root(&mut self.state);
+                                self.state.make_move(move_.0, move_.1);
+                            }
                         }
                     }
 
@@ -159,7 +171,7 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 575.0, y: 67.0 },
+                    Pos { x: 575.0, y: 660.0 },
                     "Lime wins!",
                     40,
                 );
@@ -169,7 +181,7 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 560.0, y: 67.0 },
+                    Pos { x: 560.0, y: 660.0 },
                     "Purple wins!",
                     40,
                 );
@@ -179,7 +191,7 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 550.0, y: 67.0 },
+                    Pos { x: 550.0, y: 660.0 },
                     "It's a draw!",
                     40,
                 );
