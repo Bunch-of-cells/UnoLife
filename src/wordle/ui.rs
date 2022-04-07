@@ -1,4 +1,4 @@
-use super::{CharGuess, Game};
+use super::{CharGuess, Game, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::Event;
 use piston_window::*;
@@ -24,10 +24,10 @@ const SQUARE_SIZE: f64 = BOARD_SIZE / 4.0;
 
 // Converts Guess to Color
 fn guess_to_clr(guess: CharGuess) -> [f32; 4] {
-    match guess {
-        CharGuess::Correct => [160.0 / 255.0, 237.0 / 255.0, 138.0 / 255.0, 1.0],
-        CharGuess::OutOfOrder => [233.0 / 255.0, 138.0 / 255.0, 237.0 / 255.0, 1.0],
-        CharGuess::Incorrect => [250.0 / 255.0, 246.0 / 255.0, 188.0 / 255.0, 1.0],
+    match guess.type_ {
+        GuessType::Correct => [160.0 / 255.0, 237.0 / 255.0, 138.0 / 255.0, 1.0],
+        GuessType::OutOfOrder => [233.0 / 255.0, 138.0 / 255.0, 237.0 / 255.0, 1.0],
+        GuessType::Incorrect => [250.0 / 255.0, 246.0 / 255.0, 188.0 / 255.0, 1.0],
     }
 }
 
@@ -40,7 +40,9 @@ impl MiniApp for WordleApp {
                 Key::Backspace | Key::Delete => {
                     self.guess.pop();
                 }
-                Key::Return => todo!(),
+                Key::Return => {
+                    self.state.guess(self.guess.clone()).ok();
+                }
                 Key::A => {
                     if self.guess.len() < 5 {
                         self.guess.push('a')
