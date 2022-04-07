@@ -38,8 +38,6 @@ fn mark_to_clr(mark: super::Mark) -> [f32; 4] {
 }
 
 impl MiniApp for TicTacToeApp {
-    const NAME: &'static str = "TicTacToe";
-
     fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
