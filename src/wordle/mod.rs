@@ -7,7 +7,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn wordle_word_was_not_in_list() {
+    fn word_was_not_in_list() {
         let mut wordle = Game::new();
         assert_eq!(
             wordle.guess("ILuvU".to_string()),

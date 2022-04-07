@@ -32,8 +32,6 @@ fn guess_to_clr(guess: CharGuess) -> [f32; 4] {
 }
 
 impl MiniApp for WordleApp {
-    const NAME: &'static str = "Wordle";
-
     fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs) {
         if let Some(Button::Keyboard(press)) = event.press_args() {
             match press {

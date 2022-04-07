@@ -23,8 +23,6 @@ impl MainMenu {
 }
 
 impl MiniApp for MainMenu {
-    const NAME: &'static str = "Main Menu";
-
     fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
