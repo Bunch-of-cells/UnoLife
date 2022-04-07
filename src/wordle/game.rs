@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 use rand::prelude::IteratorRandom;
-use std::{error::Error, fmt::Display, fs, iter::Flatten};
+use std::{collections::HashMap, error::Error, fmt::Display, fs, iter::Flatten};
 
 const GUESSES: usize = 6;
 lazy_static! {
@@ -97,19 +97,20 @@ impl Guess {
     }
 
     pub fn result(&self) -> [CharGuess; 5] {
-        let mut outta_order = 0;
+        let mut outta_order = HashMap::<char, usize>::new();
         let mut array = [CharGuess {
             char: ' ',
             type_: GuessType::Incorrect,
         }; 5];
         for (i, (guessed, correct)) in self.guess.chars().zip(self.word.chars()).enumerate() {
+            let outta = outta_order.get(&guessed).cloned().unwrap_or_default();
             if guessed == correct {
                 array[i] = CharGuess {
                     char: guessed,
                     type_: GuessType::Correct,
                 };
-            } else if self.word.chars().filter(|&a| a == guessed).count() - outta_order > 0 {
-                outta_order += 1;
+            } else if self.word.chars().filter(|&a| a == guessed).count() - outta > 0 {
+                outta_order.insert(guessed, outta + 1);
                 array[i] = CharGuess {
                     char: guessed,
                     type_: GuessType::OutOfOrder,

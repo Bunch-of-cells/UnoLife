@@ -1,5 +1,6 @@
-use super::{CharGuess, Game, GuessType};
+use super::{CharGuess, Game, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
+use crate::components::button::{draw_text, Pos};
 use crate::Event;
 use piston_window::*;
 
@@ -39,7 +40,52 @@ impl MiniApp for WordleApp {
                     self.guess.pop();
                 }
                 Key::Return => {
-                    self.state.guess(self.guess.clone()).ok();
+                    let result = self.state.guess(self.guess.clone());
+                    match result {
+                        Err(error) => {
+                            window.draw_2d(event, |c, g, _| {
+                                clear([1.0; 4], g);
+                                draw_text(
+                                    &c,
+                                    g,
+                                    glyphs,
+                                    [0.0, 0.0, 0.0, 1.0],
+                                    Pos { x: 450.0, y: 528.0 },
+                                    &error.to_string(),
+                                    32,
+                                );
+                            });
+                        }
+                        Ok(GuessResult::GameOver(word)) => {
+                            window.draw_2d(event, |c, g, _| {
+                                clear([1.0; 4], g);
+                                draw_text(
+                                    &c,
+                                    g,
+                                    glyphs,
+                                    [0.0, 0.0, 0.0, 1.0],
+                                    Pos { x: 450.0, y: 528.0 },
+                                    &format!("Ran outta tries, try next time bud, word was {word}"),
+                                    32,
+                                );
+                            });
+                        }
+                        Ok(GuessResult::Right) => {
+                            window.draw_2d(event, |c, g, _| {
+                                clear([1.0; 4], g);
+                                draw_text(
+                                    &c,
+                                    g,
+                                    glyphs,
+                                    [0.0, 0.0, 0.0, 1.0],
+                                    Pos { x: 450.0, y: 528.0 },
+                                    "Ya got it champ!",
+                                    32,
+                                );
+                            });
+                        }
+                        _ => (),
+                    }
                 }
                 Key::A => {
                     if self.guess.len() < 5 {
