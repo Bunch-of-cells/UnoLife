@@ -9,7 +9,7 @@ use piston_window::*;
 pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
-    ttt_app: TicTacToeApp,
+    apps: Vec<Box<dyn MiniApp>>,
 }
 
 impl MainMenu {
@@ -17,7 +17,11 @@ impl MainMenu {
         MainMenu {
             hover_pos: [0.0, 0.0],
             tab: 0,
-            ttt_app: TicTacToeApp::new(),
+            // make list that contains all apps
+            apps: vec![
+                Box::new(TicTacToeApp::new()),
+                Box::new(WordleApp::new()),
+            ],
         }
     }
 }
@@ -32,70 +36,64 @@ impl MiniApp for MainMenu {
         let size = window.size();
 
         // init buttons
-        let mut home_button = UIButton::new(
-            " Home",
-            [1.0, 1.0, 1.0, 1.0],
-            [0.0, 0.0, 0.0, 1.0],
-            24,
-            Pos { x: 30.0, y: 0.0 },
-            102.0,
-            85.0,
-        );
-        let mut games_button = UIButton::new(
-            " Games",
-            [1.0, 1.0, 1.0, 1.0],
-            [0.0, 0.0, 0.0, 1.0],
-            24,
-            Pos { x: 140.0, y: 0.0 },
-            115.0,
-            85.0,
-        );
-        let mut settings_button = UIButton::new(
-            " Settings",
-            [1.0, 1.0, 1.0, 1.0],
-            [0.0, 0.0, 0.0, 1.0],
-            24,
-            Pos { x: 270.0, y: 0.0 },
-            126.0,
-            85.0,
-        );
-
-        let mut ttt_button = UIButton::new(
-            "Play TicTacToe",
-            [0.0; 4],
-            [0.0, 0.0, 0.0, 1.0],
-            24,
-            Pos { x: 40.0, y: 120.0 },
-            224.0,
-            56.0,
-        );
+        let mut buttons = [
+            UIButton::new(
+                " Home",
+                [1.0, 1.0, 1.0, 1.0],
+                [0.0, 0.0, 0.0, 1.0],
+                24,
+                Pos { x: 30.0, y: 0.0 },
+                102.0,
+                84.0,
+            ),
+            UIButton::new(
+                " Games",
+                [1.0, 1.0, 1.0, 1.0],
+                [0.0, 0.0, 0.0, 1.0],
+                24,
+                Pos { x: 140.0, y: 0.0 },
+                115.0,
+                84.0,
+            ),
+            UIButton::new(
+                " Settings",
+                [1.0, 1.0, 1.0, 1.0],
+                [0.0, 0.0, 0.0, 1.0],
+                24,
+                Pos { x: 270.0, y: 0.0 },
+                126.0,
+                84.0,
+            ),
+            UIButton::new(
+                "Play TicTacToe",
+                [0.0; 4],
+                [0.0, 0.0, 0.0, 1.0],
+                24,
+                Pos { x: 40.0, y: 120.0 },
+                224.0,
+                56.0,
+            ),
+            UIButton::new(
+                "Play Wordle",
+                [0.0; 4],
+                [0.0, 0.0, 0.0, 1.0],
+                24,
+                Pos { x: 40.0, y: 180.0 },
+                224.0,
+                56.0,
+            ),
+        ];
 
         let left_click = event.press_args() == Some(Button::Mouse(MouseButton::Left));
 
         // handle button events
-        if home_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
-            if left_click {
-                self.tab = 0;
-            } else {
-                home_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
-            }
-        } else if settings_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
-            if left_click {
-                self.tab = 1;
-            } else {
-                settings_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
-            }
-        } else if games_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
-            if left_click {
-                self.tab = 2;
-            } else {
-                games_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
-            }
-        } else if self.tab == 2 && ttt_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
-            if left_click {
-                self.tab = 3;
-            } else {
-                ttt_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
+        for (index, button) in buttons.iter_mut().enumerate() {
+            if button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+                if left_click {
+                    self.tab = index;
+                } else {
+                    button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
+                }
             }
         }
 
@@ -105,10 +103,7 @@ impl MiniApp for MainMenu {
                     clear([212.0 / 255.0, 248.0 / 255.0, 1.0, 1.0], g);
                 });
             }
-            3 => {
-                self.ttt_app.render(window, event, glyphs);
-            }
-            _ => (),
+            _ => self.apps[self.tab - 3].render(window, event, glyphs),
         };
 
         window.draw_2d(event, |c, g, device| {
@@ -131,9 +126,11 @@ impl MiniApp for MainMenu {
                 );
 
                 // draw buttons
-                home_button.draw(&c, g, glyphs);
-                games_button.draw(&c, g, glyphs);
-                settings_button.draw(&c, g, glyphs);
+                for (index, button) in buttons.iter().enumerate() {
+                    if index < 3 {
+                        button.draw(&c, g, glyphs);
+                    }
+                }
             }
 
             match self.tab {
@@ -151,6 +148,15 @@ impl MiniApp for MainMenu {
                     );
                 }
                 1 => {
+                    // GAMES TAB
+                    // draw text
+                    for (index, button) in buttons.iter().enumerate() {
+                        if index > 2 {
+                            button.draw(&c, g, glyphs);
+                        }
+                    }
+                }
+                2 => {
                     // SETTINGS TAB
                     // draw text
                     draw_text(
@@ -162,11 +168,6 @@ impl MiniApp for MainMenu {
                         "Welcome to the settings tab!",
                         32,
                     );
-                }
-                2 => {
-                    // GAMES TAB
-                    // draw text
-                    ttt_button.draw(&c, g, glyphs);
                 }
                 _ => (),
             }
