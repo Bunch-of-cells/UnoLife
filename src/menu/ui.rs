@@ -42,13 +42,13 @@ impl MiniApp for MainMenu {
             115.0,
             70.0,
         );
-        let mut ttt_button = UIButton::new(
-            "TicTacToe",
+        let mut games_button = UIButton::new(
+            "Games",
             [1.0, 1.0, 1.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
             30,
             Pos { x: 160.0, y: 10.0 },
-            190.0,
+            125.0,
             70.0,
         );
         let mut settings_button = UIButton::new(
@@ -56,8 +56,18 @@ impl MiniApp for MainMenu {
             [1.0, 1.0, 1.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
             30,
-            Pos { x: 370.0, y: 10.0 },
+            Pos { x: 300.0, y: 10.0 },
             145.0,
+            70.0,
+        );
+
+        let mut ttt_button = UIButton::new(
+            "Play TicTacToe",
+            [0.0; 4],
+            [0.0, 0.0, 0.0, 1.0],
+            30,
+            Pos { x: 40.0, y: 120.0 },
+            280.0,
             70.0,
         );
 
@@ -76,22 +86,27 @@ impl MiniApp for MainMenu {
             } else {
                 settings_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
             }
-        } else if ttt_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+        } else if games_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
                 self.tab = 2;
+            } else {
+                games_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
+            }
+        } else if self.tab == 2 && ttt_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+            if left_click {
+                self.tab = 3;
             } else {
                 ttt_button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
             }
         }
 
-        // Draw the background
         match self.tab {
-            0 | 1 => {
+            0 | 1 | 2 => {
                 window.draw_2d(event, |_, g, _| {
                     clear([212.0 / 255.0, 248.0 / 255.0, 1.0, 1.0], g);
                 });
             }
-            2 => {
+            3 => {
                 self.ttt_app.render(window, event, glyphs);
             }
             _ => (),
@@ -99,7 +114,6 @@ impl MiniApp for MainMenu {
 
         window.draw_2d(event, |c, g, device| {
             // draw taskbar
-
             {
                 rectangle(
                     [1.0, 1.0, 1.0, 1.0],
@@ -110,7 +124,7 @@ impl MiniApp for MainMenu {
 
                 // draw buttons
                 home_button.draw(&c, g, glyphs);
-                ttt_button.draw(&c, g, glyphs);
+                games_button.draw(&c, g, glyphs);
                 settings_button.draw(&c, g, glyphs);
             }
 
@@ -140,6 +154,11 @@ impl MiniApp for MainMenu {
                         "Welcome to the settings tab!",
                         40,
                     );
+                }
+                2 => {
+                    // GAMES TAB
+                    // draw text
+                    ttt_button.draw(&c, g, glyphs);
                 }
                 _ => (),
             }

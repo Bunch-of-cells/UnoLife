@@ -20,7 +20,6 @@ fn main() {
     .build()
     .unwrap();
 
-    println!("{:?}", window.size());
     let mut main_menu = MainMenu::new();
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)

@@ -43,7 +43,7 @@ impl TicTacToeApp {
             state: Board::new(),
             hover_pos: [0.0, 0.0],
             hover_sq: (6, 6),
-            playing_ai: 0,
+            playing_ai: 2,
         }
     }
 }
@@ -74,21 +74,21 @@ impl MiniApp for TicTacToeApp {
 
         // init buttons
         let mut reset_button = UIButton::new(
-            "  Restart",
+            "     Reset",
             [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
             [1.0, 1.0, 1.0, 1.0],
             30,
             Pos { x: 989.0, y: 169.0 },
-            170.0,
+            200.0,
             60.0,
         );
 
         let ai_text = if self.playing_ai == 1 {
-            "Mode: Purple vs AI"
+            " Mode: Purple vs AI"
         } else if self.playing_ai == 2 {
-            "Mode: Lime vs AI"
+            "  Mode: Lime vs AI"
         } else {
-            "Mode: Man vs Man"
+            "  Mode: Man vs Man"
         };
         let mut ai_button = UIButton::new(
             ai_text,
@@ -96,7 +96,7 @@ impl MiniApp for TicTacToeApp {
             [1.0, 1.0, 1.0, 1.0],
             18,
             Pos { x: 989.0, y: 285.0 },
-            230.0,
+            200.0,
             60.0,
         );
 
