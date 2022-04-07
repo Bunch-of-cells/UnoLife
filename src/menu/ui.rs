@@ -37,38 +37,38 @@ impl MiniApp for MainMenu {
             "Home",
             [1.0, 1.0, 1.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
-            30,
+            24,
             Pos { x: 30.0, y: 10.0 },
-            115.0,
-            70.0,
+            92.0,
+            56.0,
         );
         let mut games_button = UIButton::new(
             "Games",
             [1.0, 1.0, 1.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
-            30,
+            24,
             Pos { x: 160.0, y: 10.0 },
-            125.0,
-            70.0,
+            100.0,
+            56.0,
         );
         let mut settings_button = UIButton::new(
             "Settings",
             [1.0, 1.0, 1.0, 1.0],
             [0.0, 0.0, 0.0, 1.0],
-            30,
+            24,
             Pos { x: 300.0, y: 10.0 },
-            145.0,
-            70.0,
+            116.0,
+            56.0,
         );
 
         let mut ttt_button = UIButton::new(
             "Play TicTacToe",
             [0.0; 4],
             [0.0, 0.0, 0.0, 1.0],
-            30,
+            24,
             Pos { x: 40.0, y: 120.0 },
-            280.0,
-            70.0,
+            224.0,
+            56.0,
         );
 
         let left_click = event.press_args() == Some(Button::Mouse(MouseButton::Left));
@@ -139,7 +139,7 @@ impl MiniApp for MainMenu {
                         [0.0, 0.0, 0.0, 1.0],
                         Pos { x: 50.0, y: 300.0 },
                         "Welcome to the home tab!",
-                        40,
+                        32,
                     );
                 }
                 1 => {
@@ -152,7 +152,7 @@ impl MiniApp for MainMenu {
                         [0.0, 0.0, 0.0, 1.0],
                         Pos { x: 50.0, y: 300.0 },
                         "Welcome to the settings tab!",
-                        40,
+                        32,
                     );
                 }
                 2 => {

@@ -20,6 +20,9 @@ fn main() {
     .build()
     .unwrap();
 
+    // let screen_resolution = window.window.ctx.window().current_monitor().unwrap().size();
+    // println!("{:?}", screen_resolution);
+
     let mut main_menu = MainMenu::new();
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)

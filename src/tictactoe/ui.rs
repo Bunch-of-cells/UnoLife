@@ -50,7 +50,7 @@ impl TicTacToeApp {
 
 const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - 100.0;
 const CENTER_X: f64 = (DEFAULT_WIDTH as f64 - BOARD_SIZE) / 2.0;
-const TOP_PAD: f64 = 130.0;
+const TOP_PAD: f64 = 104.0;
 const SQUARE_SIZE: f64 = BOARD_SIZE / 4.0;
 
 // Converts Mark to Color
@@ -77,10 +77,10 @@ impl MiniApp for TicTacToeApp {
             "     Reset",
             [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
             [1.0, 1.0, 1.0, 1.0],
-            30,
-            Pos { x: 989.0, y: 169.0 },
-            200.0,
-            60.0,
+            24,
+            Pos { x: 791.2, y: 135.2 },
+            160.0,
+            48.0,
         );
 
         let ai_text = if self.playing_ai == 1 {
@@ -94,10 +94,10 @@ impl MiniApp for TicTacToeApp {
             ai_text,
             [115.0 / 255.0, 115.0 / 255.0, 115.0 / 255.0, 1.0],
             [1.0, 1.0, 1.0, 1.0],
-            18,
-            Pos { x: 989.0, y: 285.0 },
-            200.0,
-            60.0,
+            14,
+            Pos { x: 791.2, y: 228.0 },
+            160.0,
+            48.0,
         );
 
         // handle button events
@@ -171,9 +171,9 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 575.0, y: 660.0 },
+                    Pos { x: 450.0, y: 528.0 },
                     "Lime wins!",
-                    40,
+                    32,
                 );
             } else if result == Mark::O {
                 draw_text(
@@ -181,9 +181,9 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 560.0, y: 660.0 },
+                    Pos { x: 440.0, y: 528.0 },
                     "Purple wins!",
-                    40,
+                    32,
                 );
             } else if self.state.is_draw() {
                 draw_text(
@@ -191,9 +191,9 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 550.0, y: 660.0 },
+                    Pos { x: 442.0, y: 528.0 },
                     "It's a draw!",
-                    40,
+                    32,
                 );
             }
 
@@ -203,7 +203,7 @@ impl MiniApp for TicTacToeApp {
 
             {
                 // Draw the STM
-                let ctx = c.trans(150.0, TOP_PAD * 2.0);
+                let ctx = c.trans(120.0, TOP_PAD * 2.0);
                 let rect =
                     math::margin_rectangle([0.0, 0.0, SQUARE_SIZE / 1.4, SQUARE_SIZE / 1.4], 0.0);
                 rectangle(mark_to_clr(self.state.turn), rect, ctx.transform, g);
@@ -211,7 +211,7 @@ impl MiniApp for TicTacToeApp {
 
             {
                 // Draw the board
-                let ctx = c.trans(CENTER_X + 100.0, TOP_PAD);
+                let ctx = c.trans(CENTER_X + 80.0, TOP_PAD);
 
                 for x in 0..3 {
                     for y in 0..3 {
