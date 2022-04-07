@@ -14,7 +14,7 @@ lazy_static! {
 }
 
 pub struct Game {
-    word: &'static str,
+    pub word: &'static str,
     guesses: [Option<Guess>; GUESSES],
     tries: usize,
 }
@@ -96,19 +96,29 @@ impl Guess {
         Self { guess, word }
     }
 
-    pub fn guess(&self) -> &str {
-        &self.guess
-    }
-
     pub fn result(&self) -> [CharGuess; 5] {
-        let mut array = [CharGuess::Incorrect; 5];
         let mut outta_order = 0;
+        let mut array = [CharGuess {
+            char: ' ',
+            type_: GuessType::Incorrect,
+        }; 5];
         for (i, (guessed, correct)) in self.guess.chars().zip(self.word.chars()).enumerate() {
             if guessed == correct {
-                array[i] = CharGuess::Correct;
+                array[i] = CharGuess {
+                    char: guessed,
+                    type_: GuessType::Correct,
+                };
             } else if self.word.chars().filter(|&a| a == guessed).count() - outta_order > 0 {
                 outta_order += 1;
-                array[i] = CharGuess::OutOfOrder;
+                array[i] = CharGuess {
+                    char: guessed,
+                    type_: GuessType::OutOfOrder,
+                };
+            } else {
+                array[i] = CharGuess {
+                    char: guessed,
+                    type_: GuessType::Incorrect,
+                };
             }
         }
         array
@@ -116,7 +126,13 @@ impl Guess {
 }
 
 #[derive(Debug, Clone, Copy)]
-pub enum CharGuess {
+pub struct CharGuess {
+    pub char: char,
+    pub type_: GuessType,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum GuessType {
     Correct,
     Incorrect,
     OutOfOrder,
