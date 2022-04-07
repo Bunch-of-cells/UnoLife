@@ -1,8 +1,9 @@
-use crate::tictactoe::ui::TicTacToeApp;
-use crate::{
-    components::{application::MiniApp, button::UIButton},
-    tictactoe::ui::{draw_text, Pos},
+use crate::components::{
+    application::MiniApp,
+    button::{draw_text, Pos, UIButton},
 };
+use crate::tictactoe::ui::TicTacToeApp;
+use crate::wordle::ui::WordleApp;
 use piston_window::*;
 
 pub struct MainMenu {

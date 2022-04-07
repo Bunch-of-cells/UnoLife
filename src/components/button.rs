@@ -1,5 +1,10 @@
-use crate::tictactoe::ui::*;
+// use crate::tictactoe::ui::*;
 use piston_window::{types::Color, *};
+
+pub struct Pos {
+    pub x: f64,
+    pub y: f64,
+}
 
 pub struct UIButton {
     pub text: String,
@@ -59,4 +64,24 @@ impl UIButton {
             && y > self.pos.y
             && y < self.pos.y + self.height
     }
+}
+
+pub fn draw_text(
+    ctx: &Context,
+    graphics: &mut G2d,
+    glyphs: &mut Glyphs,
+    color: [f32; 4],
+    pos: Pos,
+    text: &str,
+    font_size: u32,
+) {
+    text::Text::new_color(color, font_size)
+        .draw(
+            text,
+            glyphs,
+            &ctx.draw_state,
+            ctx.transform.trans(pos.x as f64, pos.y as f64),
+            graphics,
+        )
+        .unwrap();
 }

@@ -5,31 +5,6 @@ use crate::tictactoe::{negamax_root, Mark};
 use crate::Event;
 use piston_window::*;
 
-pub fn draw_text(
-    ctx: &Context,
-    graphics: &mut G2d,
-    glyphs: &mut Glyphs,
-    color: [f32; 4],
-    pos: Pos,
-    text: &str,
-    font_size: u32,
-) {
-    text::Text::new_color(color, font_size)
-        .draw(
-            text,
-            glyphs,
-            &ctx.draw_state,
-            ctx.transform.trans(pos.x as f64, pos.y as f64),
-            graphics,
-        )
-        .unwrap();
-}
-
-pub struct Pos {
-    pub x: f64,
-    pub y: f64,
-}
-
 pub struct TicTacToeApp {
     pub state: Board,
     pub hover_pos: [f64; 2],

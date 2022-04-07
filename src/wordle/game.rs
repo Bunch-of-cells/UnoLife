@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 use rand::prelude::IteratorRandom;
-use std::{error::Error, fmt::Display, fs};
+use std::{error::Error, fmt::Display, fs, iter::Flatten};
 
 const GUESSES: usize = 6;
 lazy_static! {
@@ -9,7 +9,7 @@ lazy_static! {
             .for_folder("assets")
             .unwrap();
         let words = fs::read_to_string(assets.join("wordle_list.txt")).unwrap();
-        words.split_whitespace().map(ToString::to_string).collect()
+        words.split_whitespace().map(|a| a.to_lowercase()).collect()
     };
 }
 
@@ -48,6 +48,10 @@ impl Game {
             return Ok(GuessResult::GameOver(self.word));
         }
         Ok(GuessResult::Wrong)
+    }
+
+    pub fn guesses(&self) -> Flatten<std::slice::Iter<'_, Option<Guess>>> {
+        self.guesses.iter().flatten()
     }
 }
 
@@ -90,6 +94,10 @@ impl PartialEq for Guess {
 impl Guess {
     fn new(guess: String, word: &'static str) -> Self {
         Self { guess, word }
+    }
+
+    pub fn guess(&self) -> &str {
+        &self.guess
     }
 
     pub fn result(&self) -> [CharGuess; 5] {
