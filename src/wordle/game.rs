@@ -1,25 +1,27 @@
+use lazy_static::lazy_static;
 use rand::prelude::IteratorRandom;
-use std::fs;
+use std::{error::Error, fmt::Display, fs};
 
 const GUESSES: usize = 6;
+lazy_static! {
+    static ref WORDS: Vec<String> = {
+        let assets = find_folder::Search::ParentsThenKids(3, 3)
+            .for_folder("assets")
+            .unwrap();
+        let words = fs::read_to_string(assets.join("wordle_list.txt")).unwrap();
+        words.split_whitespace().map(ToString::to_string).collect()
+    };
+}
 
 pub struct Game {
-    word: String,
+    word: &'static str,
     guesses: [Option<Guess>; GUESSES],
     tries: usize,
 }
 
 impl Game {
     pub fn new() -> Self {
-        let assets = find_folder::Search::ParentsThenKids(3, 3)
-            .for_folder("assets")
-            .unwrap();
-        let words = fs::read_to_string(assets.join("wordle_list.txt")).unwrap();
-        let word = words
-            .split_whitespace()
-            .choose(&mut rand::thread_rng())
-            .unwrap()
-            .to_string();
+        let word = WORDS.iter().choose(&mut rand::thread_rng()).unwrap();
         Self {
             word,
             guesses: [0; GUESSES].map(|_| None),
@@ -27,27 +29,44 @@ impl Game {
         }
     }
 
-    pub fn guess(&mut self, guess: String) -> GuessResult {
+    pub fn guess(&mut self, guess: String) -> Result<GuessResult, GuessError> {
         if guess.len() != 5 {
-            panic!(
-                "The length of the guess was not 5 :: GUESS : {}",
-                guess.len()
-            );
-        }
-        if guess.chars().any(|c| !c.is_alphabetic()) {
-            panic!("The guess was not full o alphabets : {}", guess);
-        }
-        if guess == self.word {
-            return GuessResult::Right;
+            return Err(GuessError::NotLongEnough);
         }
         if self.tries >= GUESSES {
-            return GuessResult::GameOver(&self.word);
+            return Err(GuessError::NotLongEnough);
         }
+        if guess.chars().any(|c| !c.is_alphabetic()) || !WORDS.contains(&guess) {
+            return Err(GuessError::WordWasNotInList);
+        }
+        if guess == self.word {
+            return Ok(GuessResult::Right);
+        }
+        self.guesses[self.tries] = Some(Guess::new(guess, self.word));
         self.tries += 1;
-        self.guesses[self.tries] = Some(Guess::new(guess, &self.word));
-        GuessResult::Wrong
+        if self.tries >= GUESSES {
+            return Ok(GuessResult::GameOver(self.word));
+        }
+        Ok(GuessResult::Wrong)
     }
 }
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum GuessError {
+    WordWasNotInList,
+    NotLongEnough,
+}
+
+impl Display for GuessError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            GuessError::WordWasNotInList => write!(f, "Word was not in list"),
+            GuessError::NotLongEnough => write!(f, "Word was not long enough"),
+        }
+    }
+}
+
+impl Error for GuessError {}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum GuessResult<'a> {
@@ -59,8 +78,7 @@ pub enum GuessResult<'a> {
 #[derive(Debug, Clone)]
 pub struct Guess {
     guess: String,
-    correct: u8,
-    out_of_order: u8,
+    word: &'static str,
 }
 
 impl PartialEq for Guess {
@@ -70,21 +88,28 @@ impl PartialEq for Guess {
 }
 
 impl Guess {
-    fn new(guess: String, word: &str) -> Self {
-        let correct = guess
-            .chars()
-            .zip(word.chars())
-            .filter(|(i, v)| i == v)
-            .count() as u8;
-        let out_of_order = guess
-            .chars()
-            .zip(word.chars())
-            .filter(|(i, v)| i != v && word.contains(*i))
-            .count() as u8;
-        Self {
-            guess,
-            correct,
-            out_of_order,
-        }
+    fn new(guess: String, word: &'static str) -> Self {
+        Self { guess, word }
     }
+
+    pub fn result(&self) -> [CharGuess; 5] {
+        let mut array = [CharGuess::Incorrect; 5];
+        let mut outta_order = 0;
+        for (i, (guessed, correct)) in self.guess.chars().zip(self.word.chars()).enumerate() {
+            if guessed == correct {
+                array[i] = CharGuess::Correct;
+            } else if self.word.chars().filter(|&a| a == guessed).count() - outta_order > 0 {
+                outta_order += 1;
+                array[i] = CharGuess::OutOfOrder;
+            }
+        }
+        array
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum CharGuess {
+    Correct,
+    Incorrect,
+    OutOfOrder,
 }

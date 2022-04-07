@@ -1720,6 +1720,7 @@ name = "timathon"
 version = "0.1.0"
 dependencies = [
  "find_folder",
+ "lazy_static",
  "piston_window",
  "rand",
 ]

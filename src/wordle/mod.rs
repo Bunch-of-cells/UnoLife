@@ -11,6 +11,6 @@ mod tests {
     #[should_panic]
     fn wordle_instance() {
         let mut wordle = Game::new();
-        assert_eq!(wordle.guess("above".to_string()), GuessResult::Wrong);
+        assert_eq!(wordle.guess("above".to_string()), Ok(GuessResult::Wrong));
     }
 }
