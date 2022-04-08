@@ -6,6 +6,7 @@ use piston_window::*;
 
 mod components;
 mod menu;
+mod snake;
 mod tictactoe;
 mod wordle;
 

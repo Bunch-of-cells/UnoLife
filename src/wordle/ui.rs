@@ -3,7 +3,6 @@ use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
 use crate::Event;
 use piston_window::*;
-use std::time::Instant;
 
 pub struct WordleApp {
     state: Game,
@@ -41,7 +40,6 @@ fn guess_to_clr(guess: CharGuess) -> [f32; 4] {
 
 impl MiniApp for WordleApp {
     fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs) {
-        let now = Instant::now();
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
         }
@@ -109,126 +107,110 @@ impl MiniApp for WordleApp {
                     }
                 }
             }
-            println!("Pressed");
+            // println!("Pressed");
         }
-        let b = now.elapsed().as_millis();
+        // let b = now.elapsed().as_millis();
 
-        if window
-            .draw_2d(event, |c, g, device| {
-                clear(self.bg, g);
-                dark_mode_button.draw(&c, g, glyphs);
+        window.draw_2d(event, |c, g, device| {
+            clear(self.bg, g);
+            dark_mode_button.draw(&c, g, glyphs);
 
-                if let Some(ref text) = self.prev_text {
-                    draw_text(
-                        &c,
-                        g,
-                        glyphs,
-                        [0.0, 0.0, 0.0, 1.0],
-                        Pos { x: 10.0, y: 528.0 },
-                        text,
-                        28,
-                    );
-                }
+            if let Some(ref text) = self.prev_text {
+                draw_text(
+                    &c,
+                    g,
+                    glyphs,
+                    [0.0, 0.0, 0.0, 1.0],
+                    Pos { x: 10.0, y: 528.0 },
+                    text,
+                    28,
+                );
+            }
 
-                // Draw the board
-                let ctx = c.trans(CENTER_X + 80.0, TOP_PAD);
+            // Draw the board
+            let ctx = c.trans(CENTER_X + 80.0, TOP_PAD);
 
-                let mut first = true;
-                for (y, guesses) in self.state.guesses().iter().enumerate() {
-                    if let Some(guesses) = guesses {
-                        for (x, char_guess) in guesses.result().iter().enumerate() {
-                            let clr = guess_to_clr(*char_guess);
-                            let rect = math::margin_rectangle(
-                                [
-                                    SQUARE_SIZE * (x as f64),
-                                    SQUARE_SIZE * (y as f64),
-                                    SQUARE_SIZE,
-                                    SQUARE_SIZE,
-                                ],
-                                4.0,
-                            );
-                            Rectangle::new_round_border(
-                                [211.0 / 255.0, 211.0 / 255.0, 211.0 / 255.0, 1.0],
-                                2.0,
-                                2.0,
-                            )
-                            .draw(
-                                rect,
-                                &Default::default(),
-                                ctx.transform,
-                                g,
-                            );
-                            Rectangle::new_round(clr, 2.0).draw(
-                                rect,
-                                &Default::default(),
-                                ctx.transform,
-                                g,
-                            );
-                            draw_text(
-                                &ctx,
-                                g,
-                                glyphs,
-                                [1.0; 4],
-                                Pos {
-                                    x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
-                                    y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
-                                },
-                                &char_guess.char.to_string(),
-                                30,
-                            );
-                        }
-                    } else {
-                        for x in 0..5 {
-                            let rect = math::margin_rectangle(
-                                [
-                                    SQUARE_SIZE * (x as f64),
-                                    SQUARE_SIZE * (y as f64),
-                                    SQUARE_SIZE,
-                                    SQUARE_SIZE,
-                                ],
-                                4.0,
-                            );
-                            Rectangle::new_round_border(
-                                [211.0 / 255.0, 211.0 / 255.0, 211.0 / 255.0, 1.0],
-                                2.0,
-                                2.0,
-                            )
-                            .draw(
-                                rect,
-                                &Default::default(),
-                                ctx.transform,
-                                g,
-                            );
-                            Rectangle::new_round([100. / 255., 100. / 255., 100. / 255., 1.0], 2.0)
-                                .draw(rect, &Default::default(), ctx.transform, g);
-                            if first {
-                                if let Some(&char) = self.guess.as_bytes().get(x) {
-                                    draw_text(
-                                        &ctx,
-                                        g,
-                                        glyphs,
-                                        [1.0; 4],
-                                        Pos {
-                                            x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
-                                            y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
-                                        },
-                                        &(char as char).to_string(),
-                                        30,
-                                    );
-                                }
+            let mut first = true;
+            for (y, guesses) in self.state.guesses().iter().enumerate() {
+                if let Some(guesses) = guesses {
+                    for (x, char_guess) in guesses.result().iter().enumerate() {
+                        let clr = guess_to_clr(*char_guess);
+                        let rect = math::margin_rectangle(
+                            [
+                                SQUARE_SIZE * (x as f64),
+                                SQUARE_SIZE * (y as f64),
+                                SQUARE_SIZE,
+                                SQUARE_SIZE,
+                            ],
+                            4.0,
+                        );
+                        Rectangle::new_round_border(
+                            [211.0 / 255.0, 211.0 / 255.0, 211.0 / 255.0, 1.0],
+                            2.0,
+                            2.0,
+                        )
+                        .draw(rect, &Default::default(), ctx.transform, g);
+                        Rectangle::new_round(clr, 2.0).draw(
+                            rect,
+                            &Default::default(),
+                            ctx.transform,
+                            g,
+                        );
+                        draw_text(
+                            &ctx,
+                            g,
+                            glyphs,
+                            [1.0; 4],
+                            Pos {
+                                x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
+                                y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
+                            },
+                            &char_guess.char.to_string(),
+                            30,
+                        );
+                    }
+                } else {
+                    for x in 0..5 {
+                        let rect = math::margin_rectangle(
+                            [
+                                SQUARE_SIZE * (x as f64),
+                                SQUARE_SIZE * (y as f64),
+                                SQUARE_SIZE,
+                                SQUARE_SIZE,
+                            ],
+                            4.0,
+                        );
+                        Rectangle::new_round_border(
+                            [211.0 / 255.0, 211.0 / 255.0, 211.0 / 255.0, 1.0],
+                            2.0,
+                            2.0,
+                        )
+                        .draw(rect, &Default::default(), ctx.transform, g);
+                        Rectangle::new_round([100. / 255., 100. / 255., 100. / 255., 1.0], 2.0)
+                            .draw(rect, &Default::default(), ctx.transform, g);
+                        if first {
+                            if let Some(&char) = self.guess.as_bytes().get(x) {
+                                draw_text(
+                                    &ctx,
+                                    g,
+                                    glyphs,
+                                    [1.0; 4],
+                                    Pos {
+                                        x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
+                                        y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
+                                    },
+                                    &(char as char).to_string(),
+                                    30,
+                                );
                             }
                         }
-                        first = false;
                     }
+                    first = false;
                 }
+            }
 
-                // Update glyphs before rendering
-                glyphs.factory.encoder.flush(device);
-            })
-            .is_some()
-        {
-            println!("B {}", b);
-            println!("A {}\n\n", now.elapsed().as_millis());
-        };
+            // Update glyphs before rendering
+            glyphs.factory.encoder.flush(device);
+        });
     }
 }
