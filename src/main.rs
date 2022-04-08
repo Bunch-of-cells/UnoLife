@@ -1,6 +1,6 @@
 extern crate piston_window;
 use crate::components::application::MiniApp;
-use components::{animations::bounce, button::Pos};
+// use components::{animations::bounce, button::Pos};
 use menu::ui::MainMenu;
 use piston_window::*;
 
@@ -32,7 +32,7 @@ fn main() {
     let mut glyphs = window.load_font(assets.join("Roboto-Regular.ttf")).unwrap();
 
     let mut events = Events::new(EventSettings::new());
-    
+
     // bounce(&mut window, Pos { x: 500.0, y: 100.0 }, false, 25);
     while let Some(event) = events.next(&mut window) {
         main_menu.render(&mut window, &event, &mut glyphs);

@@ -1,5 +1,4 @@
-// use crate::tictactoe::ui::*;
-use piston_window::{types::Color, *};
+use piston_window::{rectangle, text::Text, types::Color, Context, G2d, Glyphs, Transformed};
 
 pub struct Pos {
     pub x: f64,
@@ -75,7 +74,7 @@ pub fn draw_text(
     text: &str,
     font_size: u32,
 ) {
-    text::Text::new_color(color, font_size)
+    Text::new_color(color, font_size)
         .draw(
             text,
             glyphs,

@@ -18,6 +18,7 @@ impl WordleApp {
     }
 }
 
+const BACKGROUND_COLOR: [f32; 4] = [100. / 255., 100. / 255., 100. / 255., 1.0];
 const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - 100.0;
 const CENTER_X: f64 = (DEFAULT_WIDTH as f64 - BOARD_SIZE) / 2.0;
 const TOP_PAD: f64 = 104.0;
@@ -42,6 +43,7 @@ impl MiniApp for WordleApp {
                 }
                 Key::Return => {
                     let result = self.state.guess(self.guess.clone());
+                    println!("{}", self.guess);
                     match result {
                         Err(error) => {
                             text = Some(error.to_string());
@@ -65,14 +67,16 @@ impl MiniApp for WordleApp {
                 _ => {
                     if self.guess.len() < 5 {
                         let character: char = unsafe { std::mem::transmute(press) };
-                        self.guess.push(character);
+                        if character.is_ascii_alphabetic() {
+                            self.guess.push(character);
+                        }
                     }
                 }
             }
         }
 
         window.draw_2d(event, |c, g, device| {
-            clear([1.0; 4], g);
+            clear(BACKGROUND_COLOR, g);
 
             if let Some(ref text) = text {
                 println!("{text}");
@@ -81,7 +85,7 @@ impl MiniApp for WordleApp {
                     g,
                     glyphs,
                     [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 450.0, y: 528.0 },
+                    Pos { x: 200.0, y: 528.0 },
                     text,
                     32,
                 );
@@ -90,6 +94,7 @@ impl MiniApp for WordleApp {
             // Draw the board
             let ctx = c.trans(CENTER_X + 80.0, TOP_PAD);
 
+            let mut first = true;
             for (y, guesses) in self.state.guesses().iter().enumerate() {
                 if let Some(guesses) = guesses {
                     for (x, char_guess) in guesses.result().iter().enumerate() {
@@ -103,15 +108,23 @@ impl MiniApp for WordleApp {
                             ],
                             4.0,
                         );
-                        rectangle(clr, rect, ctx.transform, g);
+                        Rectangle::new_round_border(clr, 2.0, 2.0).draw(
+                            rect,
+                            &Default::default(),
+                            ctx.transform,
+                            g,
+                        );
                         draw_text(
-                            &c,
+                            &ctx,
                             g,
                             glyphs,
                             [0.0, 0.0, 0.0, 1.0],
-                            Pos { x: x as f64, y: y as f64 },
+                            Pos {
+                                x: rect[0] + SQUARE_SIZE / 2.0,
+                                y: rect[1] + SQUARE_SIZE / 2.0,
+                            },
                             &char_guess.char.to_string(),
-                            18,
+                            30,
                         );
                     }
                 } else {
@@ -125,8 +138,30 @@ impl MiniApp for WordleApp {
                             ],
                             4.0,
                         );
-                        rectangle([150.0 / 255.0, 246.0 / 255.0, 188.0 / 255.0, 1.0], rect, ctx.transform, g);
+                        Rectangle::new_round_border([1.0; 4], 2.0, 2.0).draw(
+                            rect,
+                            &Default::default(),
+                            ctx.transform,
+                            g,
+                        );
+                        if first {
+                            if let Some(&char) = self.guess.as_bytes().get(x) {
+                                draw_text(
+                                    &ctx,
+                                    g,
+                                    glyphs,
+                                    [0.0, 0.0, 0.0, 1.0],
+                                    Pos {
+                                        x: rect[0] + SQUARE_SIZE / 2.0,
+                                        y: rect[1] + SQUARE_SIZE / 2.0,
+                                    },
+                                    &(char as char).to_string(),
+                                    30,
+                                );
+                            }
+                        }
                     }
+                    first = false;
                 }
             }
 
