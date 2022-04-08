@@ -9,7 +9,7 @@ lazy_static! {
             .for_folder("assets")
             .unwrap();
         let words = fs::read_to_string(assets.join("wordle_list.txt")).unwrap();
-        words.split_whitespace().map(|a| a.to_lowercase()).collect()
+        words.split_whitespace().map(|a| a.to_uppercase()).collect()
     };
 }
 
@@ -39,10 +39,11 @@ impl Game {
         if guess.chars().any(|c| !c.is_alphabetic()) || !WORDS.contains(&guess) {
             return Err(GuessError::WordWasNotInList);
         }
-        if guess == self.word {
+        let correct = guess == self.word;
+        self.guesses[self.tries] = Some(Guess::new(guess, self.word));
+        if correct {
             return Ok(GuessResult::Right);
         }
-        self.guesses[self.tries] = Some(Guess::new(guess, self.word));
         self.tries += 1;
         if self.tries >= GUESSES {
             return Err(GuessError::GameOver(self.word));
@@ -98,20 +99,21 @@ impl Guess {
     }
 
     pub fn result(&self) -> [CharGuess; 5] {
-        let mut outta_order = HashMap::<char, usize>::new();
+        let mut seen = HashMap::<char, usize>::new();
         let mut array = [CharGuess {
             char: ' ',
             type_: GuessType::Incorrect,
         }; 5];
         for (i, (guessed, correct)) in self.guess.chars().zip(self.word.chars()).enumerate() {
-            let outta = outta_order.get(&guessed).cloned().unwrap_or_default();
+            let outta = seen.get(&guessed).cloned().unwrap_or_default();
             if guessed == correct {
+                seen.insert(guessed, outta + 1);
                 array[i] = CharGuess {
                     char: guessed,
                     type_: GuessType::Correct,
                 };
             } else if self.word.chars().filter(|&a| a == guessed).count() - outta > 0 {
-                outta_order.insert(guessed, outta + 1);
+                seen.insert(guessed, outta + 1);
                 array[i] = CharGuess {
                     char: guessed,
                     type_: GuessType::OutOfOrder,
