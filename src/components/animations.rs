@@ -79,10 +79,7 @@ pub fn bounce(window: &mut PistonWindow, pos: Pos, left: bool, speed: i32) {
         }
         for x in (pos.x as i32..pos.x as i32 + 15).rev() {
             // move window slowly to target position
-            window.set_position(Position {
-                x,
-                y: pos.y as i32,
-            });
+            window.set_position(Position { x, y: pos.y as i32 });
             sleep(time::Duration::from_nanos(1));
         }
     }

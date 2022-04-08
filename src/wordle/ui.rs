@@ -1,4 +1,4 @@
-use super::{CharGuess, Game, GuessResult, GuessType};
+use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos};
 use crate::Event;
@@ -41,24 +41,20 @@ impl MiniApp for WordleApp {
                 Key::Backspace | Key::Delete => {
                     self.guess.pop();
                 }
-                Key::Return => {
+                Key::Return if self.guess.len() == 5 => {
                     let result = self.state.guess(self.guess.clone());
-                    println!("{}", self.guess);
                     match result {
+                        Err(GuessError::GameOver(word)) => {
+                            text = Some(format!(
+                                "Ran outta tries, try next time bud, word was {word}"
+                            ));
+                        }
                         Err(error) => {
                             text = Some(error.to_string());
                         }
                         Ok(res) => {
-                            match res {
-                                GuessResult::GameOver(word) => {
-                                    text = Some(format!(
-                                        "Ran outta tries, try next time bud, word was {word}"
-                                    ));
-                                }
-                                GuessResult::Right => {
-                                    text = Some("Ya got it champ".to_string());
-                                }
-                                _ => (),
+                            if res == GuessResult::Right {
+                                text = Some("Ya got it champ".to_string());
                             }
                             self.guess.clear();
                         }
@@ -74,12 +70,15 @@ impl MiniApp for WordleApp {
                 }
             }
         }
+        if let Some(ref text) = text {
+            println!("OUTSIDE : {text}");
+        }
 
         window.draw_2d(event, |c, g, device| {
             clear(BACKGROUND_COLOR, g);
 
             if let Some(ref text) = text {
-                println!("{text}");
+                println!("INSIDE : {text}");
                 draw_text(
                     &c,
                     g,
@@ -120,8 +119,8 @@ impl MiniApp for WordleApp {
                             glyphs,
                             [0.0, 0.0, 0.0, 1.0],
                             Pos {
-                                x: rect[0] + SQUARE_SIZE / 2.0,
-                                y: rect[1] + SQUARE_SIZE / 2.0,
+                                x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
+                                y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
                             },
                             &char_guess.char.to_string(),
                             30,
@@ -152,8 +151,8 @@ impl MiniApp for WordleApp {
                                     glyphs,
                                     [0.0, 0.0, 0.0, 1.0],
                                     Pos {
-                                        x: rect[0] + SQUARE_SIZE / 2.0,
-                                        y: rect[1] + SQUARE_SIZE / 2.0,
+                                        x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
+                                        y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
                                     },
                                     &(char as char).to_string(),
                                     30,

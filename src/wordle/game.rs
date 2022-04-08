@@ -45,7 +45,7 @@ impl Game {
         self.guesses[self.tries] = Some(Guess::new(guess, self.word));
         self.tries += 1;
         if self.tries >= GUESSES {
-            return Ok(GuessResult::GameOver(self.word));
+            return Err(GuessError::GameOver(self.word));
         }
         Ok(GuessResult::Wrong)
     }
@@ -56,27 +56,28 @@ impl Game {
 }
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum GuessError {
+pub enum GuessError<'a> {
     WordWasNotInList,
     NotLongEnough,
+    GameOver(&'a str),
 }
 
-impl Display for GuessError {
+impl Display for GuessError<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             GuessError::WordWasNotInList => write!(f, "Word was not in list"),
             GuessError::NotLongEnough => write!(f, "Word was not long enough"),
+            GuessError::GameOver(word) => write!(f, "Game over, word was {}", word),
         }
     }
 }
 
-impl Error for GuessError {}
+impl Error for GuessError<'_> {}
 
 #[derive(Debug, Clone, PartialEq)]
-pub enum GuessResult<'a> {
+pub enum GuessResult {
     Right,
     Wrong,
-    GameOver(&'a str),
 }
 
 #[derive(Debug, Clone)]
