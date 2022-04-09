@@ -1,8 +1,9 @@
 use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
+use crate::config::Config;
+use crate::menu::ui::TOP_PAD;
 use crate::Event;
-use crate::menu::ui::{TOP_PAD, Config};
 use piston_window::*;
 
 pub struct WordleApp {
@@ -39,7 +40,13 @@ fn guess_to_clr(guess: CharGuess) -> [f32; 4] {
 }
 
 impl MiniApp for WordleApp {
-    fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs, config: &mut Config) {
+    fn render(
+        &mut self,
+        window: &mut PistonWindow,
+        event: &Event,
+        glyphs: &mut Glyphs,
+        config: &mut Config,
+    ) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
         }
@@ -114,7 +121,7 @@ impl MiniApp for WordleApp {
                 }
             }
         }
-        
+
         window.draw_2d(event, |c, g, device| {
             clear(self.bg, g);
 
