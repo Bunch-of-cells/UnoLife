@@ -1,4 +1,4 @@
-use super::{Direction, Game};
+use super::{Direction, Game, GameState};
 use crate::components::application::MiniApp;
 use crate::components::button::{draw_text, Pos};
 use crate::menu::{config::Config, ui::TOP_PAD};
@@ -6,16 +6,16 @@ use crate::Event;
 use piston_window::*;
 
 pub struct SnakeApp {
-    state: Game,
-    text: Option<String>,
+    game: Game,
+    state: Option<String>,
     dir: Option<Direction>,
 }
 
 impl SnakeApp {
     pub fn new() -> Self {
         SnakeApp {
-            state: Game::new(450, 450),
-            text: None,
+            game: Game::new(450, 450),
+            state: None,
             dir: None,
         }
     }
@@ -40,13 +40,13 @@ impl MiniApp for SnakeApp {
                 _ => None,
             }
         } else {
-            None
+            self.dir
         };
 
         window.draw_2d(event, |c, g, device| {
             clear([1.0; 4], g);
 
-            if let Some(ref text) = self.text {
+            if let Some(ref text) = self.state {
                 draw_text(
                     &c,
                     g,
@@ -58,16 +58,24 @@ impl MiniApp for SnakeApp {
                 );
             }
 
-            // Draw the board
             let ctx = c.trans(0.0, TOP_PAD);
 
-            self.state.step(self.dir);
-            if self.dir.is_some() {
-                self.dir = None;
+            match self.game.state {
+                GameState::Playing => {
+                    self.game.step(self.dir);
+                    if self.dir.is_some() {
+                        self.dir = None;
+                    }
+                }
+                GameState::Lost => todo!(),
+                GameState::Won => todo!(),
             }
 
-            for (x, y) in (1..self.state.width).zip(1..self.state.height) {
-                if self.state.snake.body.iter().any(|c| c.x == x && c.y == y) {
+            for (x, y) in (1..self.game.width)
+                .map(|x| (1..self.game.height).map(move |y| (x, y)))
+                .flatten()
+            {
+                if self.game.snake.body.iter().any(|c| c.x == x && c.y == y) {
                     let rect = [
                         SQUARE_SIZE * (x as f64),
                         SQUARE_SIZE * (y as f64),
