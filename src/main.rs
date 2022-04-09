@@ -12,7 +12,7 @@ mod wordle;
 
 fn main() {
     let mut window: PistonWindow = WindowSettings::new(
-        "MiniGame Collection",
+        "UnoLife",
         [
             components::application::DEFAULT_WIDTH,
             components::application::DEFAULT_HEIGHT,
@@ -26,6 +26,7 @@ fn main() {
     // println!("{:?}", screen_resolution);
 
     let mut main_menu = MainMenu::new();
+    let mut config = main_menu.config.clone();
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -36,6 +37,6 @@ fn main() {
 
     // bounce(&mut window, Pos { x: 500.0, y: 100.0 }, false, 25);
     while let Some(event) = events.next(&mut window) {
-        main_menu.render(&mut window, &event, &mut glyphs);
+        main_menu.render(&mut window, &event, &mut glyphs, &mut config);
     }
 }

@@ -2,7 +2,7 @@ use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
 use crate::Event;
-use crate::menu::ui::TOP_PAD;
+use crate::menu::ui::{TOP_PAD, Config};
 use piston_window::*;
 
 pub struct WordleApp {
@@ -39,20 +39,12 @@ fn guess_to_clr(guess: CharGuess) -> [f32; 4] {
 }
 
 impl MiniApp for WordleApp {
-    fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs) {
+    fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs, config: &mut Config) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
         }
 
-        let mut dark_mode_button = UIButton::new(
-            "Switch Theme",
-            [0.1, 0.1, 0.1, 1.0],
-            [1.0; 4],
-            20,
-            Pos { x: 791.2, y: 205.2 },
-            160.0,
-            48.0,
-        );
+        // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
             [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
@@ -65,21 +57,8 @@ impl MiniApp for WordleApp {
 
         let left_click = event.press_args() == Some(Button::Mouse(MouseButton::Left));
 
-        if dark_mode_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
-            if left_click {
-                if self.bg == [1.0; 4] {
-                    self.bg = [100. / 255., 100. / 255., 100. / 255., 1.0];
-                } else {
-                    self.bg = [1.0; 4];
-                }
-            } else {
-                dark_mode_button.width += 6.0;
-                dark_mode_button.pos.x -= 3.0;
-                dark_mode_button.height += 6.0;
-                dark_mode_button.pos.y -= 3.0;
-                dark_mode_button.size += 1;
-            }
-        } else if reset_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+        // handle button events
+        if reset_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
                 self.prev_text = None;
                 self.state.reset();
@@ -91,6 +70,13 @@ impl MiniApp for WordleApp {
                 reset_button.pos.y -= 3.0;
                 reset_button.size += 1;
             }
+        }
+
+        // handle config
+        if config.white_theme {
+            self.bg = [1.0; 4];
+        } else {
+            self.bg = [100. / 255., 100. / 255., 100. / 255., 1.0];
         }
 
         if let Some(Button::Keyboard(press)) = event.press_args() {
@@ -128,12 +114,11 @@ impl MiniApp for WordleApp {
                 }
             }
         }
-
+        
         window.draw_2d(event, |c, g, device| {
             clear(self.bg, g);
 
             // draw buttons
-            dark_mode_button.draw(&c, g, glyphs);
             reset_button.draw(&c, g, glyphs);
 
             // draw win/lose/error text
