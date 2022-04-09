@@ -1,7 +1,6 @@
 extern crate piston_window;
 
 use crate::components::application::MiniApp;
-// use components::{animations::bounce, button::Pos};
 use menu::{config::Config, ui::MainMenu};
 use piston_window::*;
 
@@ -22,8 +21,7 @@ fn main() {
     .resizable(false)
     .build::<PistonWindow>()
     .unwrap()
-    .max_fps(60)
-    .lazy(true);
+    .max_fps(60);
 
     let mut main_menu = MainMenu::new();
     let mut config = Config::fetch_config();

@@ -32,33 +32,40 @@ impl SnakeCell {
     }
 
     fn change_dir(&mut self, dir: Option<Direction>) {
-        if let Some(dir) = dir {
-            match self.dir {
-                Some(Direction::Up) => {
-                    if dir != Direction::Down {
-                        self.dir = Some(dir);
-                    }
+        let dir = match dir {
+            Some(dir) => dir,
+            None => match self.dir {
+                Some(dir) => dir,
+                None => return,
+            },
+        };
+
+        match self.dir {
+            Some(Direction::Up) => {
+                self.y -= 1;
+                if dir != Direction::Down {
+                    self.dir = Some(dir);
                 }
-                Some(Direction::Down) => {
-                    self.y += 1;
-                    if dir != Direction::Up {
-                        self.dir = Some(dir);
-                    }
-                }
-                Some(Direction::Left) => {
-                    self.x -= 1;
-                    if dir != Direction::Right {
-                        self.dir = Some(dir);
-                    }
-                }
-                Some(Direction::Right) => {
-                    self.x += 1;
-                    if dir != Direction::Left {
-                        self.dir = Some(dir);
-                    }
-                }
-                None => self.dir = Some(dir),
             }
+            Some(Direction::Down) => {
+                self.y += 1;
+                if dir != Direction::Up {
+                    self.dir = Some(dir);
+                }
+            }
+            Some(Direction::Left) => {
+                self.x -= 1;
+                if dir != Direction::Right {
+                    self.dir = Some(dir);
+                }
+            }
+            Some(Direction::Right) => {
+                self.x += 1;
+                if dir != Direction::Left {
+                    self.dir = Some(dir);
+                }
+            }
+            None => self.dir = Some(dir),
         }
     }
 }
@@ -81,29 +88,27 @@ pub struct Game {
     pub width: u32,
     pub height: u32,
     pub score: u32,
+    pub state: GameState,
 }
 
 impl Game {
     pub fn new(width: u32, height: u32) -> Self {
         Self {
             snake: Snake {
-                body: vec![SnakeCell::new(1, 1), SnakeCell::new(1, 2)],
+                body: vec![SnakeCell::new(2, 1), SnakeCell::new(1, 2)],
             },
             food: FoodCell::new(5, 5),
             width,
             height,
             score: 0,
+            state: GameState::Playing,
         }
     }
 
-    pub fn step(&mut self, turn: Option<Direction>) -> GameState {
+    pub fn step(&mut self, turn: Option<Direction>) {
         let mut cloned = self.snake.body.clone();
         for (i, cell) in self.snake.body.iter_mut().enumerate().rev() {
-            if i == 0 {
-                cell.change_dir(turn);
-            } else {
-                cell.change_dir(cloned[i - 1].dir)
-            }
+            cell.change_dir(if i == 0 { turn } else { cloned[i - 1].dir });
         }
         if self.snake.body[0].into() == self.food {
             self.score += 1;
@@ -112,7 +117,10 @@ impl Game {
                     self.food = FoodCell::new(x, y);
                     self.snake.body.push(cloned.pop().unwrap());
                 }
-                None => return GameState::YouWon,
+                None => {
+                    self.state = GameState::Won;
+                    return;
+                }
             }
         } else if self.snake.body[0].x >= self.width
             || self.snake.body[0].y >= self.height
@@ -125,13 +133,15 @@ impl Game {
                 .skip(1)
                 .any(|c| c == &self.snake.body[0])
         {
-            return GameState::YouLost;
+            self.state = GameState::Lost;
         }
-        GameState::Continue
     }
 
     fn gen_non_overlapping(&self) -> Option<(u32, u32)> {
-        let mut empty = (1..self.width).zip(1..self.height).collect::<Vec<_>>();
+        let mut empty = (1..self.width)
+            .map(|x| (1..self.height).map(move |y| (x, y)))
+            .flatten()
+            .collect::<Vec<_>>();
         self.snake.body.iter().for_each(|c| {
             if let Some(i) = empty.iter().position(|&(x, y)| x == c.x && y == c.y) {
                 empty.remove(i);
@@ -143,7 +153,7 @@ impl Game {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum GameState {
-    YouLost,
-    YouWon,
-    Continue,
+    Lost,
+    Won,
+    Playing,
 }
