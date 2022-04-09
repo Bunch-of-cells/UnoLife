@@ -143,7 +143,7 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        [1.0, 0.0, 0.0, 1.0],
+                        [0.5, 0.5, 0.5, 1.0],
                         Pos { x: 10.0, y: 200.0 },
                         text,
                         20,
@@ -153,9 +153,19 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        [1.0, 0.0, 0.0, 1.0],
+                        [77.0 / 255.0, 143.0 / 255.0, 69.0 / 255.0, 1.0],
                         Pos { x: 10.0, y: 225.0 },
                         format!("The word was {}", self.state.word).as_str(),
+                        20,
+                    );
+                } else if text == "You won!" {
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        [77.0 / 255.0, 143.0 / 255.0, 69.0 / 255.0, 1.0],
+                        Pos { x: 10.0, y: 200.0 },
+                        text,
                         20,
                     );
                 } else {
@@ -163,7 +173,7 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        [1.0, 0.0, 0.0, 1.0],
+                        [212.0 / 255.0, 189.0 / 255.0, 59.0 / 255.0, 1.0],
                         Pos { x: 10.0, y: 200.0 },
                         text,
                         20,

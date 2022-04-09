@@ -1,6 +1,11 @@
 use lazy_static::lazy_static;
 use rand::prelude::IteratorRandom;
-use std::{collections::{HashMap, hash_map::Entry}, error::Error, fmt::Display, fs};
+use std::{
+    collections::{hash_map::Entry, HashMap},
+    error::Error,
+    fmt::Display,
+    fs,
+};
 
 const GUESSES: usize = 6;
 lazy_static! {
