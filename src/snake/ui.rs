@@ -2,7 +2,7 @@ use super::{Direction, Game};
 use crate::components::application::{MiniApp, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos};
 use crate::Event;
-use crate::menu::ui::TOP_PAD;
+use crate::menu::ui::{TOP_PAD, Config};
 use piston_window::*;
 
 pub struct SnakeApp {
@@ -24,7 +24,7 @@ impl SnakeApp {
 const SQUARE_SIZE: f64 = 50.0;
 
 impl MiniApp for SnakeApp {
-    fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs) {
+    fn render(&mut self, window: &mut PistonWindow, event: &Event, glyphs: &mut Glyphs, config: &mut Config) {
         self.dir = if let Some(Button::Keyboard(press)) = event.press_args() {
             match press {
                 Key::Up => Some(Direction::Up),
