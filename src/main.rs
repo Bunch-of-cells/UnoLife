@@ -13,7 +13,7 @@ mod tictactoe;
 mod wordle;
 
 fn main() {
-    let mut window: PistonWindow = WindowSettings::new(
+    let mut window = WindowSettings::new(
         "UnoLife",
         [
             components::application::DEFAULT_WIDTH,
@@ -21,8 +21,9 @@ fn main() {
         ],
     )
     .resizable(false)
-    .build()
-    .unwrap();
+    .build::<PistonWindow>()
+    .unwrap()
+    .max_fps(60);
 
     // let screen_resolution = window.window.ctx.window().current_monitor().unwrap().size();
     // println!("{:?}", screen_resolution);
@@ -38,6 +39,5 @@ fn main() {
     // bounce(&mut window, Pos { x: 500.0, y: 100.0 }, false, 25);
     while let Some(event) = window.next() {
         main_menu.render(&mut window, &event, &mut glyphs, &mut config);
-        sleep(std::time::Duration::from_millis(1));
     }
 }
