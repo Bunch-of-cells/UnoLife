@@ -24,8 +24,7 @@ fn main() {
     .build()
     .unwrap();
 
-    // let screen_resolution = window.window.ctx.window().current_monitor().unwrap().size();
-    // println!("{:?}", screen_resolution);
+    window.set_lazy(true);
 
     let mut main_menu = MainMenu::new();
     let mut config = Config::fetch_config();
