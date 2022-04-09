@@ -30,7 +30,11 @@ impl Config {
             if !Path::new(&file).exists() {
                 let mut config_file = File::create(file.clone()).unwrap();
                 config_file
-                    .write_all(serde_json::to_string(&ConfigOptions::default()).unwrap().as_bytes())
+                    .write_all(
+                        serde_json::to_string(&ConfigOptions::default())
+                            .unwrap()
+                            .as_bytes(),
+                    )
                     .unwrap();
             }
         } else {
