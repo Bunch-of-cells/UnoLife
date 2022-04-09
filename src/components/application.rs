@@ -1,6 +1,6 @@
 use piston_window::{Event, Glyphs, PistonWindow};
 
-use crate::config::Config;
+use crate::menu::config::Config;
 
 pub trait MiniApp {
     /// Called to draw on the screen.

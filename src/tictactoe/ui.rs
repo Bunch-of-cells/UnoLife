@@ -1,8 +1,7 @@
 use super::Board;
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::*;
-use crate::config::Config;
-use crate::menu::ui::TOP_PAD;
+use crate::menu::{config::Config, ui::TOP_PAD};
 use crate::tictactoe::{negamax_root, Mark};
 use crate::Event;
 use piston_window::*;
@@ -44,7 +43,7 @@ impl MiniApp for TicTacToeApp {
         window: &mut PistonWindow,
         event: &Event,
         glyphs: &mut Glyphs,
-        config: &mut Config,
+        _config: &mut Config,
     ) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];

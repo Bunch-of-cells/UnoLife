@@ -1,8 +1,7 @@
 use super::{Direction, Game};
 use crate::components::application::{MiniApp, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos};
-use crate::config::Config;
-use crate::menu::ui::TOP_PAD;
+use crate::menu::{config::Config, ui::TOP_PAD};
 use crate::Event;
 use piston_window::*;
 

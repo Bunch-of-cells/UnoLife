@@ -1,8 +1,7 @@
 use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
-use crate::config::Config;
-use crate::menu::ui::TOP_PAD;
+use crate::menu::{config::Config, ui::TOP_PAD};
 use crate::Event;
 use piston_window::*;
 
@@ -10,7 +9,6 @@ pub struct WordleApp {
     state: Game,
     guess: String,
     hover_pos: [f64; 2],
-    bg: [f32; 4],
     prev_text: Option<String>,
 }
 
@@ -20,7 +18,6 @@ impl WordleApp {
             state: Game::new(),
             guess: String::new(),
             hover_pos: [0.0, 0.0],
-            bg: [100. / 255., 100. / 255., 100. / 255., 1.0],
             prev_text: None,
         }
     }
@@ -79,13 +76,6 @@ impl MiniApp for WordleApp {
             }
         }
 
-        // handle config
-        if config.white_theme {
-            self.bg = [1.0; 4];
-        } else {
-            self.bg = [100. / 255., 100. / 255., 100. / 255., 1.0];
-        }
-
         if let Some(Button::Keyboard(press)) = event.press_args() {
             match press {
                 Key::Backspace | Key::Delete => {
@@ -123,7 +113,14 @@ impl MiniApp for WordleApp {
         }
 
         window.draw_2d(event, |c, g, device| {
-            clear(self.bg, g);
+            clear(
+                if config.white_theme {
+                    [1.0; 4]
+                } else {
+                    [100. / 255., 100. / 255., 100. / 255., 1.0]
+                },
+                g,
+            );
 
             // draw buttons
             reset_button.draw(&c, g, glyphs);

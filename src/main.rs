@@ -5,7 +5,6 @@ use menu::ui::MainMenu;
 use piston_window::*;
 
 mod components;
-mod config;
 mod menu;
 mod snake;
 mod tictactoe;

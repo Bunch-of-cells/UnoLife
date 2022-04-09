@@ -1,15 +1,14 @@
+use crate::components::{
+    application::MiniApp,
+    button::{draw_text, Pos, UIButton},
+};
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::wordle::ui::WordleApp;
-use crate::{
-    components::{
-        application::MiniApp,
-        button::{draw_text, Pos, UIButton},
-    },
-    config::Config,
-};
 
 use piston_window::*;
+
+use super::config::Config;
 
 pub const TOP_PAD: f64 = 104.0;
 
