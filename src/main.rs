@@ -1,4 +1,6 @@
 extern crate piston_window;
+use std::thread::sleep;
+
 use crate::components::application::MiniApp;
 // use components::{animations::bounce, button::Pos};
 use menu::{ui::MainMenu, config::Config};
@@ -33,10 +35,9 @@ fn main() {
         .unwrap();
     let mut glyphs = window.load_font(assets.join("Roboto-Regular.ttf")).unwrap();
 
-    let mut events = Events::new(EventSettings::new());
-
     // bounce(&mut window, Pos { x: 500.0, y: 100.0 }, false, 25);
-    while let Some(event) = events.next(&mut window) {
+    while let Some(event) = window.next() {
         main_menu.render(&mut window, &event, &mut glyphs, &mut config);
+        sleep(std::time::Duration::from_millis(1));
     }
 }
