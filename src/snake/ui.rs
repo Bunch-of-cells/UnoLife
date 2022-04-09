@@ -1,4 +1,4 @@
-use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
+use super::Game;
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
 use crate::Event;
@@ -78,7 +78,7 @@ impl MiniApp for WordleApp {
                     self.guess.pop();
                 }
                 Key::Return if self.guess.len() == 5 => {
-                    let result = self.state.guess(&self.guess);
+                    let result = self.state.guess(self.guess.clone());
                     match result {
                         Err(GuessError::GameOver(word)) => {
                             self.prev_text = Some(format!(

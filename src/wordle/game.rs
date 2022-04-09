@@ -29,14 +29,14 @@ impl Game {
         }
     }
 
-    pub fn guess(&mut self, guess: String) -> Result<GuessResult, GuessError> {
+    pub fn guess(&mut self, guess: &String) -> Result<GuessResult, GuessError> {
         if guess.len() != 5 {
             return Err(GuessError::NotLongEnough);
         }
         if self.tries >= GUESSES {
             return Err(GuessError::NotLongEnough);
         }
-        if guess.chars().any(|c| !c.is_alphabetic()) || !WORDS.contains(&guess) {
+        if guess.chars().any(|c| !c.is_alphabetic()) || !WORDS.contains(guess) {
             return Err(GuessError::WordWasNotInList);
         }
         let correct = guess == self.word;
@@ -83,28 +83,17 @@ pub enum GuessResult {
 
 #[derive(Debug, Clone)]
 pub struct Guess {
-    guess: String,
-    word: &'static str,
-}
-
-impl PartialEq for Guess {
-    fn eq(&self, other: &Self) -> bool {
-        self.guess == other.guess
-    }
+    result: [CharGuess; 5],
 }
 
 impl Guess {
-    fn new(guess: String, word: &'static str) -> Self {
-        Self { guess, word }
-    }
-
-    pub fn result(&self) -> [CharGuess; 5] {
+    fn new(guess: &str, word: &'static str) -> Self {
         let mut seen = HashMap::<char, usize>::new();
         let mut array = [CharGuess {
             char: ' ',
             type_: GuessType::Incorrect,
         }; 5];
-        for (i, (guessed, correct)) in self.guess.chars().zip(self.word.chars()).enumerate() {
+        for (i, (guessed, correct)) in guess.chars().zip(word.chars()).enumerate() {
             let outta = seen.get(&guessed).cloned().unwrap_or_default();
             if guessed == correct {
                 seen.insert(guessed, outta + 1);
@@ -112,7 +101,7 @@ impl Guess {
                     char: guessed,
                     type_: GuessType::Correct,
                 };
-            } else if self.word.chars().filter(|&a| a == guessed).count() - outta > 0 {
+            } else if word.chars().filter(|&a| a == guessed).count() - outta > 0 {
                 seen.insert(guessed, outta + 1);
                 array[i] = CharGuess {
                     char: guessed,
@@ -125,7 +114,11 @@ impl Guess {
                 };
             }
         }
-        array
+        Self { result: array }
+    }
+
+    pub fn result(&self) -> &[CharGuess] {
+        &self.result
     }
 }
 
