@@ -2,14 +2,18 @@ use crate::components::{
     application::MiniApp,
     button::{draw_text, Pos, UIButton},
 };
+use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::wordle::ui::WordleApp;
 use piston_window::*;
 
+pub const TOP_PAD: f64 = 104.0;
+
+const GAMES: usize = 3;
 pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
-    apps: Vec<Box<dyn MiniApp>>,
+    apps: [Box<dyn MiniApp>; GAMES],
 }
 
 impl MainMenu {
@@ -18,7 +22,11 @@ impl MainMenu {
             hover_pos: [0.0, 0.0],
             tab: 0,
             // make list that contains all apps
-            apps: vec![Box::new(TicTacToeApp::new()), Box::new(WordleApp::new())],
+            apps: [
+                Box::new(TicTacToeApp::new()),
+                Box::new(WordleApp::new()),
+                Box::new(SnakeApp::new()),
+            ],
         }
     }
 }
@@ -76,6 +84,15 @@ impl MiniApp for MainMenu {
                 [0.0, 0.0, 0.0, 1.0],
                 24,
                 Pos { x: 40.0, y: 180.0 },
+                224.0,
+                56.0,
+            ),
+            UIButton::new(
+                "Play Snake",
+                [0.0; 4],
+                [0.0, 0.0, 0.0, 1.0],
+                24,
+                Pos { x: 40.0, y: 240.0 },
                 224.0,
                 56.0,
             ),

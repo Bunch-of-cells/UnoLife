@@ -1,6 +1,7 @@
 use super::Board;
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::*;
+use crate::menu::ui::TOP_PAD;
 use crate::tictactoe::{negamax_root, Mark};
 use crate::Event;
 use piston_window::*;
@@ -25,7 +26,6 @@ impl TicTacToeApp {
 
 const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - 100.0;
 const CENTER_X: f64 = (DEFAULT_WIDTH as f64 - BOARD_SIZE) / 2.0;
-const TOP_PAD: f64 = 104.0;
 const SQUARE_SIZE: f64 = BOARD_SIZE / 4.0;
 
 // Converts Mark to Color

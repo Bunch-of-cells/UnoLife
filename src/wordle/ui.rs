@@ -2,6 +2,7 @@ use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
 use crate::Event;
+use crate::menu::ui::TOP_PAD;
 use piston_window::*;
 
 pub struct WordleApp {
@@ -26,7 +27,6 @@ impl WordleApp {
 
 const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - 100.0;
 const CENTER_X: f64 = (DEFAULT_WIDTH as f64 - BOARD_SIZE) / 2.0;
-const TOP_PAD: f64 = 104.0;
 const SQUARE_SIZE: f64 = BOARD_SIZE / 6.5;
 
 // Converts Guess to Color
