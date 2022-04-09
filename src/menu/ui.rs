@@ -121,7 +121,8 @@ impl MiniApp for MainMenu {
 
         // handle button events
         for (index, button) in buttons.iter_mut().enumerate() {
-            if (index < 3 || self.tab == 1) && button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+            if (index < 3 || self.tab == 1) && button.is_over(self.hover_pos[0], self.hover_pos[1])
+            {
                 if left_click {
                     self.tab = index;
                 } else {

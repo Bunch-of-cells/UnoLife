@@ -1,9 +1,8 @@
 extern crate piston_window;
-use std::thread::sleep;
 
 use crate::components::application::MiniApp;
 // use components::{animations::bounce, button::Pos};
-use menu::{ui::MainMenu, config::Config};
+use menu::{config::Config, ui::MainMenu};
 use piston_window::*;
 
 mod components;
@@ -23,9 +22,8 @@ fn main() {
     .resizable(false)
     .build::<PistonWindow>()
     .unwrap()
-    .max_fps(60);
-
-    window.set_lazy(true);
+    .max_fps(60)
+    .lazy(true);
 
     let mut main_menu = MainMenu::new();
     let mut config = Config::fetch_config();
@@ -35,7 +33,6 @@ fn main() {
         .unwrap();
     let mut glyphs = window.load_font(assets.join("Roboto-Regular.ttf")).unwrap();
 
-    // bounce(&mut window, Pos { x: 500.0, y: 100.0 }, false, 25);
     while let Some(event) = window.next() {
         main_menu.render(&mut window, &event, &mut glyphs, &mut config);
     }
