@@ -1,6 +1,6 @@
 use lazy_static::lazy_static;
 use rand::prelude::IteratorRandom;
-use std::{collections::HashMap, error::Error, fmt::Display, fs};
+use std::{collections::{HashMap, hash_map::Entry}, error::Error, fmt::Display, fs};
 
 const GUESSES: usize = 6;
 lazy_static! {
@@ -94,21 +94,28 @@ pub struct Guess {
 
 impl Guess {
     fn new(guess: &str, word: &'static str) -> Self {
-        let mut seen = HashMap::<char, usize>::new();
+        let mut seen = HashMap::<char, Vec<(usize, bool)>>::new();
         let mut array = [CharGuess {
             char: ' ',
             type_: GuessType::Incorrect,
         }; 5];
         for (i, (guessed, correct)) in guess.chars().zip(word.chars()).enumerate() {
-            let outta = seen.get(&guessed).cloned().unwrap_or_default();
+            if let Entry::Vacant(e) = seen.entry(guessed) {
+                e.insert(Vec::new());
+                seen.get_mut(&guessed).unwrap();
+            }
+            let outta = seen.get_mut(&guessed).unwrap();
             if guessed == correct {
-                seen.insert(guessed, outta + 1);
+                if word.chars().filter(|&a| a == guessed).count() - outta.len() == 0 {
+                    outta.remove(outta.iter().position(|a| !a.1).unwrap());
+                }
+                outta.push((i, true));
                 array[i] = CharGuess {
                     char: guessed,
                     type_: GuessType::Correct,
                 };
-            } else if word.chars().filter(|&a| a == guessed).count() - outta > 0 {
-                seen.insert(guessed, outta + 1);
+            } else if word.chars().filter(|&a| a == guessed).count() - outta.len() > 0 {
+                outta.push((i, false));
                 array[i] = CharGuess {
                     char: guessed,
                     type_: GuessType::OutOfOrder,
