@@ -1,5 +1,5 @@
 use super::{Direction, Game};
-use crate::components::application::{MiniApp, DEFAULT_WIDTH};
+use crate::components::application::MiniApp;
 use crate::components::button::{draw_text, Pos};
 use crate::menu::{config::Config, ui::TOP_PAD};
 use crate::Event;
@@ -21,7 +21,7 @@ impl SnakeApp {
     }
 }
 
-const SQUARE_SIZE: f64 = 50.0;
+const SQUARE_SIZE: f64 = 10.0;
 
 impl MiniApp for SnakeApp {
     fn render(
@@ -59,7 +59,7 @@ impl MiniApp for SnakeApp {
             }
 
             // Draw the board
-            let ctx = c.trans(DEFAULT_WIDTH as f64, TOP_PAD);
+            let ctx = c.trans(0.0, TOP_PAD);
 
             self.state.step(self.dir);
             if self.dir.is_some() {

@@ -12,7 +12,7 @@ mod tictactoe;
 mod wordle;
 
 fn main() {
-    let mut window: PistonWindow = WindowSettings::new(
+    let mut window = WindowSettings::new(
         "UnoLife",
         [
             components::application::DEFAULT_WIDTH,
@@ -20,8 +20,9 @@ fn main() {
         ],
     )
     .resizable(false)
-    .build()
-    .unwrap();
+    .build::<PistonWindow>()
+    .unwrap()
+    .max_fps(60);
 
     window.set_lazy(true);
 
