@@ -45,10 +45,19 @@ impl MiniApp for WordleApp {
         }
 
         let mut dark_mode_button = UIButton::new(
-            "Switch Mode",
+            "Switch Theme",
             [0.1, 0.1, 0.1, 1.0],
             [1.0; 4],
-            22,
+            20,
+            Pos { x: 791.2, y: 205.2 },
+            160.0,
+            48.0,
+        );
+        let mut reset_button = UIButton::new(
+            "     Reset",
+            [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
+            [1.0, 1.0, 1.0, 1.0],
+            24,
             Pos { x: 791.2, y: 135.2 },
             160.0,
             48.0,
@@ -70,27 +79,38 @@ impl MiniApp for WordleApp {
                 dark_mode_button.pos.y -= 3.0;
                 dark_mode_button.size += 1;
             }
+        } else if reset_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+            if left_click {
+                self.prev_text = None;
+                self.state.reset();
+                self.guess.clear();
+            } else {
+                reset_button.width += 6.0;
+                reset_button.pos.x -= 3.0;
+                reset_button.height += 6.0;
+                reset_button.pos.y -= 3.0;
+                reset_button.size += 1;
+            }
         }
 
         if let Some(Button::Keyboard(press)) = event.press_args() {
             match press {
                 Key::Backspace | Key::Delete => {
                     self.guess.pop();
+                    self.prev_text = None;
                 }
                 Key::Return if self.guess.len() == 5 => {
                     let result = self.state.guess(&self.guess);
                     match result {
-                        Err(GuessError::GameOver(word)) => {
-                            self.prev_text = Some(format!(
-                                "Ran outta tries, try next time bud, word was {word}"
-                            ));
+                        Err(GuessError::GameOver(_)) => {
+                            self.prev_text = Some("You ran out of tries!".to_string());
                         }
                         Err(error) => {
                             self.prev_text = Some(error.to_string());
                         }
                         Ok(res) => {
                             self.prev_text = match res {
-                                GuessResult::Right => Some("Ya got it champ".to_string()),
+                                GuessResult::Right => Some("You won!".to_string()),
                                 GuessResult::Wrong => None,
                             };
                             self.guess.clear();
@@ -107,24 +127,48 @@ impl MiniApp for WordleApp {
                     }
                 }
             }
-            // println!("Pressed");
         }
-        // let b = now.elapsed().as_millis();
 
         window.draw_2d(event, |c, g, device| {
             clear(self.bg, g);
-            dark_mode_button.draw(&c, g, glyphs);
 
+            // draw buttons
+            dark_mode_button.draw(&c, g, glyphs);
+            reset_button.draw(&c, g, glyphs);
+
+            // draw win/lose/error text
             if let Some(ref text) = self.prev_text {
-                draw_text(
-                    &c,
-                    g,
-                    glyphs,
-                    [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 10.0, y: 528.0 },
-                    text,
-                    28,
-                );
+                if text == "You ran out of tries!" {
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        [1.0, 0.0, 0.0, 1.0],
+                        Pos { x: 10.0, y: 200.0 },
+                        text,
+                        20,
+                    );
+                    // reveal the word
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        [1.0, 0.0, 0.0, 1.0],
+                        Pos { x: 10.0, y: 225.0 },
+                        format!("The word was {}", self.state.word).as_str(),
+                        20,
+                    );
+                } else {
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        [1.0, 0.0, 0.0, 1.0],
+                        Pos { x: 10.0, y: 200.0 },
+                        text,
+                        20,
+                    );
+                }
             }
 
             // Draw the board

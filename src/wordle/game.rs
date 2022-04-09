@@ -54,6 +54,12 @@ impl Game {
     pub fn guesses(&self) -> &[Option<Guess>] {
         &self.guesses
     }
+
+    pub fn reset(&mut self) {
+        self.tries = 0;
+        self.guesses = [0; GUESSES].map(|_| None);
+        self.word = WORDS.iter().choose(&mut rand::thread_rng()).unwrap();
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
