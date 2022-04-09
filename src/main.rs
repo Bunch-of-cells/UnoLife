@@ -1,5 +1,4 @@
 extern crate piston_window;
-use std::thread::sleep;
 
 use crate::components::application::MiniApp;
 // use components::{animations::bounce, button::Pos};
@@ -37,6 +36,5 @@ fn main() {
     // bounce(&mut window, Pos { x: 500.0, y: 100.0 }, false, 25);
     while let Some(event) = window.next() {
         main_menu.render(&mut window, &event, &mut glyphs, &mut config);
-        sleep(std::time::Duration::from_millis(1));
     }
 }
