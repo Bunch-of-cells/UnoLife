@@ -17,7 +17,6 @@ pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
     apps: [Box<dyn MiniApp>; GAMES],
-    pub config: Config,
 }
 
 impl MainMenu {
@@ -25,7 +24,6 @@ impl MainMenu {
         MainMenu {
             hover_pos: [0.0, 0.0],
             tab: 0,
-            config: Config::fetch_config(),
             // make list that contains all apps
             apps: [
                 Box::new(TicTacToeApp::new()),
@@ -123,7 +121,7 @@ impl MiniApp for MainMenu {
 
         // handle button events
         for (index, button) in buttons.iter_mut().enumerate() {
-            if index < 3 || self.tab == 1 && button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+            if (index < 3 || self.tab == 1) && button.is_over(self.hover_pos[0], self.hover_pos[1]) {
                 if left_click {
                     self.tab = index;
                 } else {
@@ -137,7 +135,7 @@ impl MiniApp for MainMenu {
             if button.is_over(self.hover_pos[0], self.hover_pos[1]) {
                 if left_click {
                     if index == 0 {
-                        config.white_theme = !config.white_theme;
+                        config.options.white_theme = !config.options.white_theme;
                         config.save_config(config.location.clone());
                     }
                 } else {

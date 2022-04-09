@@ -114,7 +114,7 @@ impl MiniApp for WordleApp {
 
         window.draw_2d(event, |c, g, device| {
             clear(
-                if config.white_theme {
+                if config.options.white_theme {
                     [1.0; 4]
                 } else {
                     [100. / 255., 100. / 255., 100. / 255., 1.0]

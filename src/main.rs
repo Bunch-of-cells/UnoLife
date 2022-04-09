@@ -1,7 +1,7 @@
 extern crate piston_window;
 use crate::components::application::MiniApp;
 // use components::{animations::bounce, button::Pos};
-use menu::ui::MainMenu;
+use menu::{ui::MainMenu, config::Config};
 use piston_window::*;
 
 mod components;
@@ -26,7 +26,7 @@ fn main() {
     // println!("{:?}", screen_resolution);
 
     let mut main_menu = MainMenu::new();
-    let mut config = main_menu.config.clone();
+    let mut config = Config::fetch_config();
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")

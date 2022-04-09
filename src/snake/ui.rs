@@ -29,7 +29,7 @@ impl MiniApp for SnakeApp {
         window: &mut PistonWindow,
         event: &Event,
         glyphs: &mut Glyphs,
-        config: &mut Config,
+        _config: &mut Config,
     ) {
         self.dir = if let Some(Button::Keyboard(press)) = event.press_args() {
             match press {
