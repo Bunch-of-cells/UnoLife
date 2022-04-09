@@ -99,7 +99,7 @@ impl MiniApp for WordleApp {
                     self.guess.pop();
                     self.prev_text = None;
                 }
-                Key::Return if self.guess.len() == 5 => {
+                Key::Return => {
                     let result = self.state.guess(&self.guess);
                     match result {
                         Err(GuessError::GameOver(_)) => {
@@ -143,10 +143,10 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        [0.5, 0.5, 0.5, 1.0],
+                        [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 1.0],
                         Pos { x: 10.0, y: 200.0 },
                         text,
-                        20,
+                        24,
                     );
                     // reveal the word
                     draw_text(
@@ -156,14 +156,14 @@ impl MiniApp for WordleApp {
                         [77.0 / 255.0, 143.0 / 255.0, 69.0 / 255.0, 1.0],
                         Pos { x: 10.0, y: 225.0 },
                         format!("The word was {}", self.state.word).as_str(),
-                        20,
+                        24,
                     );
                 } else if text == "You won!" {
                     draw_text(
                         &c,
                         g,
                         glyphs,
-                        [77.0 / 255.0, 143.0 / 255.0, 69.0 / 255.0, 1.0],
+                        [43.0 / 255.0, 1.0, 0.0, 1.0],
                         Pos { x: 10.0, y: 200.0 },
                         text,
                         20,
