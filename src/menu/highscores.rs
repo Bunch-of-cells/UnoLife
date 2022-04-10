@@ -31,17 +31,18 @@ impl HighScores {
 
             highscores.location = folder + "\\UnoLife\\highscores.json";
 
-            // create file on system if it doesnt exist
-            if !Path::new(&highscores.location).exists() {
-                let mut highscores_file = File::create(highscores.location.clone()).unwrap();
-                highscores_file
-                    .write_all(
-                        serde_json::to_string(&HighScoreOptions::default())
-                            .unwrap()
-                            .as_bytes(),
-                    )
-                    .unwrap();
-            }
+        }
+
+        // create file on system if it doesnt exist
+        if !Path::new(&highscores.location).exists() {
+            let mut highscores_file = File::create(highscores.location.clone()).unwrap();
+            highscores_file
+                .write_all(
+                    serde_json::to_string(&HighScoreOptions::default())
+                        .unwrap()
+                        .as_bytes(),
+                )
+                .unwrap();
         }
 
         highscores.load_scores(highscores.location.clone());
