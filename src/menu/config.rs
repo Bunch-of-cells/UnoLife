@@ -24,18 +24,18 @@ impl Config {
             std::fs::create_dir_all(folder.clone() + "\\UnoLife").unwrap();
 
             config.location = folder + "\\UnoLife\\config.json";
+        }
 
-            // create file on system if it doesnt exist
-            if !Path::new(&config.location).exists() {
-                let mut config_file = File::create(config.location.clone()).unwrap();
-                config_file
-                    .write_all(
-                        serde_json::to_string(&ConfigOptions::default())
-                            .unwrap()
-                            .as_bytes(),
-                    )
-                    .unwrap();
-            }
+        // create file on system if it doesnt exist
+        if !Path::new(&config.location).exists() {
+            let mut config_file = File::create(config.location.clone()).unwrap();
+            config_file
+                .write_all(
+                    serde_json::to_string(&ConfigOptions::default())
+                        .unwrap()
+                        .as_bytes(),
+                )
+                .unwrap();
         }
 
         config.load_config(config.location.clone());
