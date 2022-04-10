@@ -84,7 +84,7 @@ impl Game {
     pub fn new(width: u32, height: u32) -> Self {
         Self {
             snake: Snake {
-                body: vec![SnakeCell::new(2, 1), SnakeCell::new(1, 1)],
+                body: vec![SnakeCell::new(1, 1)],
             },
             food: FoodCell::new(5, 5),
             width,

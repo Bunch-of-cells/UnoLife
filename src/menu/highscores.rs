@@ -30,7 +30,6 @@ impl HighScores {
             std::fs::create_dir_all(folder.clone() + "\\UnoLife").unwrap();
 
             highscores.location = folder + "\\UnoLife\\highscores.json";
-
         }
 
         // create file on system if it doesnt exist

@@ -1,4 +1,6 @@
-use core::time;
+#![allow(dead_code)]
+
+use std::time;
 use std::thread::sleep;
 
 use super::button::Pos;

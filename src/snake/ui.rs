@@ -1,27 +1,34 @@
+use std::time::Instant;
+
 use super::{Direction, Game, GameState};
-use crate::components::application::MiniApp;
+use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::Event;
 use piston_window::*;
 
+const GRID_SIZE: u32 = 40;
+const FPS: u64 = 20;
+
 pub struct SnakeApp {
     game: Game,
     state: Option<String>,
     dir: Option<Direction>,
+    size: f64,
+    now: Option<Instant>,
 }
 
 impl SnakeApp {
     pub fn new() -> Self {
         SnakeApp {
-            game: Game::new(450, 450),
+            game: Game::new(GRID_SIZE, GRID_SIZE),
             state: None,
             dir: None,
+            size: (DEFAULT_HEIGHT as f64 - TOP_PAD) / GRID_SIZE as f64,
+            now: None,
         }
     }
 }
-
-const SQUARE_SIZE: f64 = 10.0;
 
 impl MiniApp for SnakeApp {
     fn render(
@@ -44,6 +51,10 @@ impl MiniApp for SnakeApp {
             self.dir
         };
 
+        if self.dir.is_some() && self.now.is_none() {
+            self.now = Some(Instant::now());
+        }
+
         window.draw_2d(event, |c, g, device| {
             clear([1.0; 4], g);
 
@@ -59,11 +70,14 @@ impl MiniApp for SnakeApp {
                 );
             }
 
-            let ctx = c.trans(0.0, TOP_PAD);
+            let ctx = c.trans(((DEFAULT_WIDTH - GRID_SIZE) / 2) as f64, TOP_PAD);
 
             match self.game.state {
                 GameState::Playing => {
-                    self.game.step(self.dir.take());
+                    if matches!(self.now, Some(now) if now.elapsed().as_millis() >= (1000 / FPS) as u128) {
+                        self.game.step(self.dir);
+                        self.now = Some(Instant::now());
+                    }
                 }
                 GameState::Lost => todo!(),
                 GameState::Won => todo!(),
@@ -74,12 +88,25 @@ impl MiniApp for SnakeApp {
             {
                 if self.game.snake.body.iter().any(|c| c.x == x && c.y == y) {
                     let rect = [
-                        SQUARE_SIZE * (x as f64),
-                        SQUARE_SIZE * (y as f64),
-                        SQUARE_SIZE,
-                        SQUARE_SIZE,
+                        self.size * (x as f64),
+                        self.size * (y as f64),
+                        self.size,
+                        self.size,
                     ];
                     Rectangle::new([0.0, 0.0, 0.0, 1.0]).draw(
+                        rect,
+                        &Default::default(),
+                        ctx.transform,
+                        g,
+                    );
+                } else if self.game.food.x == x && self.game.food.y == y {
+                    let rect = [
+                        self.size * (x as f64),
+                        self.size * (y as f64),
+                        self.size,
+                        self.size,
+                    ];
+                    Rectangle::new([1.0, 0.0, 0.0, 1.0]).draw(
                         rect,
                         &Default::default(),
                         ctx.transform,
