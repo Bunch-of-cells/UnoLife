@@ -12,6 +12,17 @@ pub enum Direction {
     Right,
 }
 
+impl Direction {
+    fn invert(&self) -> Self {
+        match self {
+            Direction::Up => Direction::Down,
+            Direction::Down => Direction::Up,
+            Direction::Left => Direction::Right,
+            Direction::Right => Direction::Left,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct SnakeCell {
     pub x: u32,
@@ -32,40 +43,18 @@ impl SnakeCell {
     }
 
     fn change_dir(&mut self, dir: Option<Direction>) {
-        let dir = match dir {
-            Some(dir) => dir,
-            None => match self.dir {
-                Some(dir) => dir,
-                None => return,
-            },
-        };
+        match (self.dir, dir) {
+            (Some(d), Some(dir)) if d != dir.invert() => self.dir = Some(dir),
+            (None, _) => self.dir = dir,
+            _ => (),
+        }
 
         match self.dir {
-            Some(Direction::Up) => {
-                self.y -= 1;
-                if dir != Direction::Down {
-                    self.dir = Some(dir);
-                }
-            }
-            Some(Direction::Down) => {
-                self.y += 1;
-                if dir != Direction::Up {
-                    self.dir = Some(dir);
-                }
-            }
-            Some(Direction::Left) => {
-                self.x -= 1;
-                if dir != Direction::Right {
-                    self.dir = Some(dir);
-                }
-            }
-            Some(Direction::Right) => {
-                self.x += 1;
-                if dir != Direction::Left {
-                    self.dir = Some(dir);
-                }
-            }
-            None => self.dir = Some(dir),
+            Some(Direction::Up) => self.y -= 1,
+            Some(Direction::Down) => self.y += 1,
+            Some(Direction::Left) => self.x -= 1,
+            Some(Direction::Right) => self.x += 1,
+            None => (),
         }
     }
 }
@@ -95,7 +84,7 @@ impl Game {
     pub fn new(width: u32, height: u32) -> Self {
         Self {
             snake: Snake {
-                body: vec![SnakeCell::new(2, 1), SnakeCell::new(1, 2)],
+                body: vec![SnakeCell::new(2, 1), SnakeCell::new(1, 1)],
             },
             food: FoodCell::new(5, 5),
             width,
@@ -108,7 +97,11 @@ impl Game {
     pub fn step(&mut self, turn: Option<Direction>) {
         let mut cloned = self.snake.body.clone();
         for (i, cell) in self.snake.body.iter_mut().enumerate().rev() {
-            cell.change_dir(if i == 0 { turn } else { cloned[i - 1].dir });
+            cell.change_dir(if i == 0 {
+                turn
+            } else {
+                cloned[i - 1].dir.or(turn)
+            });
         }
         if self.snake.body[0].into() == self.food {
             self.score += 1;
