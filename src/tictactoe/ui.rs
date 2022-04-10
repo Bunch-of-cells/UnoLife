@@ -43,7 +43,7 @@ impl MiniApp for TicTacToeApp {
         window: &mut PistonWindow,
         event: &Event,
         glyphs: &mut Glyphs,
-        _config: &mut Config,
+        config: &mut Config,
     ) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
@@ -71,7 +71,7 @@ impl MiniApp for TicTacToeApp {
         };
         let mut ai_button = UIButton::new(
             ai_text,
-            [115.0 / 255.0, 115.0 / 255.0, 115.0 / 255.0, 1.0],
+            [18.0 / 255.0, 156.0 / 255.0, 1.0 , 1.0],
             [1.0, 1.0, 1.0, 1.0],
             14,
             Pos { x: 791.2, y: 228.0 },
@@ -140,7 +140,14 @@ impl MiniApp for TicTacToeApp {
         }
 
         window.draw_2d(event, |c, g, device| {
-            clear([1.0; 4], g);
+            clear(
+                if config.options.white_theme {
+                    [1.0; 4]
+                } else {
+                    [100. / 255., 100. / 255., 100. / 255., 1.0]
+                },
+                g,
+            );
 
             // Draw texts
             let result = self.state.is_over();

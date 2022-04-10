@@ -53,7 +53,7 @@ impl MiniApp for MainMenu {
         let mut buttons = [
             UIButton::new(
                 " Home",
-                [1.0, 1.0, 1.0, 1.0],
+                [0.0; 4],
                 [0.0, 0.0, 0.0, 1.0],
                 24,
                 Pos { x: 30.0, y: 0.0 },
@@ -62,7 +62,7 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 " Games",
-                [1.0, 1.0, 1.0, 1.0],
+                [0.0; 4],
                 [0.0, 0.0, 0.0, 1.0],
                 24,
                 Pos { x: 140.0, y: 0.0 },
@@ -71,7 +71,7 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 " Settings",
-                [1.0, 1.0, 1.0, 1.0],
+                [0.0; 4],
                 [0.0, 0.0, 0.0, 1.0],
                 24,
                 Pos { x: 270.0, y: 0.0 },
@@ -108,7 +108,7 @@ impl MiniApp for MainMenu {
         ];
 
         let mut config_buttons = [UIButton::new(
-            "Toggle Theme",
+            "Dark Theme",
             [0.0; 4],
             [0.0, 0.0, 0.0, 1.0],
             24,
@@ -116,6 +116,16 @@ impl MiniApp for MainMenu {
             224.0,
             56.0,
         )];
+
+        // change style's depending on theme
+        if !config.options.white_theme {
+            config_buttons[0].text = "Light Theme".to_string();
+            config_buttons[0].text_color = [1.0; 4];
+
+            for button in buttons.iter_mut() {
+                button.text_color = [1.0; 4];
+            }
+        }
 
         let left_click = event.press_args() == Some(Button::Mouse(MouseButton::Left));
 
@@ -133,7 +143,7 @@ impl MiniApp for MainMenu {
 
         // handle config button events
         for (index, button) in config_buttons.iter_mut().enumerate() {
-            if button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+            if self.tab == 2 && button.is_over(self.hover_pos[0], self.hover_pos[1]) {
                 if left_click {
                     if index == 0 {
                         config.options.white_theme = !config.options.white_theme;
@@ -148,7 +158,11 @@ impl MiniApp for MainMenu {
         match self.tab {
             0 | 1 | 2 => {
                 window.draw_2d(event, |_, g, _| {
-                    clear([212.0 / 255.0, 248.0 / 255.0, 1.0, 1.0], g);
+                    clear(if config.options.white_theme {
+                        [212.0 / 255.0, 248.0 / 255.0, 1.0, 1.0]
+                    } else {
+                        [30.0 / 255.0, 30.0 / 255.0, 30.0 / 255.0, 1.0]
+                    }, g);
                 });
             }
             _ => self.apps[self.tab - 3].render(window, event, glyphs, config),
@@ -158,7 +172,7 @@ impl MiniApp for MainMenu {
             // draw taskbar
             {
                 rectangle(
-                    [1.0, 1.0, 1.0, 1.0],
+                    if config.options.white_theme { [1.0, 1.0, 1.0, 1.0] } else { [60.0 / 255.0, 60.0 / 255.0, 60.0 / 255.0, 1.0] },
                     [0.0, 0.0, size.width, 85.0],
                     c.transform,
                     g,
