@@ -63,10 +63,7 @@ impl MiniApp for SnakeApp {
 
             match self.game.state {
                 GameState::Playing => {
-                    self.game.step(self.dir);
-                    if self.dir.is_some() {
-                        self.dir = None;
-                    }
+                    self.game.step(self.dir.take());
                 }
                 GameState::Lost => todo!(),
                 GameState::Won => todo!(),
