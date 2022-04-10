@@ -61,6 +61,10 @@ impl HighScores {
             .write_all(highscores_json.as_bytes())
             .unwrap();
     }
+
+    pub fn reset_highscores(&mut self) {
+        self.scores = HighScoreOptions::default();
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Default)]

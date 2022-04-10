@@ -145,6 +145,22 @@ impl MiniApp for WordleApp {
             // draw buttons
             reset_button.draw(&c, g, glyphs);
 
+            // draw highscores
+            draw_text(
+                &c,
+                g,
+                glyphs,
+                if config.options.white_theme {
+                    [0.0, 0.0, 0.0, 1.0]
+                } else {
+                    // black
+                    [1.0, 1.0, 1.0, 1.0]
+                },
+                Pos { x: 10.0, y: 400.0 },
+                &format!("Win streak: {}", highscores.scores.wordle),
+                28,
+            );
+
             // draw win/lose/error text
             if let Some(ref text) = self.prev_text {
                 if text == "You ran out of tries!" {

@@ -108,15 +108,26 @@ impl MiniApp for MainMenu {
             ),
         ];
 
-        let mut config_buttons = [UIButton::new(
-            "Dark Theme",
-            [0.0; 4],
-            [0.0, 0.0, 0.0, 1.0],
-            24,
-            Pos { x: 40.0, y: 120.0 },
-            224.0,
-            56.0,
-        )];
+        let mut config_buttons = [
+            UIButton::new(
+                "Dark Theme",
+                [0.0; 4],
+                [0.0, 0.0, 0.0, 1.0],
+                24,
+                Pos { x: 40.0, y: 120.0 },
+                224.0,
+                56.0,
+            ),
+            UIButton::new(
+                "Reset Highscores",
+                [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
+                [1.0, 1.0, 1.0, 1.0],
+                24,
+                Pos { x: 50.0, y: 200.0 },
+                240.0,
+                56.0,
+            ),
+        ];
 
         // change style's depending on theme
         if !config.options.white_theme {
@@ -146,12 +157,28 @@ impl MiniApp for MainMenu {
         for (index, button) in config_buttons.iter_mut().enumerate() {
             if self.tab == 2 && button.is_over(self.hover_pos[0], self.hover_pos[1]) {
                 if left_click {
-                    if index == 0 {
-                        config.options.white_theme = !config.options.white_theme;
-                        config.save_config(config.location.clone());
+                    match index {
+                        0 => {
+                            config.options.white_theme = !config.options.white_theme;
+                            config.save_config(config.location.clone());
+                        },
+                        1 => {
+                            highscores.reset_highscores();
+                            highscores.save_scores(highscores.location.clone());
+                        },
+                        _ => ()
                     }
                 } else {
-                    button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
+                    match index {
+                        1 => {
+                            button.width += 6.0;
+                            button.pos.x -= 3.0;
+                            button.height += 6.0;
+                            button.pos.y -= 3.0;
+                            button.size += 1;
+                        },
+                        _ => button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35]
+                    }
                 }
             }
         }

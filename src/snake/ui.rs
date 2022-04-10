@@ -38,7 +38,7 @@ impl MiniApp for SnakeApp {
         window: &mut PistonWindow,
         event: &Event,
         glyphs: &mut Glyphs,
-        _config: &mut Config,
+        config: &mut Config,
         highscores: &mut HighScores,
     ) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
@@ -48,10 +48,10 @@ impl MiniApp for SnakeApp {
         if self.game.state == GameState::Playing {
             self.dir = if let Some(Button::Keyboard(press)) = event.press_args() {
                 match press {
-                    Key::Up => Some(Direction::Up),
-                    Key::Down => Some(Direction::Down),
-                    Key::Left => Some(Direction::Left),
-                    Key::Right => Some(Direction::Right),
+                    Key::Up => if self.dir != Some(Direction::Down) { Some(Direction::Up) } else { self.dir },
+                    Key::Down => if self.dir != Some(Direction::Up) { Some(Direction::Down) } else { self.dir },
+                    Key::Left => if self.dir != Some(Direction::Right) { Some(Direction::Left) } else { self.dir },
+                    Key::Right => if self.dir != Some(Direction::Left) { Some(Direction::Right) } else { self.dir },
                     _ => None,
                 }
             } else {
@@ -80,14 +80,13 @@ impl MiniApp for SnakeApp {
         if reset_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
                 // update highscore
-                if self.first_result {
-                    highscores.scores.snake = std::cmp::max(
-                        highscores.scores.snake,
-                        self.game.score,
-                    );
-                    highscores.save_scores(highscores.location.clone());
-                    self.first_result = false;
-                }
+                highscores.scores.snake = std::cmp::max(
+                    highscores.scores.snake,
+                    self.game.score,
+                );
+                highscores.save_scores(highscores.location.clone());
+                self.first_result = true;
+                
                 self.game.reset();
                 self.dir = None;
                 self.now = None;
@@ -101,7 +100,14 @@ impl MiniApp for SnakeApp {
         }
 
         window.draw_2d(event, |c, g, device| {
-            clear([1.0; 4], g);
+            clear(
+                if config.options.white_theme {
+                    [1.0; 4]
+                } else {
+                    [100. / 255., 100. / 255., 100. / 255., 1.0]
+                },
+                g,
+            );
 
             let ctx = c.trans((DEFAULT_WIDTH as f64 - (DEFAULT_HEIGHT as f64 - TOP_PAD)) / 2.0, TOP_PAD);
 
@@ -109,9 +115,28 @@ impl MiniApp for SnakeApp {
                 &c,
                 g,
                 glyphs,
-                [0.0, 0.0, 0.0, 1.0],
+                if config.options.white_theme {
+                    [0.0, 0.0, 0.0, 1.0]
+                } else {
+                    // black
+                    [1.0, 1.0, 1.0, 1.0]
+                },
                 Pos { x: 10.0, y: 400.0 },
                 &format!("Score: {}", self.game.score),
+                28,
+            );
+            draw_text(
+                &c,
+                g,
+                glyphs,
+                if config.options.white_theme {
+                    [0.0, 0.0, 0.0, 1.0]
+                } else {
+                    // black
+                    [1.0, 1.0, 1.0, 1.0]
+                },
+                Pos { x: 10.0, y: 440.0 },
+                &format!("Highscore: {}", highscores.scores.snake),
                 28,
             );
 
@@ -137,7 +162,7 @@ impl MiniApp for SnakeApp {
                         &c,
                         g,
                         glyphs,
-                        [0.0, 0.0, 0.0, 1.0],
+                        [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 1.0],
                         Pos { x: 10.0, y: 528.0 },
                         "You lost!",
                         28,
@@ -158,7 +183,7 @@ impl MiniApp for SnakeApp {
                         &c,
                         g,
                         glyphs,
-                        [0.0, 0.0, 0.0, 1.0],
+                        [43.0 / 255.0, 1.0, 0.0, 1.0],
                         Pos { x: 10.0, y: 528.0 },
                         "You win!",
                         28,

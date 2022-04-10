@@ -182,10 +182,6 @@ impl MiniApp for TicTacToeApp {
                     "Purple wins!",
                     32,
                 );
-
-                // update highscores
-                highscores.scores.tictactoe_purple += 1;
-                highscores.save_scores(highscores.location.clone());
             } else if self.state.is_draw() {
                 draw_text(
                     &c,
@@ -231,6 +227,38 @@ impl MiniApp for TicTacToeApp {
                         rectangle(clr, rect, ctx.transform, g);
                     }
                 }
+            }
+
+            {
+                // draw highscores
+                draw_text(
+                    &c,
+                    g,
+                    glyphs,
+                    if config.options.white_theme {
+                        [0.0, 0.0, 0.0, 1.0]
+                    } else {
+                        // black
+                        [1.0, 1.0, 1.0, 1.0]
+                    },
+                    Pos { x: 10.0, y: 400.0 },
+                    &format!("Lime wins: {}", highscores.scores.tictactoe_lime),
+                    28,
+                );
+                draw_text(
+                    &c,
+                    g,
+                    glyphs,
+                    if config.options.white_theme {
+                        [0.0, 0.0, 0.0, 1.0]
+                    } else {
+                        // black
+                        [1.0, 1.0, 1.0, 1.0]
+                    },
+                    Pos { x: 10.0, y: 440.0 },
+                    &format!("Purple wins: {}", highscores.scores.tictactoe_purple),
+                    28,
+                );
             }
 
             // Update glyphs before rendering
