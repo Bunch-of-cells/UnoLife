@@ -142,7 +142,6 @@ impl MiniApp for TicTacToeApp {
                                 highscores.scores.tictactoe_purple += 1;
                                 highscores.save_scores(highscores.location.clone());
                             }
-
                         }
                     }
 

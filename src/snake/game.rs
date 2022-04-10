@@ -110,10 +110,7 @@ impl Game {
                     self.food = FoodCell::new(x, y);
                     self.snake.body.push(cloned.pop().unwrap());
                 }
-                None => {
-                    self.state = GameState::Won;
-                    return;
-                }
+                None => self.state = GameState::Won,
             }
         } else if self.snake.body[0].x >= self.width
             || self.snake.body[0].y >= self.height
@@ -132,8 +129,7 @@ impl Game {
 
     fn gen_non_overlapping(&self) -> Option<(u32, u32)> {
         let mut empty = (1..self.width)
-            .map(|x| (1..self.height).map(move |y| (x, y)))
-            .flatten()
+            .flat_map(|x| (1..self.height).map(move |y| (x, y)))
             .collect::<Vec<_>>();
         self.snake.body.iter().for_each(|c| {
             if let Some(i) = empty.iter().position(|&(x, y)| x == c.x && y == c.y) {

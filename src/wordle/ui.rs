@@ -104,16 +104,16 @@ impl MiniApp for WordleApp {
                         }
                         Ok(res) => {
                             self.prev_text = match res {
-                                GuessResult::Right => { 
+                                GuessResult::Right => {
                                     // update highscores
                                     if self.first_result {
                                         self.first_result = false;
                                         highscores.scores.wordle += 1;
                                         highscores.save_scores(highscores.location.clone());
                                     }
-                                    
+
                                     Some("You won!".to_string())
-                                },
+                                }
                                 GuessResult::Wrong => None,
                             };
                             self.guess.clear();

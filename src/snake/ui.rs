@@ -69,9 +69,8 @@ impl MiniApp for SnakeApp {
                 GameState::Won => todo!(),
             }
 
-            for (x, y) in (1..self.game.width)
-                .map(|x| (1..self.game.height).map(move |y| (x, y)))
-                .flatten()
+            for (x, y) in
+                (1..self.game.width).flat_map(|x| (1..self.game.height).map(move |y| (x, y)))
             {
                 if self.game.snake.body.iter().any(|c| c.x == x && c.y == y) {
                     let rect = [
