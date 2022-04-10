@@ -88,6 +88,10 @@ impl MiniApp for WordleApp {
                     match result {
                         Err(GuessError::GameOver(_)) => {
                             self.prev_text = Some("You ran out of tries!".to_string());
+
+                            // update highscores
+                            highscores.scores.wordle = 0;
+                            highscores.save_scores(highscores.location.clone());
                         }
                         Err(error) => {
                             self.prev_text = Some(error.to_string());
@@ -98,6 +102,10 @@ impl MiniApp for WordleApp {
                                 GuessResult::Wrong => None,
                             };
                             self.guess.clear();
+
+                            // update highscores
+                            highscores.scores.wordle += 1;
+                            highscores.save_scores(highscores.location.clone());
                         }
                     }
                 }
@@ -148,9 +156,6 @@ impl MiniApp for WordleApp {
                         format!("The word was {}", self.state.word).as_str(),
                         24,
                     );
-
-                    // update highscores
-                    highscores.scores.wordle = 0;
                 } else if text == "You won!" {
                     draw_text(
                         &c,
@@ -161,9 +166,6 @@ impl MiniApp for WordleApp {
                         text,
                         20,
                     );
-
-                    // update highscores
-                    highscores.scores.wordle += 1;
                 } else {
                     draw_text(
                         &c,

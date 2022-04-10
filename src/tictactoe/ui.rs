@@ -132,6 +132,17 @@ impl MiniApp for TicTacToeApp {
                                 let move_ = negamax_root(&mut self.state);
                                 self.state.make_move(move_.0, move_.1);
                             }
+
+                            // update highscores
+                            let result = self.state.is_over();
+                            if result == Mark::X {
+                                highscores.scores.tictactoe_lime += 1;
+                                highscores.save_scores(highscores.location.clone());
+                            } else if result == Mark::O {
+                                highscores.scores.tictactoe_purple += 1;
+                                highscores.save_scores(highscores.location.clone());
+                            }
+
                         }
                     }
 
@@ -162,9 +173,6 @@ impl MiniApp for TicTacToeApp {
                     "Lime wins!",
                     32,
                 );
-
-                // update highscores
-                highscores.scores.tictactoe_lime += 1;
             } else if result == Mark::O {
                 draw_text(
                     &c,
@@ -178,6 +186,7 @@ impl MiniApp for TicTacToeApp {
 
                 // update highscores
                 highscores.scores.tictactoe_purple += 1;
+                highscores.save_scores(highscores.location.clone());
             } else if self.state.is_draw() {
                 draw_text(
                     &c,
