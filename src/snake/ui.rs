@@ -85,36 +85,75 @@ impl MiniApp for SnakeApp {
                 ),
             }
 
-            for (x, y) in
-                (1..self.game.width).flat_map(|x| (1..self.game.height).map(move |y| (x, y)))
-            {
-                if self.game.snake.body.iter().any(|c| c.x == x && c.y == y) {
-                    let rect = [
+            for cell in &self.game.snake.body {
+                let x = cell.x as f64 * self.size;
+                let y = cell.y as f64 * self.size;
+
+                rectangle(
+                    [0.0, 0.0, 0.0, 1.0],
+                    [x, y, self.size, self.size],
+                    ctx.transform,
+                    g,
+                );
+            }
+
+            rectangle(
+                [1.0, 0.0, 0.0, 1.0],
+                [
+                    self.game.food.x as f64 * self.size,
+                    self.game.food.y as f64 * self.size,
+                    self.size,
+                    self.size,
+                ],
+                ctx.transform,
+                g,
+            );
+
+            // for (x, y) in
+            //     (0..=self.game.width).flat_map(|x| (0..=self.game.height).map(move |y| (x, y)))
+            // {
+            //     let rect = [
+            //             self.size * (x as f64),
+            //             self.size * (y as f64),
+            //             self.size,
+            //             self.size,
+            //         ];
+            //     if x == 0 || x == self.game.width || y == 0 || y == self.game.height {
+            //         Rectangle::new([0.0, 0.0, 0.0, 1.0]).draw(
+            //             rect,
+            //             &Default::default(),
+            //             ctx.transform,
+            //             g,
+            //         );
+            //     }
+            // }
+
+            for x in 0..=self.game.width {
+                Line::new([0.0, 0.0, 0.0, 1.0], 0.5).draw(
+                    [
                         self.size * (x as f64),
-                        self.size * (y as f64),
-                        self.size,
-                        self.size,
-                    ];
-                    Rectangle::new([0.0, 0.0, 0.0, 1.0]).draw(
-                        rect,
-                        &Default::default(),
-                        ctx.transform,
-                        g,
-                    );
-                } else if self.game.food.x == x && self.game.food.y == y {
-                    let rect = [
+                        self.size * (0 as f64),
                         self.size * (x as f64),
+                        self.size * (self.game.height as f64),
+                    ],
+                    &Default::default(),
+                    ctx.transform,
+                    g,
+                );
+            }
+
+            for y in 0..=self.game.height {
+                Line::new([0.0, 0.0, 0.0, 1.0], 0.5).draw(
+                    [
+                        self.size * (0 as f64),
                         self.size * (y as f64),
-                        self.size,
-                        self.size,
-                    ];
-                    Rectangle::new([1.0, 0.0, 0.0, 1.0]).draw(
-                        rect,
-                        &Default::default(),
-                        ctx.transform,
-                        g,
-                    );
-                }
+                        self.size * (self.game.width as f64),
+                        self.size * (y as f64),
+                    ],
+                    &Default::default(),
+                    ctx.transform,
+                    g,
+                );
             }
 
             // Update glyphs before rendering
