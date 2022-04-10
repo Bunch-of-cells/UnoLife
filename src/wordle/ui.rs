@@ -10,6 +10,7 @@ pub struct WordleApp {
     guess: String,
     hover_pos: [f64; 2],
     prev_text: Option<String>,
+    first_result: bool,
 }
 
 impl WordleApp {
@@ -19,6 +20,7 @@ impl WordleApp {
             guess: String::new(),
             hover_pos: [0.0, 0.0],
             prev_text: None,
+            first_result: true,
         }
     }
 }
@@ -68,6 +70,7 @@ impl MiniApp for WordleApp {
                 self.prev_text = None;
                 self.state.reset();
                 self.guess.clear();
+                self.first_result = true;
             } else {
                 reset_button.width += 6.0;
                 reset_button.pos.x -= 3.0;
@@ -90,22 +93,30 @@ impl MiniApp for WordleApp {
                             self.prev_text = Some("You ran out of tries!".to_string());
 
                             // update highscores
-                            highscores.scores.wordle = 0;
-                            highscores.save_scores(highscores.location.clone());
+                            if self.first_result {
+                                self.first_result = false;
+                                highscores.scores.wordle = 0;
+                                highscores.save_scores(highscores.location.clone());
+                            }
                         }
                         Err(error) => {
                             self.prev_text = Some(error.to_string());
                         }
                         Ok(res) => {
                             self.prev_text = match res {
-                                GuessResult::Right => Some("You won!".to_string()),
+                                GuessResult::Right => { 
+                                    // update highscores
+                                    if self.first_result {
+                                        self.first_result = false;
+                                        highscores.scores.wordle += 1;
+                                        highscores.save_scores(highscores.location.clone());
+                                    }
+                                    
+                                    Some("You won!".to_string())
+                                },
                                 GuessResult::Wrong => None,
                             };
                             self.guess.clear();
-
-                            // update highscores
-                            highscores.scores.wordle += 1;
-                            highscores.save_scores(highscores.location.clone());
                         }
                     }
                 }
