@@ -12,7 +12,6 @@ const FPS: u64 = 20;
 
 pub struct SnakeApp {
     game: Game,
-    state: Option<String>,
     dir: Option<Direction>,
     size: f64,
     now: Option<Instant>,
@@ -22,7 +21,6 @@ impl SnakeApp {
     pub fn new() -> Self {
         SnakeApp {
             game: Game::new(GRID_SIZE, GRID_SIZE),
-            state: None,
             dir: None,
             size: (DEFAULT_HEIGHT as f64 - TOP_PAD) / GRID_SIZE as f64,
             now: None,
@@ -58,19 +56,7 @@ impl MiniApp for SnakeApp {
         window.draw_2d(event, |c, g, device| {
             clear([1.0; 4], g);
 
-            if let Some(ref text) = self.state {
-                draw_text(
-                    &c,
-                    g,
-                    glyphs,
-                    [0.0, 0.0, 0.0, 1.0],
-                    Pos { x: 10.0, y: 528.0 },
-                    text,
-                    28,
-                );
-            }
-
-            let ctx = c.trans(((DEFAULT_WIDTH - GRID_SIZE) / 2) as f64, TOP_PAD);
+            let ctx = c.trans((DEFAULT_WIDTH as f64 - (DEFAULT_HEIGHT as f64 - TOP_PAD)) / 2.0, TOP_PAD);
 
             match self.game.state {
                 GameState::Playing => {
@@ -79,8 +65,24 @@ impl MiniApp for SnakeApp {
                         self.now = Some(Instant::now());
                     }
                 }
-                GameState::Lost => todo!(),
-                GameState::Won => todo!(),
+                GameState::Lost => draw_text(
+                    &c,
+                    g,
+                    glyphs,
+                    [0.0, 0.0, 0.0, 1.0],
+                    Pos { x: 10.0, y: 528.0 },
+                    "Loser",
+                    28,
+                ),
+                GameState::Won => draw_text(
+                    &c,
+                    g,
+                    glyphs,
+                    [0.0, 0.0, 0.0, 1.0],
+                    Pos { x: 10.0, y: 528.0 },
+                    "Winner",
+                    28,
+                ),
             }
 
             for (x, y) in

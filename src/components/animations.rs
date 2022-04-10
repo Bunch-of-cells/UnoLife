@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
-use std::time;
 use std::thread::sleep;
+use std::time;
 
 use super::button::Pos;
 use piston_window::*;
