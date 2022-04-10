@@ -65,8 +65,8 @@ impl HighScores {
 
 #[derive(Serialize, Deserialize, Clone, Default)]
 pub struct HighScoreOptions {
-    pub tictactoe_lime: u16,
-    pub tictactoe_purple: u16,
-    pub wordle: u16,
-    pub snake: u16,
+    pub tictactoe_lime: u32,
+    pub tictactoe_purple: u32,
+    pub wordle: u32,
+    pub snake: u32,
 }

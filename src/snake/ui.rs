@@ -35,7 +35,7 @@ impl MiniApp for SnakeApp {
         event: &Event,
         glyphs: &mut Glyphs,
         _config: &mut Config,
-        _highscores: &mut HighScores,
+        highscores: &mut HighScores,
     ) {
         self.dir = if let Some(Button::Keyboard(press)) = event.press_args() {
             match press {
@@ -58,10 +58,24 @@ impl MiniApp for SnakeApp {
 
             let ctx = c.trans((DEFAULT_WIDTH as f64 - (DEFAULT_HEIGHT as f64 - TOP_PAD)) / 2.0, TOP_PAD);
 
+            draw_text(
+                &c,
+                g,
+                glyphs,
+                [0.0, 0.0, 0.0, 1.0],
+                Pos { x: 10.0, y: 400.0 },
+                &format!("Score: {}", self.game.score),
+                28,
+            );
+
             match self.game.state {
                 GameState::Playing => {
                     if matches!(self.now, Some(now) if now.elapsed().as_millis() >= (1000 / FPS) as u128) {
                         self.game.step(self.dir);
+                        highscores.scores.snake = std::cmp::max(
+                            highscores.scores.snake,
+                            self.game.score,
+                        );
                         self.now = Some(Instant::now());
                     }
                 }
@@ -85,6 +99,7 @@ impl MiniApp for SnakeApp {
                 ),
             }
 
+            // draw snake
             for cell in &self.game.snake.body {
                 let x = cell.x as f64 * self.size;
                 let y = cell.y as f64 * self.size;
@@ -97,6 +112,7 @@ impl MiniApp for SnakeApp {
                 );
             }
 
+            // draw food
             rectangle(
                 [1.0, 0.0, 0.0, 1.0],
                 [
@@ -109,26 +125,8 @@ impl MiniApp for SnakeApp {
                 g,
             );
 
-            // for (x, y) in
-            //     (0..=self.game.width).flat_map(|x| (0..=self.game.height).map(move |y| (x, y)))
-            // {
-            //     let rect = [
-            //             self.size * (x as f64),
-            //             self.size * (y as f64),
-            //             self.size,
-            //             self.size,
-            //         ];
-            //     if x == 0 || x == self.game.width || y == 0 || y == self.game.height {
-            //         Rectangle::new([0.0, 0.0, 0.0, 1.0]).draw(
-            //             rect,
-            //             &Default::default(),
-            //             ctx.transform,
-            //             g,
-            //         );
-            //     }
-            // }
-
-            for x in 0..=self.game.width {
+            // draw boundaries
+            for (x, y) in (0..=self.game.width).zip(0..=self.game.height) {
                 Line::new([0.0, 0.0, 0.0, 1.0], 0.5).draw(
                     [
                         self.size * (x as f64),
@@ -140,9 +138,6 @@ impl MiniApp for SnakeApp {
                     ctx.transform,
                     g,
                 );
-            }
-
-            for y in 0..=self.game.height {
                 Line::new([0.0, 0.0, 0.0, 1.0], 0.5).draw(
                     [
                         self.size * (0 as f64),
