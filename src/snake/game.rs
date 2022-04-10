@@ -112,8 +112,8 @@ impl Game {
                 }
                 None => self.state = GameState::Won,
             }
-        } else if self.snake.body[0].x >= self.width
-            || self.snake.body[0].y >= self.height
+        } else if self.snake.body[0].x >= self.width-1
+            || self.snake.body[0].y >= self.height-1
             || self.snake.body[0].x == 0
             || self.snake.body[0].y == 0
             || self
@@ -137,6 +137,13 @@ impl Game {
             }
         });
         empty.choose(&mut rand::thread_rng()).cloned()
+    }
+
+    pub fn reset(&mut self) {
+        self.snake.body = vec![SnakeCell::new(1, 1)];
+        self.food = FoodCell::new(5, 5);
+        self.score = 0;
+        self.state = GameState::Playing;
     }
 }
 
