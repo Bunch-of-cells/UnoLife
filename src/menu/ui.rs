@@ -8,7 +8,7 @@ use crate::wordle::ui::WordleApp;
 
 use piston_window::*;
 
-use super::config::Config;
+use super::{config::Config, highscores::HighScores};
 
 pub const TOP_PAD: f64 = 104.0;
 
@@ -41,6 +41,7 @@ impl MiniApp for MainMenu {
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
+        highscores: &mut HighScores,
     ) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
@@ -158,21 +159,28 @@ impl MiniApp for MainMenu {
         match self.tab {
             0 | 1 | 2 => {
                 window.draw_2d(event, |_, g, _| {
-                    clear(if config.options.white_theme {
-                        [212.0 / 255.0, 248.0 / 255.0, 1.0, 1.0]
-                    } else {
-                        [30.0 / 255.0, 30.0 / 255.0, 30.0 / 255.0, 1.0]
-                    }, g);
+                    clear(
+                        if config.options.white_theme {
+                            [212.0 / 255.0, 248.0 / 255.0, 1.0, 1.0]
+                        } else {
+                            [30.0 / 255.0, 30.0 / 255.0, 30.0 / 255.0, 1.0]
+                        },
+                        g,
+                    );
                 });
             }
-            _ => self.apps[self.tab - 3].render(window, event, glyphs, config),
+            _ => self.apps[self.tab - 3].render(window, event, glyphs, config, highscores),
         };
 
         window.draw_2d(event, |c, g, device| {
             // draw taskbar
             {
                 rectangle(
-                    if config.options.white_theme { [1.0, 1.0, 1.0, 1.0] } else { [60.0 / 255.0, 60.0 / 255.0, 60.0 / 255.0, 1.0] },
+                    if config.options.white_theme {
+                        [1.0, 1.0, 1.0, 1.0]
+                    } else {
+                        [60.0 / 255.0, 60.0 / 255.0, 60.0 / 255.0, 1.0]
+                    },
                     [0.0, 0.0, size.width, 85.0],
                     c.transform,
                     g,

@@ -1,6 +1,6 @@
 use piston_window::{Event, Glyphs, PistonWindow};
 
-use crate::menu::config::Config;
+use crate::menu::{config::Config, highscores::HighScores};
 
 pub trait MiniApp {
     /// Called to draw on the screen.
@@ -10,6 +10,7 @@ pub trait MiniApp {
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
+        highscores: &mut HighScores,
     );
 }
 

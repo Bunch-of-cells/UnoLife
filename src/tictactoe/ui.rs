@@ -1,7 +1,7 @@
 use super::Board;
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::*;
-use crate::menu::{config::Config, ui::TOP_PAD};
+use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::tictactoe::{negamax_root, Mark};
 use crate::Event;
 use piston_window::*;
@@ -44,6 +44,7 @@ impl MiniApp for TicTacToeApp {
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
+        highscores: &mut HighScores,
     ) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
@@ -71,7 +72,7 @@ impl MiniApp for TicTacToeApp {
         };
         let mut ai_button = UIButton::new(
             ai_text,
-            [18.0 / 255.0, 156.0 / 255.0, 1.0 , 1.0],
+            [18.0 / 255.0, 156.0 / 255.0, 1.0, 1.0],
             [1.0, 1.0, 1.0, 1.0],
             14,
             Pos { x: 791.2, y: 228.0 },
@@ -161,6 +162,9 @@ impl MiniApp for TicTacToeApp {
                     "Lime wins!",
                     32,
                 );
+
+                // update highscores
+                highscores.scores.tictactoe_lime += 1;
             } else if result == Mark::O {
                 draw_text(
                     &c,
@@ -171,6 +175,9 @@ impl MiniApp for TicTacToeApp {
                     "Purple wins!",
                     32,
                 );
+
+                // update highscores
+                highscores.scores.tictactoe_purple += 1;
             } else if self.state.is_draw() {
                 draw_text(
                     &c,

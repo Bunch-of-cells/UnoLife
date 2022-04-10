@@ -1,7 +1,7 @@
 use super::{Direction, Game, GameState};
 use crate::components::application::MiniApp;
 use crate::components::button::{draw_text, Pos};
-use crate::menu::{config::Config, ui::TOP_PAD};
+use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::Event;
 use piston_window::*;
 
@@ -30,6 +30,7 @@ impl MiniApp for SnakeApp {
         event: &Event,
         glyphs: &mut Glyphs,
         _config: &mut Config,
+        _highscores: &mut HighScores,
     ) {
         self.dir = if let Some(Button::Keyboard(press)) = event.press_args() {
             match press {

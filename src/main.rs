@@ -1,7 +1,7 @@
 extern crate piston_window;
 
 use crate::components::application::MiniApp;
-use menu::{config::Config, ui::MainMenu};
+use menu::{config::Config, highscores::HighScores, ui::MainMenu};
 use piston_window::*;
 
 mod components;
@@ -25,6 +25,7 @@ fn main() {
 
     let mut main_menu = MainMenu::new();
     let mut config = Config::fetch_config();
+    let mut highscores = HighScores::fetch_scores();
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -32,6 +33,12 @@ fn main() {
     let mut glyphs = window.load_font(assets.join("Roboto-Regular.ttf")).unwrap();
 
     while let Some(event) = window.next() {
-        main_menu.render(&mut window, &event, &mut glyphs, &mut config);
+        main_menu.render(
+            &mut window,
+            &event,
+            &mut glyphs,
+            &mut config,
+            &mut highscores,
+        );
     }
 }

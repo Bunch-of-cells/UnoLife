@@ -1,7 +1,7 @@
 use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
-use crate::menu::{config::Config, ui::TOP_PAD};
+use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::Event;
 use piston_window::*;
 
@@ -43,6 +43,7 @@ impl MiniApp for WordleApp {
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
+        highscores: &mut HighScores,
     ) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
@@ -147,6 +148,9 @@ impl MiniApp for WordleApp {
                         format!("The word was {}", self.state.word).as_str(),
                         24,
                     );
+
+                    // update highscores
+                    highscores.scores.wordle = 0;
                 } else if text == "You won!" {
                     draw_text(
                         &c,
@@ -157,6 +161,9 @@ impl MiniApp for WordleApp {
                         text,
                         20,
                     );
+
+                    // update highscores
+                    highscores.scores.wordle += 1;
                 } else {
                     draw_text(
                         &c,

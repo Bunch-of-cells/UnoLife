@@ -18,17 +18,16 @@ impl Config {
 
     pub fn fetch_config() -> Self {
         let mut config = Config::new();
-        let file;
+
         if let Ok(folder) = env::var("localappdata") {
             // make folder if it doesnt exist
             std::fs::create_dir_all(folder.clone() + "\\UnoLife").unwrap();
 
-            file = folder + "\\UnoLife\\config.json";
-            config.location = file.clone();
+            config.location = folder + "\\UnoLife\\config.json";
 
             // create file on system if it doesnt exist
-            if !Path::new(&file).exists() {
-                let mut config_file = File::create(file.clone()).unwrap();
+            if !Path::new(&config.location).exists() {
+                let mut config_file = File::create(config.location.clone()).unwrap();
                 config_file
                     .write_all(
                         serde_json::to_string(&ConfigOptions::default())
@@ -37,12 +36,9 @@ impl Config {
                     )
                     .unwrap();
             }
-        } else {
-            file = "unolife_config.json".to_string();
-            config.location = file.clone();
         }
 
-        config.load_config(file);
+        config.load_config(config.location.clone());
         config
     }
 
