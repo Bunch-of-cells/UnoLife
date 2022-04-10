@@ -25,13 +25,13 @@ impl Direction {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct SnakeCell {
-    pub x: u32,
-    pub y: u32,
+    pub x: i32,
+    pub y: i32,
     pub dir: Option<Direction>,
 }
 
 impl SnakeCell {
-    fn new(x: u32, y: u32) -> Self {
+    fn new(x: i32, y: i32) -> Self {
         Self { x, y, dir: None }
     }
 
@@ -61,12 +61,12 @@ impl SnakeCell {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct FoodCell {
-    pub x: u32,
-    pub y: u32,
+    pub x: i32,
+    pub y: i32,
 }
 
 impl FoodCell {
-    pub fn new(x: u32, y: u32) -> Self {
+    pub fn new(x: i32, y: i32) -> Self {
         Self { x, y }
     }
 }
@@ -107,15 +107,15 @@ impl Game {
             self.score += 1;
             match self.gen_non_overlapping() {
                 Some((x, y)) => {
-                    self.food = FoodCell::new(x, y);
+                    self.food = FoodCell::new(x as i32, y as i32);
                     self.snake.body.push(cloned.pop().unwrap());
                 }
                 None => self.state = GameState::Won,
             }
-        } else if self.snake.body[0].x >= self.width-1
-            || self.snake.body[0].y >= self.height-1
-            || self.snake.body[0].x == 0
-            || self.snake.body[0].y == 0
+        } else if self.snake.body[0].x >= self.width as i32
+            || self.snake.body[0].y >= self.height as i32
+            || self.snake.body[0].x == -1
+            || self.snake.body[0].y == -1
             || self
                 .snake
                 .body
@@ -132,7 +132,7 @@ impl Game {
             .flat_map(|x| (1..self.height).map(move |y| (x, y)))
             .collect::<Vec<_>>();
         self.snake.body.iter().for_each(|c| {
-            if let Some(i) = empty.iter().position(|&(x, y)| x == c.x && y == c.y) {
+            if let Some(i) = empty.iter().position(|&(x, y)| x as i32 == c.x && y as i32 == c.y) {
                 empty.remove(i);
             }
         });

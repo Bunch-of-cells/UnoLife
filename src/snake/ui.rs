@@ -45,17 +45,19 @@ impl MiniApp for SnakeApp {
             self.hover_pos = [cx, cy];
         }
 
-        self.dir = if let Some(Button::Keyboard(press)) = event.press_args() {
-            match press {
-                Key::Up => Some(Direction::Up),
-                Key::Down => Some(Direction::Down),
-                Key::Left => Some(Direction::Left),
-                Key::Right => Some(Direction::Right),
-                _ => None,
-            }
-        } else {
-            self.dir
-        };
+        if self.game.state == GameState::Playing {
+            self.dir = if let Some(Button::Keyboard(press)) = event.press_args() {
+                match press {
+                    Key::Up => Some(Direction::Up),
+                    Key::Down => Some(Direction::Down),
+                    Key::Left => Some(Direction::Left),
+                    Key::Right => Some(Direction::Right),
+                    _ => None,
+                }
+            } else {
+                self.dir
+            };
+        }
 
         if self.dir.is_some() && self.now.is_none() {
             self.now = Some(Instant::now());
@@ -166,8 +168,20 @@ impl MiniApp for SnakeApp {
 
             // draw snake
             for cell in &self.game.snake.body {
-                let x = cell.x as f64 * self.size;
-                let y = cell.y as f64 * self.size;
+                let mut remove_x = 0;
+                let mut remove_y = 0;
+                if self.game.state == GameState::Lost {
+                    match self.dir {
+                        Some(Direction::Right) => remove_x = 1,
+                        Some(Direction::Down) => remove_y = 1,
+                        Some(Direction::Left) => remove_x = -1,
+                        Some(Direction::Up) => remove_y = -1,
+                        _ => (),
+                    }
+                }
+
+                let x = (cell.x - remove_x) as f64 * self.size;
+                let y = (cell.y - remove_y) as f64 * self.size;
 
                 rectangle(
                     [0.0, 0.0, 0.0, 1.0],
