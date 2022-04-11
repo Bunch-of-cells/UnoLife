@@ -2,7 +2,7 @@ use std::time::Instant;
 
 use super::{Direction, Game, GameState};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
-use crate::components::button::{draw_text, Pos, UIButton};
+use crate::components::{button::{draw_text, Pos, UIButton}, color::Color};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::{rgb, Event};
 use piston_window::*;
@@ -66,8 +66,8 @@ impl MiniApp for SnakeApp {
         // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
-            rgb!(242, 87, 87, 0.9),
-            rgb!(255, 255, 255),
+            Color::RESET,
+            Color::WHITE,
             24,
             Pos { x: 808.0, y: 145.0 },
             160.0,
@@ -97,7 +97,7 @@ impl MiniApp for SnakeApp {
         window.draw_2d(event, |c, g, device| {
             clear(
                 if config.options.white_theme {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 } else {
                     rgb!(100, 100, 100)
                 },
@@ -111,9 +111,9 @@ impl MiniApp for SnakeApp {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    rgb!(0, 0, 0)
+                    Color::BLACK
                 } else {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 },
                 Pos { x: 10.0, y: 400.0 },
                 &format!("Score: {}", self.game.score),
@@ -124,9 +124,9 @@ impl MiniApp for SnakeApp {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    rgb!(0, 0, 0)
+                    Color::BLACK
                 } else {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 },
                 Pos { x: 10.0, y: 440.0 },
                 &format!("Highscore: {}", highscores.scores.snake),
@@ -190,7 +190,7 @@ impl MiniApp for SnakeApp {
                 let y = cell.y as f64 * self.size;
 
                 rectangle(
-                    rgb!(0, 0, 0),
+                    Color::BLACK,
                     [x, y, self.size, self.size],
                     ctx.transform,
                     g,
@@ -212,7 +212,7 @@ impl MiniApp for SnakeApp {
 
             // draw boundaries
             for (x, y) in (0..=self.game.width + 1).zip(0..=self.game.height + 1) {
-                Line::new(rgb!(0, 0, 0), 0.5).draw(
+                Line::new(Color::BLACK, 0.5).draw(
                     [
                         self.size * (x as f64),
                         0.0,
@@ -223,7 +223,7 @@ impl MiniApp for SnakeApp {
                     ctx.transform,
                     g,
                 );
-                Line::new(rgb!(0, 0, 0), 0.5).draw(
+                Line::new(Color::BLACK, 0.5).draw(
                     [
                         0.0,
                         self.size * (y as f64),

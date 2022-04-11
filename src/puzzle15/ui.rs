@@ -1,6 +1,6 @@
 use super::{Direction, Game};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
-use crate::components::button::{draw_text, Pos, UIButton};
+use crate::components::{button::{draw_text, Pos, UIButton}, color::Color};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::{rgb, Event};
 use piston_window::*;
@@ -41,8 +41,8 @@ impl MiniApp for Puzzle15App {
         // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
-            rgb!(242, 87, 87, 0.9),
-            rgb!(255, 255, 255),
+            Color::RESET,
+            Color::WHITE,
             24,
             Pos { x: 791.2, y: 135.2 },
             160.0,
@@ -77,7 +77,7 @@ impl MiniApp for Puzzle15App {
         window.draw_2d(event, |c, g, device| {
             clear(
                 if config.options.white_theme {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 } else {
                     rgb!(100, 100, 100)
                 },
@@ -93,9 +93,9 @@ impl MiniApp for Puzzle15App {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    rgb!(0, 0, 0)
+                    Color::BLACK
                 } else {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 },
                 Pos { x: 10.0, y: 400.0 },
                 &format!("Moves: {}", self.game.moves),
@@ -106,9 +106,9 @@ impl MiniApp for Puzzle15App {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    rgb!(0, 0, 0)
+                    Color::BLACK
                 } else {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 },
                 Pos { x: 10.0, y: 440.0 },
                 &format!("Highscore: {}", highscores.scores.puzzle15),
@@ -161,7 +161,7 @@ impl MiniApp for Puzzle15App {
                         &ctx,
                         g,
                         glyphs,
-                        rgb!(0, 0, 0),
+                        Color::BLACK,
                         Pos {
                             x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
                             y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,

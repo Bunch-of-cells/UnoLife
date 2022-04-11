@@ -1,6 +1,6 @@
 use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
-use crate::components::button::{draw_text, Pos, UIButton};
+use crate::components::{button::{draw_text, Pos, UIButton}, color::Color};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::{rgb, Event};
 use piston_window::*;
@@ -54,8 +54,8 @@ impl MiniApp for WordleApp {
         // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
-            rgb!(242, 87, 87, 0.9),
-            rgb!(255, 255, 255),
+            Color::RESET,
+            Color::WHITE,
             24,
             Pos { x: 791.2, y: 135.2 },
             160.0,
@@ -135,7 +135,7 @@ impl MiniApp for WordleApp {
         window.draw_2d(event, |c, g, device| {
             clear(
                 if config.options.white_theme {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 } else {
                     rgb!(100, 100, 100)
                 },
@@ -151,10 +151,10 @@ impl MiniApp for WordleApp {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    rgb!(0, 0, 0)
+                    Color::BLACK
                 } else {
                     // black
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 },
                 Pos { x: 10.0, y: 400.0 },
                 &format!("Win streak: {}", highscores.scores.wordle),
@@ -233,7 +233,7 @@ impl MiniApp for WordleApp {
                             &ctx,
                             g,
                             glyphs,
-                            rgb!(255, 255, 255),
+                            Color::WHITE,
                             Pos {
                                 x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
                                 y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
@@ -271,7 +271,7 @@ impl MiniApp for WordleApp {
                                     &ctx,
                                     g,
                                     glyphs,
-                                    rgb!(255, 255, 255),
+                                    Color::WHITE,
                                     Pos {
                                         x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
                                         y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,

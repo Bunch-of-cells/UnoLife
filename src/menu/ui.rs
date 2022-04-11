@@ -7,6 +7,7 @@ use crate::{
     components::{
         application::MiniApp,
         button::{draw_text, Pos, UIButton},
+        color::Color
     },
     rgb,
 };
@@ -61,8 +62,8 @@ impl MiniApp for MainMenu {
         let mut buttons = [
             UIButton::new(
                 " Home",
-                rgb!(0, 0, 0, 0.0),
-                rgb!(0, 0, 0),
+                Color::CLEAR,
+                Color::BLACK,
                 24,
                 Pos { x: 30.0, y: 0.0 },
                 102.0,
@@ -70,8 +71,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 " Games",
-                rgb!(0, 0, 0, 0.0),
-                rgb!(0, 0, 0),
+                Color::CLEAR,
+                Color::BLACK,
                 24,
                 Pos { x: 140.0, y: 0.0 },
                 115.0,
@@ -79,8 +80,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 " Settings",
-                rgb!(0, 0, 0, 0.0),
-                rgb!(0, 0, 0),
+                Color::CLEAR,
+                Color::BLACK,
                 24,
                 Pos { x: 270.0, y: 0.0 },
                 126.0,
@@ -88,8 +89,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Play TicTacToe",
-                rgb!(0, 0, 0, 0.0),
-                rgb!(0, 0, 0),
+                Color::CLEAR,
+                Color::BLACK,
                 24,
                 Pos { x: 40.0, y: 120.0 },
                 224.0,
@@ -97,8 +98,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Play Wordle",
-                rgb!(0, 0, 0, 0.0),
-                rgb!(0, 0, 0),
+                Color::CLEAR,
+                Color::BLACK,
                 24,
                 Pos { x: 40.0, y: 180.0 },
                 224.0,
@@ -106,8 +107,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Play Snake",
-                rgb!(0, 0, 0, 0.0),
-                rgb!(0, 0, 0),
+                Color::CLEAR,
+                Color::BLACK,
                 24,
                 Pos { x: 40.0, y: 240.0 },
                 224.0,
@@ -115,8 +116,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Play 2048",
-                rgb!(0, 0, 0, 0.0),
-                rgb!(0, 0, 0),
+                Color::CLEAR,
+                Color::BLACK,
                 24,
                 Pos { x: 40.0, y: 300.0 },
                 224.0,
@@ -124,8 +125,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Play 15 Puzzle",
-                rgb!(0, 0, 0, 0.0),
-                rgb!(0, 0, 0),
+                Color::CLEAR,
+                Color::BLACK,
                 24,
                 Pos { x: 40.0, y: 360.0 },
                 224.0,
@@ -136,8 +137,8 @@ impl MiniApp for MainMenu {
         let mut config_buttons = [
             UIButton::new(
                 "Dark Theme",
-                rgb!(0, 0, 0, 0.0),
-                rgb!(0, 0, 0),
+                Color::CLEAR,
+                Color::BLACK,
                 24,
                 Pos { x: 40.0, y: 120.0 },
                 224.0,
@@ -145,8 +146,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Reset Highscores",
-                rgb!(242, 87, 87, 0.9),
-                rgb!(255, 255, 255),
+                Color::RESET,
+                Color::WHITE,
                 24,
                 Pos { x: 50.0, y: 200.0 },
                 240.0,
@@ -157,10 +158,10 @@ impl MiniApp for MainMenu {
         // change style's depending on theme
         if !config.options.white_theme {
             config_buttons[0].text = "Light Theme".to_string();
-            config_buttons[0].text_color = rgb!(255, 255, 255);
+            config_buttons[0].text_color = Color::WHITE;
 
             for button in buttons.iter_mut() {
-                button.text_color = rgb!(255, 255, 255);
+                button.text_color = Color::WHITE;
             }
         }
 
@@ -229,7 +230,7 @@ impl MiniApp for MainMenu {
             {
                 rectangle(
                     if config.options.white_theme {
-                        rgb!(255, 255, 255)
+                        Color::WHITE
                     } else {
                         rgb!(60, 60, 60)
                     },
@@ -240,7 +241,7 @@ impl MiniApp for MainMenu {
 
                 // draw black line sepperating the task bar from the content
                 line(
-                    rgb!(0, 0, 0),
+                    Color::BLACK,
                     0.5,
                     [0.0, 85.0, size.width, 85.0],
                     c.transform,
@@ -264,9 +265,9 @@ impl MiniApp for MainMenu {
                         g,
                         glyphs,
                         if config.options.white_theme {
-                            rgb!(0, 0, 0)
+                            Color::BLACK
                         } else {
-                            rgb!(255, 255, 255)
+                            Color::WHITE
                         },
                         Pos { x: 50.0, y: 300.0 },
                         "Welcome to the home tab!",

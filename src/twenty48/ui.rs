@@ -1,6 +1,6 @@
 use super::{Direction, Game, GameState};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
-use crate::components::button::{draw_text, Pos, UIButton};
+use crate::components::{button::{draw_text, Pos, UIButton}, color::Color};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::{rgb, Event};
 use piston_window::*;
@@ -40,7 +40,7 @@ fn val_to_clr(val: u32) -> [f32; 4] {
         512 => rgb!(237, 200, 80),
         1024 => rgb!(237, 197, 63),
         2048 => rgb!(237, 194, 46),
-        _ => rgb!(255, 255, 255),
+        _ => Color::WHITE,
     }
 }
 
@@ -60,8 +60,8 @@ impl MiniApp for Twenty48App {
         // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
-            rgb!(242, 87, 87, 0.9),
-            rgb!(255, 255, 255),
+            Color::RESET,
+            Color::WHITE,
             24,
             Pos { x: 791.2, y: 135.2 },
             160.0,
@@ -99,7 +99,7 @@ impl MiniApp for Twenty48App {
         window.draw_2d(event, |c, g, device| {
             clear(
                 if config.options.white_theme {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 } else {
                     rgb!(100, 100, 100)
                 },
@@ -115,9 +115,9 @@ impl MiniApp for Twenty48App {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    rgb!(0, 0, 0)
+                    Color::BLACK
                 } else {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 },
                 Pos { x: 10.0, y: 400.0 },
                 &format!("Score: {}", self.game.score),
@@ -128,9 +128,9 @@ impl MiniApp for Twenty48App {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    rgb!(0, 0, 0)
+                    Color::BLACK
                 } else {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 },
                 Pos { x: 10.0, y: 440.0 },
                 &format!("Highscore: {}", highscores.scores.twenty48),
@@ -201,7 +201,7 @@ impl MiniApp for Twenty48App {
                         &ctx,
                         g,
                         glyphs,
-                        rgb!(0, 0, 0),
+                        Color::BLACK,
                         Pos {
                             x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
                             y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,

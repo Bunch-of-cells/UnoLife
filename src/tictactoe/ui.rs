@@ -1,6 +1,6 @@
 use super::Board;
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
-use crate::components::button::*;
+use crate::components::{button::{draw_text, Pos, UIButton}, color::Color};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::tictactoe::{negamax_root, Mark};
 use crate::{rgb, Event};
@@ -55,8 +55,8 @@ impl MiniApp for TicTacToeApp {
         // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
-            rgb!(242, 87, 87, 0.9),
-            rgb!(255, 255, 255),
+            Color::RESET,
+            Color::WHITE,
             24,
             Pos { x: 791.2, y: 135.2 },
             160.0,
@@ -73,7 +73,7 @@ impl MiniApp for TicTacToeApp {
         let mut ai_button = UIButton::new(
             ai_text,
             rgb!(18, 156, 255),
-            rgb!(255, 255, 255),
+            Color::WHITE,
             14,
             Pos { x: 791.2, y: 228.0 },
             160.0,
@@ -153,7 +153,7 @@ impl MiniApp for TicTacToeApp {
         window.draw_2d(event, |c, g, device| {
             clear(
                 if config.options.white_theme {
-                    rgb!(255, 255, 255)
+                    Color::WHITE
                 } else {
                     rgb!(100, 100, 100)
                 },
@@ -167,7 +167,7 @@ impl MiniApp for TicTacToeApp {
                     &c,
                     g,
                     glyphs,
-                    rgb!(0, 0, 0),
+                    Color::BLACK,
                     Pos { x: 450.0, y: 528.0 },
                     "Lime wins!",
                     32,
@@ -177,7 +177,7 @@ impl MiniApp for TicTacToeApp {
                     &c,
                     g,
                     glyphs,
-                    rgb!(0, 0, 0),
+                    Color::BLACK,
                     Pos { x: 440.0, y: 528.0 },
                     "Purple wins!",
                     32,
@@ -187,7 +187,7 @@ impl MiniApp for TicTacToeApp {
                     &c,
                     g,
                     glyphs,
-                    rgb!(0, 0, 0),
+                    Color::BLACK,
                     Pos { x: 442.0, y: 528.0 },
                     "It's a draw!",
                     32,
@@ -235,10 +235,10 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     if config.options.white_theme {
-                        rgb!(0, 0, 0)
+                        Color::BLACK
                     } else {
                         // black
-                        rgb!(255, 255, 255)
+                        Color::WHITE
                     },
                     Pos { x: 10.0, y: 400.0 },
                     &format!("Lime wins: {}", highscores.scores.tictactoe_lime),
@@ -249,10 +249,10 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     if config.options.white_theme {
-                        rgb!(0, 0, 0)
+                        Color::BLACK
                     } else {
                         // black
-                        rgb!(255, 255, 255)
+                        Color::WHITE
                     },
                     Pos { x: 10.0, y: 440.0 },
                     &format!("Purple wins: {}", highscores.scores.tictactoe_purple),

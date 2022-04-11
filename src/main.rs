@@ -12,6 +12,7 @@ mod snake;
 mod tictactoe;
 mod twenty48;
 mod wordle;
+mod breakout;
 
 fn main() {
     let mut window = WindowSettings::new(
