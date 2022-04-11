@@ -1,4 +1,7 @@
-use super::{Game, HorizontalMovement, BRICK_SIZE};
+use super::{
+    Game, HorizontalMovement, BALL_SIZE, BOTTOM_WALL, BRICK_SIZE, LEFT_WALL, PADDLE_SIZE,
+    RIGHT_WALL, TOP_WALL,
+};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::{
     button::{draw_text, Pos, UIButton},
@@ -8,14 +11,14 @@ use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::{rgb, Event};
 use piston_window::*;
 
-pub struct WordleApp {
+pub struct BreakoutApp {
     state: Game,
     hover_pos: [f64; 2],
 }
 
-impl WordleApp {
+impl BreakoutApp {
     pub fn new() -> Self {
-        WordleApp {
+        BreakoutApp {
             state: Game::new(),
             hover_pos: [0.0, 0.0],
         }
@@ -24,11 +27,8 @@ impl WordleApp {
 
 const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - 100.0;
 const CENTER_X: f64 = (DEFAULT_WIDTH as f64 - BOARD_SIZE) / 2.0;
-const SQUARE_SIZE: f64 = BOARD_SIZE / 6.5;
 
-// Converts Guess to Color
-
-impl MiniApp for WordleApp {
+impl MiniApp for BreakoutApp {
     fn render(
         &mut self,
         window: &mut PistonWindow,
@@ -69,6 +69,12 @@ impl MiniApp for WordleApp {
 
         if let Some(Button::Keyboard(press)) = event.press_args() {
             match press {
+                Key::Left => {
+                    self.state.update(Some(HorizontalMovement::Left));
+                }
+                Key::Right => {
+                    self.state.update(Some(HorizontalMovement::Right));
+                }
                 _ => (),
             }
         }
@@ -94,7 +100,6 @@ impl MiniApp for WordleApp {
                 if config.options.white_theme {
                     Color::BLACK
                 } else {
-                    // black
                     Color::WHITE
                 },
                 Pos { x: 10.0, y: 400.0 },
@@ -102,18 +107,52 @@ impl MiniApp for WordleApp {
                 28,
             );
 
-            // Draw the board
-            let ctx = c.trans(CENTER_X + 80.0, TOP_PAD);
+            let ctx = c.trans(0.0, TOP_PAD);
 
+            // Draw Walls
+            Rectangle::new_border(Color::BLACK, 1.0).draw(
+                [
+                    LEFT_WALL as f64,
+                    TOP_WALL as f64,
+                    (RIGHT_WALL - LEFT_WALL) as f64,
+                    (BOTTOM_WALL - TOP_WALL) as f64,
+                ],
+                &Default::default(),
+                ctx.transform,
+                g,
+            );
+
+            // Draw bricks
             for brick in &self.state.bricks {
                 let rect = [
                     (brick.x + BRICK_SIZE[0]) as f64,
                     (brick.y + BRICK_SIZE[1]) as f64,
-                    brick.x as f64,
-                    brick.y as f64,
+                    BRICK_SIZE[0] as f64,
+                    BRICK_SIZE[1] as f64,
                 ];
                 rectangle(rgb!(200, 200, 100), rect, ctx.transform, g);
             }
+
+            // Draw paddle
+            let paddle_rect = [
+                (self.state.paddle.x + PADDLE_SIZE[0]) as f64,
+                (self.state.paddle.y + PADDLE_SIZE[1]) as f64,
+                PADDLE_SIZE[0] as f64,
+                PADDLE_SIZE[1] as f64,
+            ];
+            rectangle(rgb!(150, 150, 150), paddle_rect, ctx.transform, g);
+
+            // Draw ball
+            let ball_rect = [
+                (self.state.ball.x + BALL_SIZE) as f64,
+                (self.state.ball.y + BALL_SIZE) as f64,
+                self.state.ball.x as f64,
+                self.state.ball.y as f64,
+            ];
+            rectangle(rgb!(100, 200, 100), ball_rect, ctx.transform, g);
+
+            // Run
+            self.state.update(None);
 
             // Update glyphs before rendering
             glyphs.factory.encoder.flush(device);

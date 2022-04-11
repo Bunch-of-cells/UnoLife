@@ -1,3 +1,4 @@
+use crate::breakout::ui::BreakoutApp;
 use crate::puzzle15::ui::Puzzle15App;
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
@@ -18,7 +19,7 @@ use super::{config::Config, highscores::HighScores};
 
 pub const TOP_PAD: f64 = 104.0;
 
-const GAMES: usize = 5;
+const GAMES: usize = 6;
 pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
@@ -37,6 +38,7 @@ impl MainMenu {
                 Box::new(SnakeApp::new()),
                 Box::new(Twenty48App::new()),
                 Box::new(Puzzle15App::new()),
+                Box::new(BreakoutApp::new()),
             ],
         }
     }
@@ -129,6 +131,15 @@ impl MiniApp for MainMenu {
                 Color::BLACK,
                 24,
                 Pos { x: 40.0, y: 360.0 },
+                224.0,
+                56.0,
+            ),
+            UIButton::new(
+                "Play Breakout",
+                Color::CLEAR,
+                Color::BLACK,
+                24,
+                Pos { x: 40.0, y: 420.0 },
                 224.0,
                 56.0,
             ),
