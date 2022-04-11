@@ -3,7 +3,8 @@ extern crate piston_window;
 use crate::components::application::MiniApp;
 use menu::{config::Config, highscores::HighScores, ui::MainMenu};
 use piston_window::*;
-use winit::{window::Icon, platform::windows::IconExtWindows};
+#[cfg(windows)]
+use winit::{platform::windows::IconExtWindows, window::Icon};
 
 mod breakout;
 mod components;
@@ -30,11 +31,14 @@ fn main() {
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
         .unwrap();
-    
-    window.window.ctx.window().set_window_icon(
-        Some(Icon::from_path(assets.join("unolife_logo.ico"), None).unwrap())
-    );
-    
+
+    #[cfg(windows)]
+    {
+        window.window.ctx.window().set_window_icon(Some(
+            Icon::from_path(assets.join("unolife_logo.ico"), None).unwrap(),
+        ));
+    }
+
     let mut main_menu = MainMenu::new();
     let mut config = Config::fetch_config();
     let mut highscores = HighScores::fetch_scores();
