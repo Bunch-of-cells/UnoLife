@@ -7,7 +7,7 @@ use menu::{config::Config, highscores::HighScores, ui::MainMenu};
 use piston_window::*;
 use winit::window::Icon;
 
-// mod breakout;
+mod breakout;
 mod components;
 mod menu;
 mod puzzle15;
