@@ -263,7 +263,11 @@ impl MiniApp for MainMenu {
                         &c,
                         g,
                         glyphs,
-                        rgb!(255, 255, 255),
+                        if config.options.white_theme {
+                            rgb!(0, 0, 0)
+                        } else {
+                            rgb!(255, 255, 255)
+                        },
                         Pos { x: 50.0, y: 300.0 },
                         "Welcome to the home tab!",
                         32,
