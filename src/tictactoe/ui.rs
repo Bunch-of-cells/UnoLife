@@ -24,7 +24,7 @@ impl TicTacToeApp {
     }
 }
 
-const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - 100.0;
+const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - TOP_PAD;
 const CENTER_X: f64 = (DEFAULT_WIDTH as f64 - BOARD_SIZE) / 2.0;
 const SQUARE_SIZE: f64 = BOARD_SIZE / 4.0;
 

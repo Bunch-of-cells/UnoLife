@@ -21,7 +21,7 @@ impl Twenty48App {
     }
 }
 
-const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - 100.0;
+const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - TOP_PAD;
 const CENTER_X: f64 = (DEFAULT_WIDTH as f64 - BOARD_SIZE) / 2.0;
 const SQUARE_SIZE: f64 = BOARD_SIZE / 4.5;
 
@@ -181,7 +181,7 @@ impl MiniApp for Twenty48App {
             }
 
             // Draw the board
-            let ctx = c.trans(CENTER_X + 80.0, TOP_PAD);
+            let ctx = c.trans(CENTER_X + 40.0, TOP_PAD);
 
             for (i, &val) in self.game.board.iter().enumerate() {
                 let x = i % Game::WIDTH;

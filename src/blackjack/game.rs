@@ -68,13 +68,13 @@ impl Game {
 
     pub fn start(&mut self) {
         self.dealer
-            .push(Card::CARDS.choose(&mut rand::thread_rng()).unwrap().clone());
+            .push(*Card::CARDS.choose(&mut rand::thread_rng()).unwrap());
         self.player
-            .push(Card::CARDS.choose(&mut rand::thread_rng()).unwrap().clone());
+            .push(*Card::CARDS.choose(&mut rand::thread_rng()).unwrap());
         self.dealer
-            .push(Card::CARDS.choose(&mut rand::thread_rng()).unwrap().clone());
+            .push(*Card::CARDS.choose(&mut rand::thread_rng()).unwrap());
         self.player
-            .push(Card::CARDS.choose(&mut rand::thread_rng()).unwrap().clone());
+            .push(*Card::CARDS.choose(&mut rand::thread_rng()).unwrap());
     }
 
     pub fn hit(&mut self) {
