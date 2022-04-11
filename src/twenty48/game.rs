@@ -182,6 +182,13 @@ impl Game {
         }
     }
 
+    pub fn reset(&mut self) {
+        self.board = [0; Self::GRIDSIZE];
+        self.add_random_tile();
+        self.add_random_tile();
+        self.state = GameState::Playing;
+    }
+
     pub fn step(&mut self, direction: Direction) {
         if self.state != GameState::Playing {
             return;

@@ -73,4 +73,5 @@ pub struct HighScoreOptions {
     pub tictactoe_purple: u32,
     pub wordle: u32,
     pub snake: u32,
+    pub twenty48: u32,
 }

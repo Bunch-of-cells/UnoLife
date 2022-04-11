@@ -5,6 +5,7 @@ use crate::components::{
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::wordle::ui::WordleApp;
+use crate::twenty48::ui::Twenty48App;
 
 use piston_window::*;
 
@@ -12,7 +13,7 @@ use super::{config::Config, highscores::HighScores};
 
 pub const TOP_PAD: f64 = 104.0;
 
-const GAMES: usize = 3;
+const GAMES: usize = 4;
 pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
@@ -29,6 +30,7 @@ impl MainMenu {
                 Box::new(TicTacToeApp::new()),
                 Box::new(WordleApp::new()),
                 Box::new(SnakeApp::new()),
+                Box::new(Twenty48App::new()),
             ],
         }
     }
@@ -103,6 +105,15 @@ impl MiniApp for MainMenu {
                 [0.0, 0.0, 0.0, 1.0],
                 24,
                 Pos { x: 40.0, y: 240.0 },
+                224.0,
+                56.0,
+            ),
+            UIButton::new(
+                "Play 2048",
+                [0.0; 4],
+                [0.0, 0.0, 0.0, 1.0],
+                24,
+                Pos { x: 40.0, y: 300.0 },
                 224.0,
                 56.0,
             ),
