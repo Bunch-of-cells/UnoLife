@@ -15,8 +15,10 @@ mod snake;
 mod tictactoe;
 mod twenty48;
 mod wordle;
+mod reddit_meme;
 
 fn main() {
+
     let mut window = WindowSettings::new(
         "UnoLife",
         [

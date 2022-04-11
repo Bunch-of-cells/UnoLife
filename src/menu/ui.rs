@@ -1,5 +1,6 @@
 use crate::breakout::ui::BreakoutApp;
 use crate::puzzle15::ui::Puzzle15App;
+use crate::reddit_meme::ui::MemeApp;
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::twenty48::ui::Twenty48App;
@@ -19,7 +20,7 @@ use super::{config::Config, highscores::HighScores};
 
 pub const TOP_PAD: f64 = 104.0;
 
-const GAMES: usize = 6;
+const GAMES: usize = 7;
 pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
@@ -39,6 +40,7 @@ impl MainMenu {
                 Box::new(Twenty48App::new()),
                 Box::new(Puzzle15App::new()),
                 Box::new(BreakoutApp::new()),
+                Box::new(MemeApp::new()),
             ],
         }
     }
@@ -143,6 +145,15 @@ impl MiniApp for MainMenu {
                 224.0,
                 56.0,
             ),
+            UIButton::new(
+                "Show Meme",
+                Color::CLEAR,
+                Color::BLACK,
+                24,
+                Pos { x: 40.0, y: 480.0 },
+                224.0,
+                56.0,
+            ),
         ];
 
         let mut config_buttons = [
@@ -232,6 +243,10 @@ impl MiniApp for MainMenu {
                         g,
                     );
                 });
+            },
+            9 => {
+                self.apps[6].render(window, event, glyphs, config, highscores);
+                self.tab = 1;
             }
             _ => self.apps[self.tab - 3].render(window, event, glyphs, config, highscores),
         };
