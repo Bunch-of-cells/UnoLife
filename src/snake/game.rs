@@ -105,7 +105,12 @@ impl Game {
         if self.state != GameState::Playing {
             return;
         }
-        match turn.or(self.snake.body[0].dir) {
+        let dir = if turn != self.snake.body[0].dir.map(|a| a.invert()) {
+            turn.or(self.snake.body[0].dir)
+        } else {
+            self.snake.body[0].dir
+        };
+        match dir {
             Some(Direction::Up) if self.snake.body[0].y == 1 => {
                 return self.state = GameState::Lost
             }
