@@ -2,7 +2,7 @@ use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
-use crate::{Event, rgb};
+use crate::{rgb, Event};
 use piston_window::*;
 
 pub struct WordleApp {
@@ -253,13 +253,18 @@ impl MiniApp for WordleApp {
                             ],
                             4.0,
                         );
-                        Rectangle::new_border(
-                            rgb!(211, 211, 211),
-                            2.0,
-                        )
-                        .draw(rect, &Default::default(), ctx.transform, g);
-                        Rectangle::new(rgb!(100, 100, 100))
-                            .draw(rect, &Default::default(), ctx.transform, g);
+                        Rectangle::new_border(rgb!(211, 211, 211), 2.0).draw(
+                            rect,
+                            &Default::default(),
+                            ctx.transform,
+                            g,
+                        );
+                        Rectangle::new(rgb!(100, 100, 100)).draw(
+                            rect,
+                            &Default::default(),
+                            ctx.transform,
+                            g,
+                        );
                         if first {
                             if let Some(&char) = self.guess.as_bytes().get(x) {
                                 draw_text(

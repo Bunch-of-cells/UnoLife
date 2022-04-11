@@ -3,7 +3,7 @@ use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::*;
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::tictactoe::{negamax_root, Mark};
-use crate::{Event, rgb};
+use crate::{rgb, Event};
 use piston_window::*;
 
 pub struct TicTacToeApp {
@@ -201,8 +201,7 @@ impl MiniApp for TicTacToeApp {
             {
                 // Draw the STM
                 let ctx = c.trans(120.0, TOP_PAD * 2.0);
-                let rect =
-                    [0.0, 0.0, SQUARE_SIZE / 1.4, SQUARE_SIZE / 1.4];
+                let rect = [0.0, 0.0, SQUARE_SIZE / 1.4, SQUARE_SIZE / 1.4];
                 rectangle(mark_to_clr(self.state.turn), rect, ctx.transform, g);
             }
 

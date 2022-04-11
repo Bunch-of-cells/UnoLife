@@ -1,11 +1,14 @@
-use crate::{components::{
-    application::MiniApp,
-    button::{draw_text, Pos, UIButton},
-}, rgb};
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::twenty48::ui::Twenty48App;
 use crate::wordle::ui::WordleApp;
+use crate::{
+    components::{
+        application::MiniApp,
+        button::{draw_text, Pos, UIButton},
+    },
+    rgb,
+};
 
 use piston_window::*;
 
