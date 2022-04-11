@@ -1,12 +1,13 @@
 extern crate piston_window;
 
+use std::fs;
+
 use crate::components::application::MiniApp;
 use menu::{config::Config, highscores::HighScores, ui::MainMenu};
 use piston_window::*;
-#[cfg(windows)]
-use winit::{platform::windows::IconExtWindows, window::Icon};
+use winit::window::Icon;
 
-mod breakout;
+// mod breakout;
 mod components;
 mod menu;
 mod puzzle15;
@@ -32,12 +33,13 @@ fn main() {
         .for_folder("assets")
         .unwrap();
 
-    #[cfg(windows)]
-    {
-        window.window.ctx.window().set_window_icon(Some(
-            Icon::from_path(assets.join("unolife_logo.ico"), None).unwrap(),
-        ));
-    }
+    let file = assets.join("unolife_logo.rgba");
+    let data = fs::read(file).unwrap();
+    window
+        .window
+        .ctx
+        .window()
+        .set_window_icon(Some(Icon::from_rgba(data, 500, 500).unwrap()));
 
     let mut main_menu = MainMenu::new();
     let mut config = Config::fetch_config();
