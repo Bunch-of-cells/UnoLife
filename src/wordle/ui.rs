@@ -96,7 +96,7 @@ impl MiniApp for WordleApp {
                             if self.first_result {
                                 self.first_result = false;
                                 highscores.scores.wordle = 0;
-                                highscores.save_scores(highscores.location.clone());
+                                highscores.save_scores();
                             }
                         }
                         Err(error) => {
@@ -109,7 +109,7 @@ impl MiniApp for WordleApp {
                                     if self.first_result {
                                         self.first_result = false;
                                         highscores.scores.wordle += 1;
-                                        highscores.save_scores(highscores.location.clone());
+                                        highscores.save_scores();
                                     }
 
                                     Some("You won!".to_string())

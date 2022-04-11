@@ -73,6 +73,9 @@ impl MiniApp for Twenty48App {
         // handle button events
         if reset_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
+                highscores.scores.twenty48 =
+                    std::cmp::max(highscores.scores.twenty48, self.game.score);
+                highscores.save_scores();
                 self.game.reset();
             } else {
                 reset_button.width += 6.0;
@@ -141,7 +144,7 @@ impl MiniApp for Twenty48App {
                     if self.first_result {
                         highscores.scores.twenty48 =
                             std::cmp::max(highscores.scores.twenty48, self.game.score);
-                        highscores.save_scores(highscores.location.clone());
+                        highscores.save_scores();
                         self.first_result = false;
                     }
 
@@ -160,7 +163,7 @@ impl MiniApp for Twenty48App {
                     if self.first_result {
                         highscores.scores.twenty48 =
                             std::cmp::max(highscores.scores.twenty48, self.game.score);
-                        highscores.save_scores(highscores.location.clone());
+                        highscores.save_scores();
                         self.first_result = false;
                     }
 

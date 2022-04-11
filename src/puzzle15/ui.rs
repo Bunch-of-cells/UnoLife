@@ -118,8 +118,8 @@ impl MiniApp for Puzzle15App {
             if self.game.is_over() {
                 if self.first_result {
                     highscores.scores.puzzle15 =
-                        std::cmp::max(highscores.scores.puzzle15, self.game.moves);
-                    highscores.save_scores(highscores.location.clone());
+                        std::cmp::min(highscores.scores.puzzle15, self.game.moves);
+                    highscores.save_scores();
                     self.first_result = false;
                 }
 

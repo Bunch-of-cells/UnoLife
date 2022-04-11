@@ -137,10 +137,10 @@ impl MiniApp for TicTacToeApp {
                             let result = self.state.is_over();
                             if result == Mark::X {
                                 highscores.scores.tictactoe_lime += 1;
-                                highscores.save_scores(highscores.location.clone());
+                                highscores.save_scores();
                             } else if result == Mark::O {
                                 highscores.scores.tictactoe_purple += 1;
-                                highscores.save_scores(highscores.location.clone());
+                                highscores.save_scores();
                             }
                         }
                     }

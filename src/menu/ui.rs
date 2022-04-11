@@ -189,7 +189,7 @@ impl MiniApp for MainMenu {
                         }
                         1 => {
                             highscores.reset_highscores();
-                            highscores.save_scores(highscores.location.clone());
+                            highscores.save_scores();
                         }
                         _ => (),
                     }

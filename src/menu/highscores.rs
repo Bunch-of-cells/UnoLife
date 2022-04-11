@@ -34,7 +34,7 @@ impl HighScores {
 
         // create file on system if it doesnt exist
         if !Path::new(&highscores.location).exists() {
-            let mut highscores_file = File::create(highscores.location.clone()).unwrap();
+            let mut highscores_file = File::create(&highscores.location).unwrap();
             highscores_file
                 .write_all(
                     serde_json::to_string(&HighScoreOptions::default())
@@ -44,20 +44,20 @@ impl HighScores {
                 .unwrap();
         }
 
-        highscores.load_scores(highscores.location.clone());
+        highscores.load_scores();
         highscores
     }
 
-    pub fn load_scores(&mut self, file: String) {
-        let highscores_file = File::open(file).unwrap();
+    pub fn load_scores(&mut self) {
+        let highscores_file = File::open(&self.location).unwrap();
         let highscores_json: HighScoreOptions =
             serde_json::from_reader(highscores_file).unwrap_or_default();
         self.scores = highscores_json;
     }
 
-    pub fn save_scores(&self, file: String) {
+    pub fn save_scores(&self) {
         let highscores_json = serde_json::to_string(&self.scores).unwrap();
-        let mut highscores_file = File::create(file).unwrap();
+        let mut highscores_file = File::create(&self.location).unwrap();
         highscores_file
             .write_all(highscores_json.as_bytes())
             .unwrap();

@@ -79,7 +79,7 @@ impl MiniApp for SnakeApp {
             if left_click {
                 // update highscore
                 highscores.scores.snake = std::cmp::max(highscores.scores.snake, self.game.score);
-                highscores.save_scores(highscores.location.clone());
+                highscores.save_scores();
                 self.first_result = true;
 
                 self.game.reset();
@@ -147,7 +147,7 @@ impl MiniApp for SnakeApp {
                             highscores.scores.snake,
                             self.game.score,
                         );
-                        highscores.save_scores(highscores.location.clone());
+                        highscores.save_scores();
                         self.first_result = false;
                     }
 
@@ -168,7 +168,7 @@ impl MiniApp for SnakeApp {
                             highscores.scores.snake,
                             self.game.score,
                         );
-                        highscores.save_scores(highscores.location.clone());
+                        highscores.save_scores();
                         self.first_result = false;
                     }
 
