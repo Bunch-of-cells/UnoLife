@@ -8,6 +8,7 @@ mod components;
 mod menu;
 mod snake;
 mod tictactoe;
+mod twenty48;
 mod wordle;
 
 fn main() {
