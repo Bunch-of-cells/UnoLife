@@ -39,7 +39,7 @@ fn main() {
         .window
         .ctx
         .window()
-        .set_window_icon(Some(Icon::from_rgba(data, 500, 500).unwrap()));
+        .set_window_icon(Icon::from_rgba(data, 500, 500).ok());
 
     let mut main_menu = MainMenu::new();
     let mut config = Config::fetch_config();

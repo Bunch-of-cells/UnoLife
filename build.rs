@@ -6,7 +6,7 @@ fn main() {
             .for_folder("assets")
             .unwrap();
         let mut res = WindowsResource::new();
-        res.set_icon(assets.join("unolife_logo.ico"));
+        res.set_icon(assets.join("unolife_logo.ico").to_str().unwrap());
         res.compile().unwrap();
     }
 }
