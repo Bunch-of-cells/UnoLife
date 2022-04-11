@@ -2,7 +2,7 @@ use super::{
     Game, HorizontalMovement, BALL_SIZE, BOTTOM_WALL, BRICK_SIZE, LEFT_WALL, PADDLE_SIZE,
     RIGHT_WALL, TOP_WALL,
 };
-use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
+use crate::components::application::MiniApp;
 use crate::components::{
     button::{draw_text, Pos, UIButton},
     color::Color,
@@ -24,9 +24,6 @@ impl BreakoutApp {
         }
     }
 }
-
-const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - 100.0;
-const CENTER_X: f64 = (DEFAULT_WIDTH as f64 - BOARD_SIZE) / 2.0;
 
 impl MiniApp for BreakoutApp {
     fn render(
