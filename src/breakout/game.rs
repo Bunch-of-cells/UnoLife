@@ -38,7 +38,6 @@ const GAP_BETWEEN_BRICKS_AND_SIDES: f32 = 20.0;
 // const BRICK_COLOR: Color = Color::rgb(0.5, 0.5, 1.0);
 // const WALL_COLOR: Color = Color::rgb(0.8, 0.8, 0.8);
 
-
 struct Paddle {
     x: f32,
     y: f32,
@@ -57,5 +56,3 @@ pub struct Game {
     ball: Ball,
     bricks: Vec<Brick>,
 }
-
-

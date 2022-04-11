@@ -1,6 +1,9 @@
 use super::{Direction, Game, GameState};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
-use crate::components::{button::{draw_text, Pos, UIButton}, color::Color};
+use crate::components::{
+    button::{draw_text, Pos, UIButton},
+    color::Color,
+};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::{rgb, Event};
 use piston_window::*;

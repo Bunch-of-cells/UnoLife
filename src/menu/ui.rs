@@ -7,7 +7,7 @@ use crate::{
     components::{
         application::MiniApp,
         button::{draw_text, Pos, UIButton},
-        color::Color
+        color::Color,
     },
     rgb,
 };

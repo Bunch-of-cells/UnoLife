@@ -2,7 +2,10 @@ use std::time::Instant;
 
 use super::{Direction, Game, GameState};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
-use crate::components::{button::{draw_text, Pos, UIButton}, color::Color};
+use crate::components::{
+    button::{draw_text, Pos, UIButton},
+    color::Color,
+};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::{rgb, Event};
 use piston_window::*;
@@ -186,8 +189,8 @@ impl MiniApp for SnakeApp {
 
             // draw snake
             for cell in &self.game.snake.body {
-                let x = cell.x as f64 * self.size;
-                let y = cell.y as f64 * self.size;
+                let x = (cell.x - 1) as f64 * self.size;
+                let y = (cell.y - 1) as f64 * self.size;
 
                 rectangle(
                     Color::BLACK,
@@ -201,8 +204,8 @@ impl MiniApp for SnakeApp {
             rectangle(
                 rgb!(255, 0, 0),
                 [
-                    self.game.food.x as f64 * self.size,
-                    self.game.food.y as f64 * self.size,
+                    (self.game.food.x - 1) as f64 * self.size,
+                    (self.game.food.y - 1) as f64 * self.size,
                     self.size,
                     self.size,
                 ],
@@ -211,13 +214,13 @@ impl MiniApp for SnakeApp {
             );
 
             // draw boundaries
-            for (x, y) in (0..=self.game.width + 1).zip(0..=self.game.height + 1) {
+            for (x, y) in (0..=self.game.width).zip(0..=self.game.height) {
                 Line::new(Color::BLACK, 0.5).draw(
                     [
                         self.size * (x as f64),
                         0.0,
                         self.size * (x as f64),
-                        self.size * (self.game.height + 1) as f64,
+                        self.size * (self.game.height) as f64,
                     ],
                     &Default::default(),
                     ctx.transform,
@@ -227,7 +230,7 @@ impl MiniApp for SnakeApp {
                     [
                         0.0,
                         self.size * (y as f64),
-                        self.size * (self.game.width + 1) as f64,
+                        self.size * (self.game.width) as f64,
                         self.size * (y as f64),
                     ],
                     &Default::default(),

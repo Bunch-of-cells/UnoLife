@@ -1,6 +1,9 @@
 use super::Board;
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
-use crate::components::{button::{draw_text, Pos, UIButton}, color::Color};
+use crate::components::{
+    button::{draw_text, Pos, UIButton},
+    color::Color,
+};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::tictactoe::{negamax_root, Mark};
 use crate::{rgb, Event};

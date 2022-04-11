@@ -105,6 +105,21 @@ impl Game {
         if self.state != GameState::Playing {
             return;
         }
+        match turn.or(self.snake.body[0].dir) {
+            Some(Direction::Up) if self.snake.body[0].y == 1 => {
+                return self.state = GameState::Lost
+            }
+            Some(Direction::Down) if self.snake.body[0].y == self.height => {
+                return self.state = GameState::Lost
+            }
+            Some(Direction::Left) if self.snake.body[0].x == 1 => {
+                return self.state = GameState::Lost
+            }
+            Some(Direction::Right) if self.snake.body[0].x == self.width => {
+                return self.state = GameState::Lost
+            }
+            _ => (),
+        }
         let mut cloned = self.snake.body.clone();
         for (i, cell) in self.snake.body.iter_mut().enumerate().rev() {
             cell.change_dir(if i == 0 {
@@ -122,8 +137,8 @@ impl Game {
                 }
                 None => self.state = GameState::Won,
             }
-        } else if self.snake.body[0].x >= self.width
-            || self.snake.body[0].y >= self.height
+        } else if self.snake.body[0].x > self.width
+            || self.snake.body[0].y > self.height
             || self.snake.body[0].x == 0
             || self.snake.body[0].y == 0
             || self
@@ -138,8 +153,8 @@ impl Game {
     }
 
     fn gen_non_overlapping(&self) -> Option<(u32, u32)> {
-        (1..self.width)
-            .flat_map(|x| (1..self.height).map(move |y| (x, y)))
+        (1..=self.width)
+            .flat_map(|x| (1..=self.height).map(move |y| (x, y)))
             .filter(|(x, y)| !self.snake.body.iter().any(|c| c.x == *x && c.y == *y))
             .choose(&mut rand::thread_rng())
     }
