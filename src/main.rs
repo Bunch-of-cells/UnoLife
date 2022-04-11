@@ -4,7 +4,6 @@ use crate::components::application::MiniApp;
 use menu::{config::Config, highscores::HighScores, ui::MainMenu};
 use piston_window::*;
 
-mod blackjack;
 mod breakout;
 mod components;
 mod menu;

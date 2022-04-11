@@ -7,6 +7,14 @@ macro_rules! rgb {
     ($r:expr, $g:expr, $b:expr, $a: expr) => {
         [$r as f32 / 255.0, $g as f32 / 255.0, $b as f32 / 255.0, $a]
     };
+
+    (f32 $r:expr, $g:expr, $b:expr) => {
+        [$r, $g, $b, 1.0]
+    };
+
+    (f32 $r:expr, $g:expr, $b:expr, $a: expr) => {
+        [$r, $g, $b, $a]
+    };
 }
 
 pub struct Color;
