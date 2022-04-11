@@ -4,6 +4,7 @@ use crate::components::application::MiniApp;
 use menu::{config::Config, highscores::HighScores, ui::MainMenu};
 use piston_window::*;
 
+mod blackjack;
 mod components;
 mod menu;
 mod puzzle15;
@@ -11,7 +12,6 @@ mod snake;
 mod tictactoe;
 mod twenty48;
 mod wordle;
-mod blackjack;
 
 fn main() {
     let mut window = WindowSettings::new(
