@@ -28,8 +28,19 @@ const SQUARE_SIZE: f64 = BOARD_SIZE / 4.5;
 // Converts Guess to Color
 fn val_to_clr(val: u32) -> [f32; 4] {
     match val {
+        0 => rgb!(204, 192, 179),
         2 => rgb!(238, 228, 218),
-        _ => rgb!(200, 200, 200),
+        4 => rgb!(237, 224, 200),
+        8 => rgb!(242, 177, 121),
+        16 => rgb!(245, 149, 99),
+        32 => rgb!(246, 124, 95),
+        64 => rgb!(246, 94, 59),
+        128 => rgb!(237, 207, 114),
+        256 => rgb!(237, 204, 97),
+        512 => rgb!(237, 200, 80),
+        1024 => rgb!(237, 197, 63),
+        2048 => rgb!(237, 194, 46),
+        _ => rgb!(255, 255, 255),
     }
 }
 
@@ -128,8 +139,8 @@ impl MiniApp for Twenty48App {
                 GameState::Lost => {
                     // update highscore
                     if self.first_result {
-                        highscores.scores.snake =
-                            std::cmp::max(highscores.scores.snake, self.game.score);
+                        highscores.scores.twenty48 =
+                            std::cmp::max(highscores.scores.twenty48, self.game.score);
                         highscores.save_scores(highscores.location.clone());
                         self.first_result = false;
                     }
@@ -147,8 +158,8 @@ impl MiniApp for Twenty48App {
                 GameState::Won => {
                     // update highscore
                     if self.first_result {
-                        highscores.scores.snake =
-                            std::cmp::max(highscores.scores.snake, self.game.score);
+                        highscores.scores.twenty48 =
+                            std::cmp::max(highscores.scores.twenty48, self.game.score);
                         highscores.save_scores(highscores.location.clone());
                         self.first_result = false;
                     }
@@ -187,7 +198,7 @@ impl MiniApp for Twenty48App {
                         &ctx,
                         g,
                         glyphs,
-                        rgb!(255, 255, 255),
+                        rgb!(0, 0, 0),
                         Pos {
                             x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
                             y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
