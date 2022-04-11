@@ -1,4 +1,4 @@
-use rand::prelude::SliceRandom;
+use rand::prelude::IteratorRandom;
 
 pub struct Snake {
     pub body: Vec<SnakeCell>,
@@ -25,13 +25,13 @@ impl Direction {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct SnakeCell {
-    pub x: i32,
-    pub y: i32,
+    pub x: u32,
+    pub y: u32,
     pub dir: Option<Direction>,
 }
 
 impl SnakeCell {
-    fn new(x: i32, y: i32) -> Self {
+    fn new(x: u32, y: u32) -> Self {
         Self { x, y, dir: None }
     }
 
@@ -61,12 +61,12 @@ impl SnakeCell {
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct FoodCell {
-    pub x: i32,
-    pub y: i32,
+    pub x: u32,
+    pub y: u32,
 }
 
 impl FoodCell {
-    pub fn new(x: i32, y: i32) -> Self {
+    pub fn new(x: u32, y: u32) -> Self {
         Self { x, y }
     }
 }
@@ -82,7 +82,7 @@ pub struct Game {
 
 impl Game {
     pub fn new(width: u32, height: u32) -> Self {
-        Self {
+        let mut obj = Self {
             snake: Snake {
                 body: vec![SnakeCell::new(1, 1)],
             },
@@ -91,10 +91,20 @@ impl Game {
             height,
             score: 0,
             state: GameState::Playing,
+        };
+
+        match obj.gen_non_overlapping() {
+            Some((x, y)) => obj.food = FoodCell::new(x, y),
+            None => obj.state = GameState::Won,
         }
+
+        obj
     }
 
     pub fn step(&mut self, turn: Option<Direction>) {
+        if self.state != GameState::Playing {
+            return;
+        }
         let mut cloned = self.snake.body.clone();
         for (i, cell) in self.snake.body.iter_mut().enumerate().rev() {
             cell.change_dir(if i == 0 {
@@ -107,42 +117,40 @@ impl Game {
             self.score += 1;
             match self.gen_non_overlapping() {
                 Some((x, y)) => {
-                    self.food = FoodCell::new(x as i32, y as i32);
+                    self.food = FoodCell::new(x, y);
                     self.snake.body.push(cloned.pop().unwrap());
                 }
                 None => self.state = GameState::Won,
             }
-        } else if self.snake.body[0].x >= self.width as i32
-            || self.snake.body[0].y >= self.height as i32
-            || self.snake.body[0].x == -1
-            || self.snake.body[0].y == -1
+        } else if self.snake.body[0].x >= self.width
+            || self.snake.body[0].y >= self.height
+            || self.snake.body[0].x == 0
+            || self.snake.body[0].y == 0
             || self
                 .snake
                 .body
                 .iter()
                 .skip(1)
-                .any(|c| c == &self.snake.body[0])
+                .any(|c| c.x == self.snake.body[0].x && c.y == self.snake.body[0].y)
         {
             self.state = GameState::Lost;
         }
     }
 
     fn gen_non_overlapping(&self) -> Option<(u32, u32)> {
-        let mut empty = (1..self.width)
+        (1..self.width)
             .flat_map(|x| (1..self.height).map(move |y| (x, y)))
-            .collect::<Vec<_>>();
-        self.snake.body.iter().for_each(|c| {
-            if let Some(i) = empty.iter().position(|&(x, y)| x as i32 == c.x && y as i32 == c.y) {
-                empty.remove(i);
-            }
-        });
-        empty.choose(&mut rand::thread_rng()).cloned()
+            .filter(|(x, y)| !self.snake.body.iter().any(|c| c.x == *x && c.y == *y))
+            .choose(&mut rand::thread_rng())
     }
 
     pub fn reset(&mut self) {
         self.snake.body = vec![SnakeCell::new(1, 1)];
-        self.food = FoodCell::new(5, 5);
         self.score = 0;
+        self.food = match self.gen_non_overlapping() {
+            Some((x, y)) => FoodCell::new(x, y),
+            None => return self.state = GameState::Won,
+        };
         self.state = GameState::Playing;
     }
 }

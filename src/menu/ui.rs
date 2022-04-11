@@ -161,12 +161,12 @@ impl MiniApp for MainMenu {
                         0 => {
                             config.options.white_theme = !config.options.white_theme;
                             config.save_config(config.location.clone());
-                        },
+                        }
                         1 => {
                             highscores.reset_highscores();
                             highscores.save_scores(highscores.location.clone());
-                        },
-                        _ => ()
+                        }
+                        _ => (),
                     }
                 } else {
                     match index {
@@ -176,8 +176,8 @@ impl MiniApp for MainMenu {
                             button.height += 6.0;
                             button.pos.y -= 3.0;
                             button.size += 1;
-                        },
-                        _ => button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35]
+                        }
+                        _ => button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35],
                     }
                 }
             }
@@ -238,7 +238,7 @@ impl MiniApp for MainMenu {
                         &c,
                         g,
                         glyphs,
-                        [0.0, 0.0, 0.0, 1.0],
+                        [1.0; 4],
                         Pos { x: 50.0, y: 300.0 },
                         "Welcome to the home tab!",
                         32,

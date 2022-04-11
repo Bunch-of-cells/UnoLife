@@ -45,19 +45,17 @@ impl MiniApp for SnakeApp {
             self.hover_pos = [cx, cy];
         }
 
-        if self.game.state == GameState::Playing {
-            self.dir = if let Some(Button::Keyboard(press)) = event.press_args() {
-                match press {
-                    Key::Up => if self.dir != Some(Direction::Down) { Some(Direction::Up) } else { self.dir },
-                    Key::Down => if self.dir != Some(Direction::Up) { Some(Direction::Down) } else { self.dir },
-                    Key::Left => if self.dir != Some(Direction::Right) { Some(Direction::Left) } else { self.dir },
-                    Key::Right => if self.dir != Some(Direction::Left) { Some(Direction::Right) } else { self.dir },
-                    _ => None,
-                }
-            } else {
-                self.dir
-            };
-        }
+        self.dir = if let Some(Button::Keyboard(press)) = event.press_args() {
+            match press {
+                Key::Up => Some(Direction::Up),
+                Key::Down => Some(Direction::Down),
+                Key::Left => Some(Direction::Left),
+                Key::Right => Some(Direction::Right),
+                _ => None,
+            }
+        } else {
+            self.dir
+        };
 
         if self.dir.is_some() && self.now.is_none() {
             self.now = Some(Instant::now());
@@ -80,13 +78,10 @@ impl MiniApp for SnakeApp {
         if reset_button.is_over(self.hover_pos[0], self.hover_pos[1]) {
             if left_click {
                 // update highscore
-                highscores.scores.snake = std::cmp::max(
-                    highscores.scores.snake,
-                    self.game.score,
-                );
+                highscores.scores.snake = std::cmp::max(highscores.scores.snake, self.game.score);
                 highscores.save_scores(highscores.location.clone());
                 self.first_result = true;
-                
+
                 self.game.reset();
                 self.dir = None;
                 self.now = None;
@@ -104,12 +99,12 @@ impl MiniApp for SnakeApp {
                 if config.options.white_theme {
                     [1.0; 4]
                 } else {
-                    [100. / 255., 100. / 255., 100. / 255., 1.0]
+                    [100.0 / 255.0, 100.0 / 255.0, 100.0 / 255.0, 1.0]
                 },
                 g,
             );
 
-            let ctx = c.trans((DEFAULT_WIDTH as f64 - (DEFAULT_HEIGHT as f64 - TOP_PAD)) / 2.0, TOP_PAD);
+            let ctx = c.trans((DEFAULT_WIDTH as f64 - (DEFAULT_HEIGHT as f64 - TOP_PAD)) / 2.0, TOP_PAD - self.size / 2.0);
 
             draw_text(
                 &c,
@@ -118,7 +113,6 @@ impl MiniApp for SnakeApp {
                 if config.options.white_theme {
                     [0.0, 0.0, 0.0, 1.0]
                 } else {
-                    // black
                     [1.0, 1.0, 1.0, 1.0]
                 },
                 Pos { x: 10.0, y: 400.0 },
@@ -132,7 +126,6 @@ impl MiniApp for SnakeApp {
                 if config.options.white_theme {
                     [0.0, 0.0, 0.0, 1.0]
                 } else {
-                    // black
                     [1.0, 1.0, 1.0, 1.0]
                 },
                 Pos { x: 10.0, y: 440.0 },
@@ -193,20 +186,8 @@ impl MiniApp for SnakeApp {
 
             // draw snake
             for cell in &self.game.snake.body {
-                let mut remove_x = 0;
-                let mut remove_y = 0;
-                if self.game.state == GameState::Lost {
-                    match self.dir {
-                        Some(Direction::Right) => remove_x = 1,
-                        Some(Direction::Down) => remove_y = 1,
-                        Some(Direction::Left) => remove_x = -1,
-                        Some(Direction::Up) => remove_y = -1,
-                        _ => (),
-                    }
-                }
-
-                let x = (cell.x - remove_x) as f64 * self.size;
-                let y = (cell.y - remove_y) as f64 * self.size;
+                let x = cell.x as f64 * self.size;
+                let y = cell.y as f64 * self.size;
 
                 rectangle(
                     [0.0, 0.0, 0.0, 1.0],
@@ -230,13 +211,13 @@ impl MiniApp for SnakeApp {
             );
 
             // draw boundaries
-            for (x, y) in (0..=self.game.width).zip(0..=self.game.height) {
+            for (x, y) in (0..=self.game.width + 1).zip(0..=self.game.height + 1) {
                 Line::new([0.0, 0.0, 0.0, 1.0], 0.5).draw(
                     [
                         self.size * (x as f64),
-                        self.size * (0 as f64),
+                        0.0,
                         self.size * (x as f64),
-                        self.size * (self.game.height as f64),
+                        self.size * (self.game.height + 1) as f64,
                     ],
                     &Default::default(),
                     ctx.transform,
@@ -244,9 +225,9 @@ impl MiniApp for SnakeApp {
                 );
                 Line::new([0.0, 0.0, 0.0, 1.0], 0.5).draw(
                     [
-                        self.size * (0 as f64),
+                        0.0,
                         self.size * (y as f64),
-                        self.size * (self.game.width as f64),
+                        self.size * (self.game.width + 1) as f64,
                         self.size * (y as f64),
                     ],
                     &Default::default(),
