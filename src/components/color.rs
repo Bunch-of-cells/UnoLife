@@ -16,4 +16,7 @@ impl Color {
     pub const BLACK: [f32; 4] = rgb!(0, 0, 0);
     pub const CLEAR: [f32; 4] = rgb!(0, 0, 0, 0.0);
     pub const RESET: [f32; 4] = rgb!(242, 87, 87, 0.9);
+    pub const LOSE_TEXT: [f32; 4] = rgb!(242, 87, 87);
+    pub const WIN_TEXT: [f32; 4] = rgb!(43, 255, 0);
+    pub const DARK_THEME_BG: [f32; 4] = rgb!(100, 100, 100);
 }

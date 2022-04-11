@@ -104,7 +104,7 @@ impl MiniApp for Twenty48App {
                 if config.options.white_theme {
                     Color::WHITE
                 } else {
-                    rgb!(100, 100, 100)
+                    Color::DARK_THEME_BG
                 },
                 g,
             );
@@ -155,7 +155,7 @@ impl MiniApp for Twenty48App {
                         &c,
                         g,
                         glyphs,
-                        rgb!(242, 87, 87, 0.9),
+                        Color::LOSE_TEXT,
                         Pos { x: 10.0, y: 200.0 },
                         "Game Over",
                         24,
@@ -174,7 +174,7 @@ impl MiniApp for Twenty48App {
                         &c,
                         g,
                         glyphs,
-                        rgb!(43, 255, 0),
+                        Color::WIN_TEXT,
                         Pos { x: 10.0, y: 200.0 },
                         "You win!",
                         20,

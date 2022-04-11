@@ -140,7 +140,7 @@ impl MiniApp for WordleApp {
                 if config.options.white_theme {
                     Color::WHITE
                 } else {
-                    rgb!(100, 100, 100)
+                    Color::DARK_THEME_BG
                 },
                 g,
             );
@@ -171,7 +171,7 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        rgb!(242, 87, 87),
+                        Color::LOSE_TEXT,
                         Pos { x: 10.0, y: 200.0 },
                         text,
                         24,
@@ -191,7 +191,7 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        rgb!(43, 255, 0),
+                        Color::WIN_TEXT,
                         Pos { x: 10.0, y: 200.0 },
                         text,
                         20,

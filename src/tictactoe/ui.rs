@@ -158,7 +158,7 @@ impl MiniApp for TicTacToeApp {
                 if config.options.white_theme {
                     Color::WHITE
                 } else {
-                    rgb!(100, 100, 100)
+                    Color::DARK_THEME_BG
                 },
                 g,
             );
