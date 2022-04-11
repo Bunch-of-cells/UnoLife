@@ -4,7 +4,7 @@ use super::{Direction, Game, GameState};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
-use crate::Event;
+use crate::{Event, rgb};
 use piston_window::*;
 
 const GRID_SIZE: u32 = 30;
@@ -66,8 +66,8 @@ impl MiniApp for SnakeApp {
         // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
-            [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
-            [1.0, 1.0, 1.0, 1.0],
+            rgb!(242, 87, 87, 0.9),
+            rgb!(255, 255, 255),
             24,
             Pos { x: 808.0, y: 145.0 },
             160.0,
@@ -97,9 +97,9 @@ impl MiniApp for SnakeApp {
         window.draw_2d(event, |c, g, device| {
             clear(
                 if config.options.white_theme {
-                    [1.0; 4]
+                    rgb!(255, 255, 255)
                 } else {
-                    [100.0 / 255.0, 100.0 / 255.0, 100.0 / 255.0, 1.0]
+                    rgb!(100, 100, 100)
                 },
                 g,
             );
@@ -111,9 +111,9 @@ impl MiniApp for SnakeApp {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    [0.0, 0.0, 0.0, 1.0]
+                    rgb!(0, 0, 0)
                 } else {
-                    [1.0, 1.0, 1.0, 1.0]
+                    rgb!(255, 255, 255)
                 },
                 Pos { x: 10.0, y: 400.0 },
                 &format!("Score: {}", self.game.score),
@@ -124,9 +124,9 @@ impl MiniApp for SnakeApp {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    [0.0, 0.0, 0.0, 1.0]
+                    rgb!(0, 0, 0)
                 } else {
-                    [1.0, 1.0, 1.0, 1.0]
+                    rgb!(255, 255, 255)
                 },
                 Pos { x: 10.0, y: 440.0 },
                 &format!("Highscore: {}", highscores.scores.snake),
@@ -155,7 +155,7 @@ impl MiniApp for SnakeApp {
                         &c,
                         g,
                         glyphs,
-                        [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 1.0],
+                        rgb!(242, 87, 87),
                         Pos { x: 10.0, y: 528.0 },
                         "You lost!",
                         28,
@@ -176,7 +176,7 @@ impl MiniApp for SnakeApp {
                         &c,
                         g,
                         glyphs,
-                        [43.0 / 255.0, 1.0, 0.0, 1.0],
+                        rgb!(43, 255, 0),
                         Pos { x: 10.0, y: 528.0 },
                         "You win!",
                         28,
@@ -190,7 +190,7 @@ impl MiniApp for SnakeApp {
                 let y = cell.y as f64 * self.size;
 
                 rectangle(
-                    [0.0, 0.0, 0.0, 1.0],
+                    rgb!(0, 0, 0),
                     [x, y, self.size, self.size],
                     ctx.transform,
                     g,
@@ -199,7 +199,7 @@ impl MiniApp for SnakeApp {
 
             // draw food
             rectangle(
-                [1.0, 0.0, 0.0, 1.0],
+                rgb!(255, 0, 0),
                 [
                     self.game.food.x as f64 * self.size,
                     self.game.food.y as f64 * self.size,
@@ -212,7 +212,7 @@ impl MiniApp for SnakeApp {
 
             // draw boundaries
             for (x, y) in (0..=self.game.width + 1).zip(0..=self.game.height + 1) {
-                Line::new([0.0, 0.0, 0.0, 1.0], 0.5).draw(
+                Line::new(rgb!(0, 0, 0), 0.5).draw(
                     [
                         self.size * (x as f64),
                         0.0,
@@ -223,7 +223,7 @@ impl MiniApp for SnakeApp {
                     ctx.transform,
                     g,
                 );
-                Line::new([0.0, 0.0, 0.0, 1.0], 0.5).draw(
+                Line::new(rgb!(0, 0, 0), 0.5).draw(
                     [
                         0.0,
                         self.size * (y as f64),

@@ -20,7 +20,7 @@ pub fn sin_bounce(target: f64, factor: f64, time_passed: f64) -> Option<f64> {
 pub fn bounce(window: &mut PistonWindow, pos: Pos, left: bool, speed: i32) {
     if left {
         window.set_position(Position {
-            x: (0.0 - window.size().width) as i32,
+            x: -window.size().width as i32,
             y: pos.y as i32,
         });
 

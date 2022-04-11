@@ -44,7 +44,7 @@ impl Config {
 
     pub fn load_config(&mut self, file: String) {
         let config_file = File::open(file).unwrap();
-        let config_json: ConfigOptions = serde_json::from_reader(config_file).unwrap();
+        let config_json: ConfigOptions = serde_json::from_reader(config_file).unwrap_or_default();
         self.options = config_json;
     }
 

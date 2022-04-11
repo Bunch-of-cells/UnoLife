@@ -1,8 +1,8 @@
-use super::{Game, Direction, GameState};
+use super::{Direction, Game, GameState};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
-use crate::Event;
+use crate::{Event, rgb};
 use piston_window::*;
 
 pub struct Twenty48App {
@@ -23,16 +23,15 @@ impl Twenty48App {
 
 const BOARD_SIZE: f64 = DEFAULT_HEIGHT as f64 - 100.0;
 const CENTER_X: f64 = (DEFAULT_WIDTH as f64 - BOARD_SIZE) / 2.0;
-const SQUARE_SIZE: f64 = BOARD_SIZE / 6.5;
+const SQUARE_SIZE: f64 = BOARD_SIZE / 4.5;
 
 // Converts Guess to Color
-// fn guess_to_clr(guess: CharGuess) -> [f32; 4] {
-//     match guess.type_ {
-//         GuessType::Correct => [77.0 / 255.0, 143.0 / 255.0, 69.0 / 255.0, 1.0],
-//         GuessType::OutOfOrder => [212.0 / 255.0, 189.0 / 255.0, 59.0 / 255.0, 1.0],
-//         GuessType::Incorrect => [0.5, 0.5, 0.5, 1.0],
-//     }
-// }
+fn val_to_clr(val: u32) -> [f32; 4] {
+    match val {
+        2 => rgb!(238, 228, 218),
+        _ => rgb!(200, 200, 200),
+    }
+}
 
 impl MiniApp for Twenty48App {
     fn render(
@@ -50,8 +49,8 @@ impl MiniApp for Twenty48App {
         // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
-            [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
-            [1.0, 1.0, 1.0, 1.0],
+            rgb!(242, 87, 87, 0.9),
+            rgb!(255, 255, 255),
             24,
             Pos { x: 791.2, y: 135.2 },
             160.0,
@@ -79,16 +78,16 @@ impl MiniApp for Twenty48App {
                 Key::Down => self.game.step(Direction::Down),
                 Key::Left => self.game.step(Direction::Left),
                 Key::Right => self.game.step(Direction::Right),
-                _ => ()
+                _ => (),
             }
         }
 
         window.draw_2d(event, |c, g, device| {
             clear(
                 if config.options.white_theme {
-                    [1.0; 4]
+                    rgb!(255, 255, 255)
                 } else {
-                    [100. / 255., 100. / 255., 100. / 255., 1.0]
+                    rgb!(100, 100, 100)
                 },
                 g,
             );
@@ -102,9 +101,9 @@ impl MiniApp for Twenty48App {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    [0.0, 0.0, 0.0, 1.0]
+                    rgb!(0, 0, 0)
                 } else {
-                    [1.0, 1.0, 1.0, 1.0]
+                    rgb!(255, 255, 255)
                 },
                 Pos { x: 10.0, y: 400.0 },
                 &format!("Score: {}", self.game.score),
@@ -115,9 +114,9 @@ impl MiniApp for Twenty48App {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    [0.0, 0.0, 0.0, 1.0]
+                    rgb!(0, 0, 0)
                 } else {
-                    [1.0, 1.0, 1.0, 1.0]
+                    rgb!(255, 255, 255)
                 },
                 Pos { x: 10.0, y: 440.0 },
                 &format!("Highscore: {}", highscores.scores.twenty48),
@@ -129,10 +128,8 @@ impl MiniApp for Twenty48App {
                 GameState::Lost => {
                     // update highscore
                     if self.first_result {
-                        highscores.scores.snake = std::cmp::max(
-                            highscores.scores.snake,
-                            self.game.score,
-                        );
+                        highscores.scores.snake =
+                            std::cmp::max(highscores.scores.snake, self.game.score);
                         highscores.save_scores(highscores.location.clone());
                         self.first_result = false;
                     }
@@ -141,19 +138,17 @@ impl MiniApp for Twenty48App {
                         &c,
                         g,
                         glyphs,
-                        [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 1.0],
+                        rgb!(242, 87, 87, 0.9),
                         Pos { x: 10.0, y: 200.0 },
                         "Game Over",
                         24,
                     );
-                },
+                }
                 GameState::Won => {
                     // update highscore
                     if self.first_result {
-                        highscores.scores.snake = std::cmp::max(
-                            highscores.scores.snake,
-                            self.game.score,
-                        );
+                        highscores.scores.snake =
+                            std::cmp::max(highscores.scores.snake, self.game.score);
                         highscores.save_scores(highscores.location.clone());
                         self.first_result = false;
                     }
@@ -162,17 +157,46 @@ impl MiniApp for Twenty48App {
                         &c,
                         g,
                         glyphs,
-                        [43.0 / 255.0, 1.0, 0.0, 1.0],
+                        rgb!(43, 255, 0),
                         Pos { x: 10.0, y: 200.0 },
                         "You win!",
                         20,
                     );
                 }
-                GameState::Playing => ()
+                GameState::Playing => (),
             }
 
             // Draw the board
             let ctx = c.trans(CENTER_X + 80.0, TOP_PAD);
+
+            for (i, &val) in self.game.board.iter().enumerate() {
+                let x = i % Game::WIDTH;
+                let y = i / Game::LENGTH;
+                let rect = math::margin_rectangle(
+                    [
+                        SQUARE_SIZE * (x as f64),
+                        SQUARE_SIZE * (y as f64),
+                        SQUARE_SIZE,
+                        SQUARE_SIZE,
+                    ],
+                    4.0,
+                );
+                Rectangle::new(val_to_clr(val)).draw(rect, &Default::default(), ctx.transform, g);
+                if val != 0 {
+                    draw_text(
+                        &ctx,
+                        g,
+                        glyphs,
+                        rgb!(255, 255, 255),
+                        Pos {
+                            x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
+                            y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
+                        },
+                        &val.to_string(),
+                        30,
+                    );
+                }
+            }
 
             // draw buttons
             reset_button.draw(&c, g, glyphs);

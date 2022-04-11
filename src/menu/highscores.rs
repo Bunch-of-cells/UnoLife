@@ -50,7 +50,8 @@ impl HighScores {
 
     pub fn load_scores(&mut self, file: String) {
         let highscores_file = File::open(file).unwrap();
-        let highscores_json: HighScoreOptions = serde_json::from_reader(highscores_file).unwrap();
+        let highscores_json: HighScoreOptions =
+            serde_json::from_reader(highscores_file).unwrap_or_default();
         self.scores = highscores_json;
     }
 

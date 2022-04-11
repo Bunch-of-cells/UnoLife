@@ -3,7 +3,7 @@ use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::*;
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
 use crate::tictactoe::{negamax_root, Mark};
-use crate::Event;
+use crate::{Event, rgb};
 use piston_window::*;
 
 pub struct TicTacToeApp {
@@ -31,9 +31,9 @@ const SQUARE_SIZE: f64 = BOARD_SIZE / 4.0;
 // Converts Mark to Color
 fn mark_to_clr(mark: super::Mark) -> [f32; 4] {
     match mark {
-        super::Mark::X => [160.0 / 255.0, 237.0 / 255.0, 138.0 / 255.0, 1.0],
-        super::Mark::O => [233.0 / 255.0, 138.0 / 255.0, 237.0 / 255.0, 1.0],
-        _ => [250.0 / 255.0, 246.0 / 255.0, 188.0 / 255.0, 1.0],
+        super::Mark::X => rgb!(160, 237, 128),
+        super::Mark::O => rgb!(233, 138, 237),
+        _ => rgb!(250, 246, 188),
     }
 }
 
@@ -55,8 +55,8 @@ impl MiniApp for TicTacToeApp {
         // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
-            [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
-            [1.0, 1.0, 1.0, 1.0],
+            rgb!(242, 87, 87, 0.9),
+            rgb!(255, 255, 255),
             24,
             Pos { x: 791.2, y: 135.2 },
             160.0,
@@ -72,8 +72,8 @@ impl MiniApp for TicTacToeApp {
         };
         let mut ai_button = UIButton::new(
             ai_text,
-            [18.0 / 255.0, 156.0 / 255.0, 1.0, 1.0],
-            [1.0, 1.0, 1.0, 1.0],
+            rgb!(18, 156, 255),
+            rgb!(255, 255, 255),
             14,
             Pos { x: 791.2, y: 228.0 },
             160.0,
@@ -153,9 +153,9 @@ impl MiniApp for TicTacToeApp {
         window.draw_2d(event, |c, g, device| {
             clear(
                 if config.options.white_theme {
-                    [1.0; 4]
+                    rgb!(255, 255, 255)
                 } else {
-                    [100. / 255., 100. / 255., 100. / 255., 1.0]
+                    rgb!(100, 100, 100)
                 },
                 g,
             );
@@ -167,7 +167,7 @@ impl MiniApp for TicTacToeApp {
                     &c,
                     g,
                     glyphs,
-                    [0.0, 0.0, 0.0, 1.0],
+                    rgb!(0, 0, 0),
                     Pos { x: 450.0, y: 528.0 },
                     "Lime wins!",
                     32,
@@ -177,7 +177,7 @@ impl MiniApp for TicTacToeApp {
                     &c,
                     g,
                     glyphs,
-                    [0.0, 0.0, 0.0, 1.0],
+                    rgb!(0, 0, 0),
                     Pos { x: 440.0, y: 528.0 },
                     "Purple wins!",
                     32,
@@ -187,7 +187,7 @@ impl MiniApp for TicTacToeApp {
                     &c,
                     g,
                     glyphs,
-                    [0.0, 0.0, 0.0, 1.0],
+                    rgb!(0, 0, 0),
                     Pos { x: 442.0, y: 528.0 },
                     "It's a draw!",
                     32,
@@ -202,7 +202,7 @@ impl MiniApp for TicTacToeApp {
                 // Draw the STM
                 let ctx = c.trans(120.0, TOP_PAD * 2.0);
                 let rect =
-                    math::margin_rectangle([0.0, 0.0, SQUARE_SIZE / 1.4, SQUARE_SIZE / 1.4], 0.0);
+                    [0.0, 0.0, SQUARE_SIZE / 1.4, SQUARE_SIZE / 1.4];
                 rectangle(mark_to_clr(self.state.turn), rect, ctx.transform, g);
             }
 
@@ -236,10 +236,10 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     if config.options.white_theme {
-                        [0.0, 0.0, 0.0, 1.0]
+                        rgb!(0, 0, 0)
                     } else {
                         // black
-                        [1.0, 1.0, 1.0, 1.0]
+                        rgb!(255, 255, 255)
                     },
                     Pos { x: 10.0, y: 400.0 },
                     &format!("Lime wins: {}", highscores.scores.tictactoe_lime),
@@ -250,10 +250,10 @@ impl MiniApp for TicTacToeApp {
                     g,
                     glyphs,
                     if config.options.white_theme {
-                        [0.0, 0.0, 0.0, 1.0]
+                        rgb!(0, 0, 0)
                     } else {
                         // black
-                        [1.0, 1.0, 1.0, 1.0]
+                        rgb!(255, 255, 255)
                     },
                     Pos { x: 10.0, y: 440.0 },
                     &format!("Purple wins: {}", highscores.scores.tictactoe_purple),

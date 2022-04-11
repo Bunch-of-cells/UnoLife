@@ -1,11 +1,11 @@
-use crate::components::{
+use crate::{components::{
     application::MiniApp,
     button::{draw_text, Pos, UIButton},
-};
+}, rgb};
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
-use crate::wordle::ui::WordleApp;
 use crate::twenty48::ui::Twenty48App;
+use crate::wordle::ui::WordleApp;
 
 use piston_window::*;
 
@@ -56,8 +56,8 @@ impl MiniApp for MainMenu {
         let mut buttons = [
             UIButton::new(
                 " Home",
-                [0.0; 4],
-                [0.0, 0.0, 0.0, 1.0],
+                rgb!(0, 0, 0, 0.0),
+                rgb!(0, 0, 0),
                 24,
                 Pos { x: 30.0, y: 0.0 },
                 102.0,
@@ -65,8 +65,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 " Games",
-                [0.0; 4],
-                [0.0, 0.0, 0.0, 1.0],
+                rgb!(0, 0, 0, 0.0),
+                rgb!(0, 0, 0),
                 24,
                 Pos { x: 140.0, y: 0.0 },
                 115.0,
@@ -74,8 +74,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 " Settings",
-                [0.0; 4],
-                [0.0, 0.0, 0.0, 1.0],
+                rgb!(0, 0, 0, 0.0),
+                rgb!(0, 0, 0),
                 24,
                 Pos { x: 270.0, y: 0.0 },
                 126.0,
@@ -83,8 +83,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Play TicTacToe",
-                [0.0; 4],
-                [0.0, 0.0, 0.0, 1.0],
+                rgb!(0, 0, 0, 0.0),
+                rgb!(0, 0, 0),
                 24,
                 Pos { x: 40.0, y: 120.0 },
                 224.0,
@@ -92,8 +92,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Play Wordle",
-                [0.0; 4],
-                [0.0, 0.0, 0.0, 1.0],
+                rgb!(0, 0, 0, 0.0),
+                rgb!(0, 0, 0),
                 24,
                 Pos { x: 40.0, y: 180.0 },
                 224.0,
@@ -101,8 +101,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Play Snake",
-                [0.0; 4],
-                [0.0, 0.0, 0.0, 1.0],
+                rgb!(0, 0, 0, 0.0),
+                rgb!(0, 0, 0),
                 24,
                 Pos { x: 40.0, y: 240.0 },
                 224.0,
@@ -110,8 +110,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Play 2048",
-                [0.0; 4],
-                [0.0, 0.0, 0.0, 1.0],
+                rgb!(0, 0, 0, 0.0),
+                rgb!(0, 0, 0),
                 24,
                 Pos { x: 40.0, y: 300.0 },
                 224.0,
@@ -122,8 +122,8 @@ impl MiniApp for MainMenu {
         let mut config_buttons = [
             UIButton::new(
                 "Dark Theme",
-                [0.0; 4],
-                [0.0, 0.0, 0.0, 1.0],
+                rgb!(0, 0, 0, 0.0),
+                rgb!(0, 0, 0),
                 24,
                 Pos { x: 40.0, y: 120.0 },
                 224.0,
@@ -131,8 +131,8 @@ impl MiniApp for MainMenu {
             ),
             UIButton::new(
                 "Reset Highscores",
-                [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
-                [1.0, 1.0, 1.0, 1.0],
+                rgb!(242, 87, 87, 0.9),
+                rgb!(255, 255, 255),
                 24,
                 Pos { x: 50.0, y: 200.0 },
                 240.0,
@@ -143,10 +143,10 @@ impl MiniApp for MainMenu {
         // change style's depending on theme
         if !config.options.white_theme {
             config_buttons[0].text = "Light Theme".to_string();
-            config_buttons[0].text_color = [1.0; 4];
+            config_buttons[0].text_color = rgb!(255, 255, 255);
 
             for button in buttons.iter_mut() {
-                button.text_color = [1.0; 4];
+                button.text_color = rgb!(255, 255, 255);
             }
         }
 
@@ -159,7 +159,7 @@ impl MiniApp for MainMenu {
                 if left_click {
                     self.tab = index;
                 } else {
-                    button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35];
+                    button.color = rgb!(120, 120, 120, 0.35);
                 }
             }
         }
@@ -188,7 +188,7 @@ impl MiniApp for MainMenu {
                             button.pos.y -= 3.0;
                             button.size += 1;
                         }
-                        _ => button.color = [120.0 / 255.0, 120.0 / 255.0, 120.0 / 255.0, 0.35],
+                        _ => button.color = rgb!(120, 120, 120, 0.35),
                     }
                 }
             }
@@ -199,9 +199,9 @@ impl MiniApp for MainMenu {
                 window.draw_2d(event, |_, g, _| {
                     clear(
                         if config.options.white_theme {
-                            [212.0 / 255.0, 248.0 / 255.0, 1.0, 1.0]
+                            rgb!(212, 248, 255)
                         } else {
-                            [30.0 / 255.0, 30.0 / 255.0, 30.0 / 255.0, 1.0]
+                            rgb!(30, 30, 30)
                         },
                         g,
                     );
@@ -215,9 +215,9 @@ impl MiniApp for MainMenu {
             {
                 rectangle(
                     if config.options.white_theme {
-                        [1.0, 1.0, 1.0, 1.0]
+                        rgb!(255, 255, 255)
                     } else {
-                        [60.0 / 255.0, 60.0 / 255.0, 60.0 / 255.0, 1.0]
+                        rgb!(60, 60, 60)
                     },
                     [0.0, 0.0, size.width, 85.0],
                     c.transform,
@@ -226,7 +226,7 @@ impl MiniApp for MainMenu {
 
                 // draw black line sepperating the task bar from the content
                 line(
-                    [0.0, 0.0, 0.0, 1.0],
+                    rgb!(0, 0, 0),
                     0.5,
                     [0.0, 85.0, size.width, 85.0],
                     c.transform,
@@ -249,7 +249,7 @@ impl MiniApp for MainMenu {
                         &c,
                         g,
                         glyphs,
-                        [1.0; 4],
+                        rgb!(255, 255, 255),
                         Pos { x: 50.0, y: 300.0 },
                         "Welcome to the home tab!",
                         32,

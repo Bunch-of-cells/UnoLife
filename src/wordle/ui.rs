@@ -2,7 +2,7 @@ use super::{CharGuess, Game, GuessError, GuessResult, GuessType};
 use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos, UIButton};
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
-use crate::Event;
+use crate::{Event, rgb};
 use piston_window::*;
 
 pub struct WordleApp {
@@ -32,9 +32,9 @@ const SQUARE_SIZE: f64 = BOARD_SIZE / 6.5;
 // Converts Guess to Color
 fn guess_to_clr(guess: CharGuess) -> [f32; 4] {
     match guess.type_ {
-        GuessType::Correct => [77.0 / 255.0, 143.0 / 255.0, 69.0 / 255.0, 1.0],
-        GuessType::OutOfOrder => [212.0 / 255.0, 189.0 / 255.0, 59.0 / 255.0, 1.0],
-        GuessType::Incorrect => [0.5, 0.5, 0.5, 1.0],
+        GuessType::Correct => rgb!(77, 143, 69),
+        GuessType::OutOfOrder => rgb!(212, 189, 59),
+        GuessType::Incorrect => rgb!(128, 128, 128),
     }
 }
 
@@ -54,8 +54,8 @@ impl MiniApp for WordleApp {
         // init buttons
         let mut reset_button = UIButton::new(
             "     Reset",
-            [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 0.9],
-            [1.0, 1.0, 1.0, 1.0],
+            rgb!(242, 87, 87, 0.9),
+            rgb!(255, 255, 255),
             24,
             Pos { x: 791.2, y: 135.2 },
             160.0,
@@ -135,9 +135,9 @@ impl MiniApp for WordleApp {
         window.draw_2d(event, |c, g, device| {
             clear(
                 if config.options.white_theme {
-                    [1.0; 4]
+                    rgb!(255, 255, 255)
                 } else {
-                    [100. / 255., 100. / 255., 100. / 255., 1.0]
+                    rgb!(100, 100, 100)
                 },
                 g,
             );
@@ -151,10 +151,10 @@ impl MiniApp for WordleApp {
                 g,
                 glyphs,
                 if config.options.white_theme {
-                    [0.0, 0.0, 0.0, 1.0]
+                    rgb!(0, 0, 0)
                 } else {
                     // black
-                    [1.0, 1.0, 1.0, 1.0]
+                    rgb!(255, 255, 255)
                 },
                 Pos { x: 10.0, y: 400.0 },
                 &format!("Win streak: {}", highscores.scores.wordle),
@@ -168,7 +168,7 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        [242.0 / 255.0, 87.0 / 255.0, 87.0 / 255.0, 1.0],
+                        rgb!(242, 87, 87),
                         Pos { x: 10.0, y: 200.0 },
                         text,
                         24,
@@ -178,7 +178,7 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        [77.0 / 255.0, 143.0 / 255.0, 69.0 / 255.0, 1.0],
+                        rgb!(77, 143, 69),
                         Pos { x: 10.0, y: 225.0 },
                         format!("The word was {}", self.state.word).as_str(),
                         24,
@@ -188,7 +188,7 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        [43.0 / 255.0, 1.0, 0.0, 1.0],
+                        rgb!(43, 255, 0),
                         Pos { x: 10.0, y: 200.0 },
                         text,
                         20,
@@ -198,7 +198,7 @@ impl MiniApp for WordleApp {
                         &c,
                         g,
                         glyphs,
-                        [212.0 / 255.0, 189.0 / 255.0, 59.0 / 255.0, 1.0],
+                        rgb!(212, 189, 59),
                         Pos { x: 10.0, y: 200.0 },
                         text,
                         20,
@@ -223,12 +223,6 @@ impl MiniApp for WordleApp {
                             ],
                             4.0,
                         );
-                        Rectangle::new_round_border(
-                            [211.0 / 255.0, 211.0 / 255.0, 211.0 / 255.0, 1.0],
-                            2.0,
-                            2.0,
-                        )
-                        .draw(rect, &Default::default(), ctx.transform, g);
                         Rectangle::new_round(clr, 2.0).draw(
                             rect,
                             &Default::default(),
@@ -239,7 +233,7 @@ impl MiniApp for WordleApp {
                             &ctx,
                             g,
                             glyphs,
-                            [1.0; 4],
+                            rgb!(255, 255, 255),
                             Pos {
                                 x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
                                 y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,
@@ -259,13 +253,12 @@ impl MiniApp for WordleApp {
                             ],
                             4.0,
                         );
-                        Rectangle::new_round_border(
-                            [211.0 / 255.0, 211.0 / 255.0, 211.0 / 255.0, 1.0],
-                            2.0,
+                        Rectangle::new_border(
+                            rgb!(211, 211, 211),
                             2.0,
                         )
                         .draw(rect, &Default::default(), ctx.transform, g);
-                        Rectangle::new_round([100. / 255., 100. / 255., 100. / 255., 1.0], 2.0)
+                        Rectangle::new(rgb!(100, 100, 100))
                             .draw(rect, &Default::default(), ctx.transform, g);
                         if first {
                             if let Some(&char) = self.guess.as_bytes().get(x) {
@@ -273,7 +266,7 @@ impl MiniApp for WordleApp {
                                     &ctx,
                                     g,
                                     glyphs,
-                                    [1.0; 4],
+                                    rgb!(255, 255, 255),
                                     Pos {
                                         x: rect[0] + SQUARE_SIZE / 4.0 + 2.0,
                                         y: rect[1] + SQUARE_SIZE / 2.0 + 5.0,

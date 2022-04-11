@@ -11,9 +11,9 @@ pub struct Game {
 }
 
 impl Game {
-    const LENGTH: usize = 4;
-    const WIDTH: usize = 4;
-    const GRIDSIZE: usize = Self::LENGTH * Self::WIDTH;
+    pub const LENGTH: usize = 4;
+    pub const WIDTH: usize = 4;
+    pub const GRIDSIZE: usize = Self::LENGTH * Self::WIDTH;
 
     pub fn new() -> Self {
         let mut obj = Self {
