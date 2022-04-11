@@ -75,4 +75,5 @@ pub struct HighScoreOptions {
     pub wordle: u32,
     pub snake: u32,
     pub twenty48: u32,
+    pub puzzle15: u32,
 }

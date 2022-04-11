@@ -16,7 +16,8 @@ impl Game {
     }
 
     fn shuffle(&mut self) {
-        while !self.is_solvable() {
+        self.board.shuffle(&mut rand::thread_rng());
+        while self.is_over() || !self.is_solvable() {
             self.board.shuffle(&mut rand::thread_rng());
         }
     }
@@ -53,6 +54,11 @@ impl Game {
         }
 
         count
+    }
+
+    pub fn reset(&mut self) {
+        self.shuffle();
+        self.moves = 0;
     }
 
     pub fn step(&mut self, step: Direction) {

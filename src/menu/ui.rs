@@ -1,3 +1,4 @@
+use crate::puzzle15::ui::Puzzle15App;
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::twenty48::ui::Twenty48App;
@@ -16,7 +17,7 @@ use super::{config::Config, highscores::HighScores};
 
 pub const TOP_PAD: f64 = 104.0;
 
-const GAMES: usize = 4;
+const GAMES: usize = 5;
 pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
@@ -34,6 +35,7 @@ impl MainMenu {
                 Box::new(WordleApp::new()),
                 Box::new(SnakeApp::new()),
                 Box::new(Twenty48App::new()),
+                Box::new(Puzzle15App::new()),
             ],
         }
     }
@@ -117,6 +119,15 @@ impl MiniApp for MainMenu {
                 rgb!(0, 0, 0),
                 24,
                 Pos { x: 40.0, y: 300.0 },
+                224.0,
+                56.0,
+            ),
+            UIButton::new(
+                "Play 15 Puzzle",
+                rgb!(0, 0, 0, 0.0),
+                rgb!(0, 0, 0),
+                24,
+                Pos { x: 40.0, y: 360.0 },
                 224.0,
                 56.0,
             ),
