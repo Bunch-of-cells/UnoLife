@@ -1,5 +1,5 @@
 use super::{
-    Game, HorizontalMovement, BALL_SIZE, BOTTOM_WALL, BRICK_SIZE, LEFT_WALL, PADDLE_SIZE,
+    Game, HorizontalMovement, BOTTOM_WALL, LEFT_WALL,
     RIGHT_WALL, TOP_WALL,
 };
 use crate::components::application::MiniApp;
@@ -122,29 +122,29 @@ impl MiniApp for BreakoutApp {
             // Draw bricks
             for brick in &self.state.bricks {
                 let rect = [
-                    (brick.x + BRICK_SIZE[0]) as f64,
-                    (brick.y + BRICK_SIZE[1]) as f64,
-                    BRICK_SIZE[0] as f64,
-                    BRICK_SIZE[1] as f64,
+                    (brick.0.x + brick.0.w) as f64,
+                    (brick.0.y + brick.0.h) as f64,
+                    brick.0.w as f64,
+                    brick.0.h as f64,
                 ];
                 rectangle(rgb!(200, 200, 100), rect, ctx.transform, g);
             }
 
             // Draw paddle
             let paddle_rect = [
-                (self.state.paddle.x + PADDLE_SIZE[0]) as f64,
-                (self.state.paddle.y + PADDLE_SIZE[1]) as f64,
-                PADDLE_SIZE[0] as f64,
-                PADDLE_SIZE[1] as f64,
+                (self.state.paddle.0.x + self.state.paddle.0.w) as f64,
+                (self.state.paddle.0.y + self.state.paddle.0.h) as f64,
+                self.state.paddle.0.w as f64,
+                self.state.paddle.0.h as f64,
             ];
             rectangle(rgb!(150, 150, 150), paddle_rect, ctx.transform, g);
 
             // Draw ball
             let ball_rect = [
-                (self.state.ball.x + BALL_SIZE) as f64,
-                (self.state.ball.y + BALL_SIZE) as f64,
-                self.state.ball.x as f64,
-                self.state.ball.y as f64,
+                (self.state.ball.rect.x + self.state.ball.rect.w) as f64,
+                (self.state.ball.rect.y + self.state.ball.rect.h) as f64,
+                self.state.ball.rect.w as f64,
+                self.state.ball.rect.h as f64,
             ];
             rectangle(rgb!(100, 200, 100), ball_rect, ctx.transform, g);
 
