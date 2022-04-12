@@ -1,10 +1,10 @@
 use crate::components::application::MiniApp;
-use crate::menu::ui::TOP_PAD;
+// use crate::menu::ui::TOP_PAD;
 use crate::menu::{config::Config, highscores::HighScores};
-use crate::{Event, components};
-use http_req::response::{Response, Status, StatusCode, Headers};
+use crate::{components, Event};
+// use http_req::response::{Headers, Response, Status, StatusCode};
+// use piston_window::rectangle::square;
 use piston_window::*;
-use piston_window::rectangle::square;
 use std::ffi::OsStr;
 use std::io::Write;
 use std::time::Duration;
@@ -41,11 +41,16 @@ impl MiniApp for MemeApp {
         if unsafe { UPDATE } {
             println!("No meme file");
             let mut writer = Vec::new(); //container for body of a response
-            let res = Request::new(&Uri::try_from("https://api.reddit.com/r/memes/random.json").unwrap()).header("User-Agent", "windows:com.fireplank.unolife:v1.0.0 (by /u/fireplank)")
-                .read_timeout(Some(Duration::from_secs(5)))
-                .write_timeout(Some(Duration::from_secs(5)))
-                .timeout(Some(Duration::from_secs(5)))
-                .send(&mut writer);
+            let res =
+                Request::new(&Uri::try_from("https://api.reddit.com/r/memes/random.json").unwrap())
+                    .header(
+                        "User-Agent",
+                        "windows:com.fireplank.unolife:v1.0.0 (by /u/fireplank)",
+                    )
+                    .read_timeout(Some(Duration::from_secs(5)))
+                    .write_timeout(Some(Duration::from_secs(5)))
+                    .timeout(Some(Duration::from_secs(5)))
+                    .send(&mut writer);
 
             // check if request was successful
             if res.is_err() {
@@ -54,46 +59,78 @@ impl MiniApp for MemeApp {
             }
 
             let res = res.unwrap();
-        
+
             // check if redirect
             if res.status_code().is_redirect() {
                 // get location header from response
                 let location = res.headers().get("location").unwrap();
-                Request::new(&Uri::try_from(location.as_str()).unwrap()).header("User-Agent", "windows:com.fireplank.unolife:v1.0.0 (by /u/fireplank)")
+                Request::new(&Uri::try_from(location.as_str()).unwrap())
+                    .header(
+                        "User-Agent",
+                        "windows:com.fireplank.unolife:v1.0.0 (by /u/fireplank)",
+                    )
                     .read_timeout(Some(Duration::from_secs(10)))
                     .write_timeout(Some(Duration::from_secs(10)))
                     .timeout(Some(Duration::from_secs(5)))
-                    .send(&mut writer).unwrap();
-        
+                    .send(&mut writer)
+                    .unwrap();
+
                 // convert body to json
                 let json: serde_json::Value = serde_json::from_slice(&writer).unwrap();
                 // get data from json
-                let meme_url = json[0]["data"]["children"][0]["data"]["url"].as_str().unwrap();
-                let meme_title = json[0]["data"]["children"][0]["data"]["title"].as_str().unwrap().to_string();
-                let meme_author = json[0]["data"]["children"][0]["data"]["author"].as_str().unwrap().to_string();
-                let meme_score = json[0]["data"]["children"][0]["data"]["score"].as_i64().unwrap();
-                let meme_id = json[0]["data"]["children"][0]["data"]["id"].as_str().unwrap().to_string();
-                let is_nsfw = json[0]["data"]["children"][0]["data"]["over_18"].as_bool().unwrap();
+                let meme_url = json[0]["data"]["children"][0]["data"]["url"]
+                    .as_str()
+                    .unwrap();
+                let meme_title = json[0]["data"]["children"][0]["data"]["title"]
+                    .as_str()
+                    .unwrap()
+                    .to_string();
+                let meme_author = json[0]["data"]["children"][0]["data"]["author"]
+                    .as_str()
+                    .unwrap()
+                    .to_string();
+                let meme_score = json[0]["data"]["children"][0]["data"]["score"]
+                    .as_i64()
+                    .unwrap();
+                let meme_id = json[0]["data"]["children"][0]["data"]["id"]
+                    .as_str()
+                    .unwrap()
+                    .to_string();
+                let is_nsfw = json[0]["data"]["children"][0]["data"]["over_18"]
+                    .as_bool()
+                    .unwrap();
 
                 // download meme
                 let mut writer = Vec::new();
-                Request::new(&Uri::try_from(meme_url).unwrap()).header("User-Agent", "windows:com.fireplank.unolife:v1.0.0 (by /u/fireplank)")
+                Request::new(&Uri::try_from(meme_url).unwrap())
+                    .header(
+                        "User-Agent",
+                        "windows:com.fireplank.unolife:v1.0.0 (by /u/fireplank)",
+                    )
                     .read_timeout(Some(Duration::from_secs(10)))
                     .write_timeout(Some(Duration::from_secs(10)))
                     .timeout(Some(Duration::from_secs(5)))
-                    .send(&mut writer).unwrap();
-            
+                    .send(&mut writer)
+                    .unwrap();
+
                 // save image
-                let file_extension = Path::new(meme_url).extension().unwrap_or_else(|| OsStr::new("jpg") ).to_str().unwrap_or_else(|| "jpg");
+                let file_extension = Path::new(meme_url)
+                    .extension()
+                    .unwrap_or_else(|| OsStr::new("jpg"))
+                    .to_str()
+                    .unwrap_or("jpg");
                 if file_extension != "jpg" && file_extension != "png" && file_extension != "jpeg" {
                     // file format not supported, so skip
                     self.render(windows, event, glyphs, config, highscores);
                 }
-                let mut file = std::fs::File::create(Path::new(&format!("meme.{}", file_extension))).unwrap();
+                let mut file =
+                    std::fs::File::create(Path::new(&format!("meme.{}", file_extension))).unwrap();
                 file.write_all(&writer).unwrap();
                 file.flush().unwrap();
 
-                unsafe { UPDATE = false; }
+                unsafe {
+                    UPDATE = false;
+                }
 
                 let mut texture_context = windows[1].create_texture_context();
                 // make texture for image from response
@@ -101,19 +138,21 @@ impl MiniApp for MemeApp {
                     &mut texture_context,
                     Path::new(&format!("meme.{}", file_extension)),
                     Flip::None,
-                    &TextureSettings::new()
-                ).unwrap();
-                
+                    &TextureSettings::new(),
+                )
+                .unwrap();
+
                 // delete image
                 // std::fs::remove_file(Path::new(&format!("meme.{}", Path::new(meme_url).extension().unwrap().to_str().unwrap_or_else(|| "jpg")))).unwrap();
 
-                let width = texture.get_width().min(components::application::DEFAULT_WIDTH);
-                let height = texture.get_height().min(components::application::DEFAULT_HEIGHT);
+                let width = texture
+                    .get_width()
+                    .min(components::application::DEFAULT_WIDTH);
+                let height = texture
+                    .get_height()
+                    .min(components::application::DEFAULT_HEIGHT);
 
-                windows[1].set_size([
-                    width as u32,
-                    height as u32
-                ]);
+                windows[1].set_size([width as u32, height as u32]);
 
                 // set window title to meme title
                 windows[1].set_title(meme_title);
@@ -121,20 +160,20 @@ impl MiniApp for MemeApp {
                 windows[1].show();
 
                 let image = Image::new().rect([0.0, 0.0, width as f64, height as f64]);
-                
+
                 windows[1].draw_2d(event, |c, g, _| {
                     clear([1.0; 4], g);
                     // draw image with texture
-                    image.draw(
-                        &texture,
-                        &DrawState::new_alpha(),
-                        c.transform,
-                        g,
-                    );
+                    image.draw(&texture, &DrawState::new_alpha(), c.transform, g);
                 });
             } else {
                 // something went wrong, most likely rate limited
-                println!("{} / {} / {}", res.status_code(), res.reason(), res.headers());
+                println!(
+                    "{} / {} / {}",
+                    res.status_code(),
+                    res.reason(),
+                    res.headers()
+                );
             }
         }
     }

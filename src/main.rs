@@ -12,24 +12,18 @@ mod breakout;
 mod components;
 mod menu;
 mod puzzle15;
+mod reddit_meme;
 mod snake;
 mod tictactoe;
 mod twenty48;
 mod wordle;
-mod reddit_meme;
 
 fn create_window() -> PistonWindow {
-    WindowSettings::new(
-        "UnoLife",
-        [
-            0,
-            0,
-        ],
-    )
-    .resizable(false)
-    .build::<PistonWindow>()
-    .unwrap()
-    .max_fps(60)
+    WindowSettings::new("UnoLife", [0, 0])
+        .resizable(false)
+        .build::<PistonWindow>()
+        .unwrap()
+        .max_fps(60)
 }
 
 fn main() {
@@ -39,10 +33,7 @@ fn main() {
         components::application::DEFAULT_WIDTH,
         components::application::DEFAULT_HEIGHT,
     ]);
-    windows[1].set_size([
-        0,
-        0,
-    ]);
+    windows[1].set_size([0, 0]);
 
     let assets = find_folder::Search::ParentsThenKids(3, 3)
         .for_folder("assets")
@@ -60,18 +51,14 @@ fn main() {
     let mut config = Config::fetch_config();
     let mut highscores = HighScores::fetch_scores();
 
-    let mut glyphs = windows[0].load_font(assets.join("Roboto-Regular.ttf")).unwrap();
+    let mut glyphs = windows[0]
+        .load_font(assets.join("Roboto-Regular.ttf"))
+        .unwrap();
     loop {
         for i in 0..windows.len() {
             if let Some(e) = windows[i].next() {
                 if i == 0 {
-                    main_menu.render(
-                        &mut windows,
-                        &e,
-                        &mut glyphs,
-                        &mut config,
-                        &mut highscores,
-                    );
+                    main_menu.render(&mut windows, &e, &mut glyphs, &mut config, &mut highscores);
                 } else if i == 1 {
                     main_menu.apps[6].render(
                         &mut windows,
@@ -100,7 +87,9 @@ fn main() {
                         fs::remove_file(file).unwrap();
                     }
                     windows[i].hide();
-                    unsafe { UPDATE = false; }
+                    unsafe {
+                        UPDATE = false;
+                    }
                 }
             }
         }

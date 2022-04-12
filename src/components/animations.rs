@@ -98,7 +98,7 @@ pub fn bounce(window: &mut PistonWindow, pos: Pos, left: bool, speed: i32) {
 //     while steps < dist {
 //         x += dx / step;
 //         y += dy / step;
-        
+
 //         sleep(time::Duration::from_nanos(1));
 //         steps += step;
 //     }

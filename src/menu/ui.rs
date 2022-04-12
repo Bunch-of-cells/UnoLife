@@ -14,8 +14,8 @@ use crate::{
     rgb,
 };
 
-use piston_window::*;
 use super::{config::Config, highscores::HighScores};
+use piston_window::*;
 
 pub const TOP_PAD: f64 = 104.0;
 
@@ -242,10 +242,12 @@ impl MiniApp for MainMenu {
                         g,
                     );
                 });
-            },
-            9 => { 
+            }
+            9 => {
                 println!("UPDATE TIME");
-                unsafe { UPDATE = true; }
+                unsafe {
+                    UPDATE = true;
+                }
                 self.tab = 1;
             }
             _ => self.apps[self.tab - 3].render(windows, event, glyphs, config, highscores),
