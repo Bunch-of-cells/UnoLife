@@ -7,13 +7,12 @@ use std::{
     fs,
 };
 
+use crate::ASSETS;
+
 const GUESSES: usize = 6;
 lazy_static! {
     static ref WORDS: Vec<String> = {
-        let assets = find_folder::Search::ParentsThenKids(3, 3)
-            .for_folder("assets")
-            .unwrap();
-        let words = fs::read_to_string(assets.join("wordle_list.txt")).unwrap();
+        let words = fs::read_to_string(ASSETS.join("wordle_list.txt")).unwrap();
         words.split_whitespace().map(|a| a.to_uppercase()).collect()
     };
 }

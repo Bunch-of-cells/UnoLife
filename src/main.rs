@@ -1,11 +1,14 @@
 extern crate piston_window;
 
-use std::{fs, path::Path};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 use crate::components::application::MiniApp;
+use lazy_static::lazy_static;
 use menu::{config::Config, highscores::HighScores, ui::MainMenu};
 use piston_window::*;
-use reddit_meme::ui::UPDATE;
 use winit::window::Icon;
 
 mod breakout;
@@ -18,8 +21,14 @@ mod tictactoe;
 mod twenty48;
 mod wordle;
 
+lazy_static! {
+    pub static ref ASSETS: PathBuf = find_folder::Search::ParentsThenKids(3, 3)
+        .for_folder("assets")
+        .unwrap();
+}
+
 fn create_window() -> PistonWindow {
-    WindowSettings::new("UnoLife", [0, 0])
+    WindowSettings::new("UnoLife", [1, 1])
         .resizable(false)
         .build::<PistonWindow>()
         .unwrap()
@@ -35,11 +44,7 @@ fn main() {
     ]);
     windows[1].set_size([0, 0]);
 
-    let assets = find_folder::Search::ParentsThenKids(3, 3)
-        .for_folder("assets")
-        .unwrap();
-
-    let file = assets.join("unolife_logo.rgba");
+    let file = ASSETS.join("unolife_logo.rgba");
     let data = fs::read(file).unwrap();
     windows[0]
         .window
@@ -52,7 +57,7 @@ fn main() {
     let mut highscores = HighScores::fetch_scores();
 
     let mut glyphs = windows[0]
-        .load_font(assets.join("Roboto-Regular.ttf"))
+        .load_font(ASSETS.join("Roboto-Regular.ttf"))
         .unwrap();
     loop {
         for i in 0..windows.len() {
@@ -87,9 +92,9 @@ fn main() {
                         fs::remove_file(file).unwrap();
                     }
                     windows[i].hide();
-                    unsafe {
-                        UPDATE = false;
-                    }
+                    // unsafe {
+                    //     UPDATE = false;
+                    // }
                 }
             }
         }
