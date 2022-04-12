@@ -44,13 +44,12 @@ fn guess_to_clr(guess: CharGuess) -> [f32; 4] {
 impl MiniApp for WordleApp {
     fn render(
         &mut self,
-        windows: &mut Vec<PistonWindow>,
+        window: &mut PistonWindow,
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
         highscores: &mut HighScores,
     ) {
-        let window = &mut windows[0];
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
         }

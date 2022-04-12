@@ -6,7 +6,7 @@ pub trait MiniApp {
     /// Called to draw on the screen.
     fn render(
         &mut self,
-        windows: &mut Vec<PistonWindow>,
+        window: &mut PistonWindow,
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,

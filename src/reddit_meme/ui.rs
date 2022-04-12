@@ -32,7 +32,7 @@ impl MemeApp {
 impl MiniApp for MemeApp {
     fn render(
         &mut self,
-        windows: &mut Vec<PistonWindow>,
+        window: &mut PistonWindow,
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
@@ -121,7 +121,7 @@ impl MiniApp for MemeApp {
                     .unwrap_or("jpg");
                 if file_extension != "jpg" && file_extension != "png" && file_extension != "jpeg" {
                     // file format not supported, so skip
-                    self.render(windows, event, glyphs, config, highscores);
+                    self.render(window, event, glyphs, config, highscores);
                 }
                 let mut file =
                     std::fs::File::create(Path::new(&format!("meme.{}", file_extension))).unwrap();
@@ -132,7 +132,7 @@ impl MiniApp for MemeApp {
                     UPDATE = false;
                 }
 
-                let mut texture_context = windows[1].create_texture_context();
+                let mut texture_context = window.create_texture_context();
                 // make texture for image from response
                 let texture = Texture::from_path(
                     &mut texture_context,
@@ -152,16 +152,16 @@ impl MiniApp for MemeApp {
                     .get_height()
                     .min(components::application::DEFAULT_HEIGHT);
 
-                windows[1].set_size([width as u32, height as u32]);
+                window.set_size([width as u32, height as u32]);
 
                 // set window title to meme title
-                windows[1].set_title(meme_title);
+                window.set_title(meme_title);
                 // show window
-                windows[1].show();
+                window.show();
 
                 let image = Image::new().rect([0.0, 0.0, width as f64, height as f64]);
 
-                windows[1].draw_2d(event, |c, g, _| {
+                window.draw_2d(event, |c, g, _| {
                     clear([1.0; 4], g);
                     // draw image with texture
                     image.draw(&texture, &DrawState::new_alpha(), c.transform, g);

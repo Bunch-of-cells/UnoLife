@@ -1,6 +1,6 @@
 use crate::breakout::ui::BreakoutApp;
 use crate::puzzle15::ui::Puzzle15App;
-use crate::reddit_meme::ui::{MemeApp, UPDATE};
+use crate::reddit_meme::ui::MemeApp;
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::twenty48::ui::Twenty48App;
@@ -48,7 +48,7 @@ impl MainMenu {
 impl MiniApp for MainMenu {
     fn render(
         &mut self,
-        windows: &mut Vec<PistonWindow>,
+        window: &mut PistonWindow,
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
@@ -59,7 +59,7 @@ impl MiniApp for MainMenu {
         }
 
         // init variables
-        let size = windows[0].size();
+        let size = window.size();
 
         // init buttons
         let mut buttons = [
@@ -232,7 +232,7 @@ impl MiniApp for MainMenu {
 
         match self.tab {
             0 | 1 | 2 => {
-                windows[0].draw_2d(event, |_, g, _| {
+                window.draw_2d(event, |_, g, _| {
                     clear(
                         if config.options.white_theme {
                             rgb!(212, 248, 255)
@@ -243,17 +243,10 @@ impl MiniApp for MainMenu {
                     );
                 });
             }
-            9 => {
-                println!("UPDATE TIME");
-                unsafe {
-                    UPDATE = true;
-                }
-                self.tab = 1;
-            }
-            _ => self.apps[self.tab - 3].render(windows, event, glyphs, config, highscores),
+            _ => self.apps[self.tab - 3].render(window, event, glyphs, config, highscores),
         };
 
-        windows[0].draw_2d(event, |c, g, device| {
+        window.draw_2d(event, |c, g, device| {
             // draw taskbar
             {
                 rectangle(
