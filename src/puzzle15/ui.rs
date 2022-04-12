@@ -31,12 +31,13 @@ const SQUARE_SIZE: f64 = BOARD_SIZE / 4.5;
 impl MiniApp for Puzzle15App {
     fn render(
         &mut self,
-        window: &mut PistonWindow,
+        windows: &mut Vec<PistonWindow>,
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
         highscores: &mut HighScores,
     ) {
+        let window = &mut windows[0];
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
         }

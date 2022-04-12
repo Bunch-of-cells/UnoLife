@@ -1,5 +1,6 @@
 use crate::breakout::ui::BreakoutApp;
 use crate::puzzle15::ui::Puzzle15App;
+use crate::reddit_meme::ui::{MemeApp, UPDATE};
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::twenty48::ui::Twenty48App;
@@ -14,16 +15,15 @@ use crate::{
 };
 
 use piston_window::*;
-
 use super::{config::Config, highscores::HighScores};
 
 pub const TOP_PAD: f64 = 104.0;
 
-const GAMES: usize = 6;
+const GAMES: usize = 7;
 pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
-    apps: [Box<dyn MiniApp>; GAMES],
+    pub apps: [Box<dyn MiniApp>; GAMES],
 }
 
 impl MainMenu {
@@ -39,6 +39,7 @@ impl MainMenu {
                 Box::new(Twenty48App::new()),
                 Box::new(Puzzle15App::new()),
                 Box::new(BreakoutApp::new()),
+                Box::new(MemeApp::new()),
             ],
         }
     }
@@ -47,7 +48,7 @@ impl MainMenu {
 impl MiniApp for MainMenu {
     fn render(
         &mut self,
-        window: &mut PistonWindow,
+        windows: &mut Vec<PistonWindow>,
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
@@ -58,7 +59,7 @@ impl MiniApp for MainMenu {
         }
 
         // init variables
-        let size = window.size();
+        let size = windows[0].size();
 
         // init buttons
         let mut buttons = [
@@ -143,6 +144,15 @@ impl MiniApp for MainMenu {
                 224.0,
                 56.0,
             ),
+            UIButton::new(
+                "Show Meme",
+                Color::CLEAR,
+                Color::BLACK,
+                24,
+                Pos { x: 40.0, y: 480.0 },
+                224.0,
+                56.0,
+            ),
         ];
 
         let mut config_buttons = [
@@ -222,7 +232,7 @@ impl MiniApp for MainMenu {
 
         match self.tab {
             0 | 1 | 2 => {
-                window.draw_2d(event, |_, g, _| {
+                windows[0].draw_2d(event, |_, g, _| {
                     clear(
                         if config.options.white_theme {
                             rgb!(212, 248, 255)
@@ -232,11 +242,16 @@ impl MiniApp for MainMenu {
                         g,
                     );
                 });
+            },
+            9 => { 
+                println!("UPDATE TIME");
+                unsafe { UPDATE = true; }
+                self.tab = 1;
             }
-            _ => self.apps[self.tab - 3].render(window, event, glyphs, config, highscores),
+            _ => self.apps[self.tab - 3].render(windows, event, glyphs, config, highscores),
         };
 
-        window.draw_2d(event, |c, g, device| {
+        windows[0].draw_2d(event, |c, g, device| {
             // draw taskbar
             {
                 rectangle(
