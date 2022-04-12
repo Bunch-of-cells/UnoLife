@@ -86,3 +86,20 @@ pub fn bounce(window: &mut PistonWindow, pos: Pos, left: bool, speed: i32) {
         }
     }
 }
+
+// pub fn slide_rectangle(rect: Rectangle, start_pos: Pos, target_pos: Pos, speed: i32) {
+//     let mut x = start_pos.x;
+//     let mut y = start_pos.y;
+//     let mut dx = target_pos.x - start_pos.x;
+//     let mut dy = target_pos.y - start_pos.y;
+//     let mut dist = (dx * dx + dy * dy).sqrt();
+//     let mut step = dist / (speed as f64);
+//     let mut steps = 0.0;
+//     while steps < dist {
+//         x += dx / step;
+//         y += dy / step;
+        
+//         sleep(time::Duration::from_nanos(1));
+//         steps += step;
+//     }
+// }
