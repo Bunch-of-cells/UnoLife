@@ -1,9 +1,6 @@
 extern crate piston_window;
 
-use std::{
-    fs,
-    path::PathBuf,
-};
+use std::{fs, path::PathBuf};
 
 use crate::components::application::MiniApp;
 use lazy_static::lazy_static;

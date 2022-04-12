@@ -1,9 +1,11 @@
 fn main() {
     #[cfg(windows)]
     {
-        use crate::ASSETS;
         use winres::WindowsResource;
-        let path = ASSETS.join("unolife_logo.ico");
+        let assets = find_folder::Search::ParentsThenKids(3, 3)
+            .for_folder("assets")
+            .unwrap();
+        let path = assets.join("unolife_logo.ico");
         let mut res = WindowsResource::new();
         res.set_icon(path.to_str().unwrap());
         res.compile().unwrap();
