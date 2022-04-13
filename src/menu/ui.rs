@@ -349,9 +349,9 @@ impl MiniApp for MainMenu {
                         } else {
                             Color::WHITE
                         },
-                        Pos { x: 50.0, y: 300.0 },
-                        "Highscores",
-                        32,
+                        Pos { x: 50.0, y: 150.0 },
+                        &format!("Most numbers of Apples in a single Snake run: {}", highscores.scores.snake),
+                        22,
                     );
                 }
                 _ => (),
