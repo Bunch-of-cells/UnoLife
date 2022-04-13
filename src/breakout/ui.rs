@@ -1,7 +1,4 @@
-use super::{
-    Game, HorizontalMovement, BOTTOM_WALL, LEFT_WALL,
-    RIGHT_WALL, TOP_WALL,
-};
+use super::{Game, HorizontalMovement, BOTTOM_WALL, LEFT_WALL, RIGHT_WALL, TOP_WALL};
 use crate::components::application::MiniApp;
 use crate::components::{
     button::{draw_text, Pos, UIButton},
@@ -24,6 +21,12 @@ impl BreakoutApp {
         }
     }
 }
+
+// const BACKGROUND_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
+// const PADDLE_COLOR: Color = Color::rgb(0.3, 0.3, 0.7);
+// const BALL_COLOR: Color = Color::rgb(1.0, 0.5, 0.5);
+// const BRICK_COLOR: Color = Color::rgb(0.5, 0.5, 1.0);
+// const WALL_COLOR: Color = Color::rgb(0.8, 0.8, 0.8);
 
 impl MiniApp for BreakoutApp {
     fn render(
@@ -122,20 +125,20 @@ impl MiniApp for BreakoutApp {
             // Draw bricks
             for brick in &self.state.bricks {
                 let rect = [
-                    (brick.0.x + brick.0.w) as f64,
-                    (brick.0.y + brick.0.h) as f64,
-                    brick.0.w as f64,
-                    brick.0.h as f64,
+                    (brick.x + brick.w) as f64,
+                    (brick.y + brick.h) as f64,
+                    brick.w as f64,
+                    brick.h as f64,
                 ];
                 rectangle(rgb!(200, 200, 100), rect, ctx.transform, g);
             }
 
             // Draw paddle
             let paddle_rect = [
-                (self.state.paddle.0.x + self.state.paddle.0.w) as f64,
-                (self.state.paddle.0.y + self.state.paddle.0.h) as f64,
-                self.state.paddle.0.w as f64,
-                self.state.paddle.0.h as f64,
+                (self.state.paddle.x + self.state.paddle.w) as f64,
+                (self.state.paddle.y + self.state.paddle.h) as f64,
+                self.state.paddle.w as f64,
+                self.state.paddle.h as f64,
             ];
             rectangle(rgb!(150, 150, 150), paddle_rect, ctx.transform, g);
 
