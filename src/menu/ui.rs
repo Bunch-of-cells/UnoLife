@@ -62,14 +62,14 @@ impl MiniApp for MainMenu {
         let size = window.size();
 
         // init buttons
-        let mut buttons = [
+        let mut tabs = [
             UIButton::new(
                 " Home",
                 Color::CLEAR,
                 Color::BLACK,
                 24,
                 Pos { x: 30.0, y: 0.0 },
-                102.0,
+                100.0,
                 84.0,
             ),
             UIButton::new(
@@ -77,7 +77,7 @@ impl MiniApp for MainMenu {
                 Color::CLEAR,
                 Color::BLACK,
                 24,
-                Pos { x: 140.0, y: 0.0 },
+                Pos { x: 130.0, y: 0.0 },
                 115.0,
                 84.0,
             ),
@@ -86,10 +86,22 @@ impl MiniApp for MainMenu {
                 Color::CLEAR,
                 Color::BLACK,
                 24,
-                Pos { x: 270.0, y: 0.0 },
-                126.0,
+                Pos { x: 245.0, y: 0.0 },
+                120.0,
                 84.0,
             ),
+            UIButton::new(
+                " Highscores",
+                Color::CLEAR,
+                Color::BLACK,
+                24,
+                Pos { x: 365.0, y: 0.0 },
+                165.0,
+                84.0,
+            ),
+        ];
+
+        let mut game_buttons = [
             UIButton::new(
                 "Play TicTacToe",
                 Color::CLEAR,
@@ -181,7 +193,11 @@ impl MiniApp for MainMenu {
             config_buttons[0].text = "Light Theme".to_string();
             config_buttons[0].text_color = Color::WHITE;
 
-            for button in buttons.iter_mut() {
+            for button in tabs.iter_mut() {
+                button.text_color = Color::WHITE;
+            }
+
+            for button in game_buttons.iter_mut() {
                 button.text_color = Color::WHITE;
             }
         }
@@ -189,9 +205,8 @@ impl MiniApp for MainMenu {
         let left_click = event.press_args() == Some(Button::Mouse(MouseButton::Left));
 
         // handle button events
-        for (index, button) in buttons.iter_mut().enumerate() {
-            if (index < 3 || self.tab == 1) && button.is_over(self.hover_pos[0], self.hover_pos[1])
-            {
+        for (index, button) in tabs.iter_mut().enumerate() {
+            if button.is_over(self.hover_pos[0], self.hover_pos[1]) {
                 if left_click {
                     self.tab = index;
                 } else {
@@ -200,38 +215,53 @@ impl MiniApp for MainMenu {
             }
         }
 
-        // handle config button events
-        for (index, button) in config_buttons.iter_mut().enumerate() {
-            if self.tab == 2 && button.is_over(self.hover_pos[0], self.hover_pos[1]) {
-                if left_click {
-                    match index {
-                        0 => {
-                            config.options.white_theme = !config.options.white_theme;
-                            config.save_config(config.location.clone());
-                        }
-                        1 => {
-                            highscores.reset_highscores();
-                            highscores.save_scores();
-                        }
-                        _ => (),
+        // Handle if hovered on / pressed buttons in game tab
+        if self.tab == 1 {
+            for (index, button) in game_buttons.iter_mut().enumerate() {
+                if button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+                    if left_click {
+                        self.tab = index + tabs.len();
+                    } else {
+                        button.color = rgb!(120, 120, 120, 0.35);
                     }
-                } else {
-                    match index {
-                        1 => {
-                            button.width += 6.0;
-                            button.pos.x -= 3.0;
-                            button.height += 6.0;
-                            button.pos.y -= 3.0;
-                            button.size += 1;
+                }
+            }
+        }
+
+        // handle config button events
+        if self.tab == 2 {
+            for (index, button) in config_buttons.iter_mut().enumerate() {
+                if button.is_over(self.hover_pos[0], self.hover_pos[1]) {
+                    if left_click {
+                        match index {
+                            0 => {
+                                config.options.white_theme = !config.options.white_theme;
+                                config.save_config(config.location.clone());
+                            }
+                            1 => {
+                                highscores.reset_highscores();
+                                highscores.save_scores();
+                            }
+                            _ => (),
                         }
-                        _ => button.color = rgb!(120, 120, 120, 0.35),
+                    } else {
+                        match index {
+                            1 => {
+                                button.width += 6.0;
+                                button.pos.x -= 3.0;
+                                button.height += 6.0;
+                                button.pos.y -= 3.0;
+                                button.size += 1;
+                            }
+                            _ => button.color = rgb!(120, 120, 120, 0.35),
+                        }
                     }
                 }
             }
         }
 
         match self.tab {
-            0 | 1 | 2 => {
+            tab if tab < tabs.len() => {
                 window.draw_2d(event, |_, g, _| {
                     clear(
                         if config.options.white_theme {
@@ -243,7 +273,7 @@ impl MiniApp for MainMenu {
                     );
                 });
             }
-            _ => self.apps[self.tab - 3].render(window, event, glyphs, config, highscores),
+            _ => self.apps[self.tab - tabs.len()].render(window, event, glyphs, config, highscores),
         };
 
         window.draw_2d(event, |c, g, device| {
@@ -270,10 +300,8 @@ impl MiniApp for MainMenu {
                 );
 
                 // draw buttons
-                for (index, button) in buttons.iter().enumerate() {
-                    if index < 3 {
-                        button.draw(&c, g, glyphs);
-                    }
+                for button in tabs.iter() {
+                    button.draw(&c, g, glyphs);
                 }
             }
 
@@ -298,10 +326,8 @@ impl MiniApp for MainMenu {
                 1 => {
                     // GAMES TAB
                     // draw
-                    for (index, button) in buttons.iter().enumerate() {
-                        if index > 2 {
-                            button.draw(&c, g, glyphs);
-                        }
+                    for button in game_buttons.iter() {
+                        button.draw(&c, g, glyphs);
                     }
                 }
                 2 => {
@@ -310,6 +336,23 @@ impl MiniApp for MainMenu {
                     for button in config_buttons {
                         button.draw(&c, g, glyphs);
                     }
+                }
+                3 => {
+                    // HighScores tab
+                    // draw
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos { x: 50.0, y: 300.0 },
+                        "Highscores",
+                        32,
+                    );
                 }
                 _ => (),
             }
