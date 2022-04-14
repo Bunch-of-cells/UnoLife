@@ -90,15 +90,15 @@ impl MiniApp for MainMenu {
                 120.0,
                 84.0,
             ),
-            UIButton::new(
-                " Highscores",
-                Color::CLEAR,
-                Color::BLACK,
-                24,
-                Pos { x: 365.0, y: 0.0 },
-                165.0,
-                84.0,
-            ),
+            // UIButton::new(
+            //     " Highscores",
+            //     Color::CLEAR,
+            //     Color::BLACK,
+            //     24,
+            //     Pos { x: 365.0, y: 0.0 },
+            //     165.0,
+            //     84.0,
+            // ),
         ];
 
         let mut game_buttons = [
@@ -337,23 +337,23 @@ impl MiniApp for MainMenu {
                         button.draw(&c, g, glyphs);
                     }
                 }
-                3 => {
-                    // HighScores tab
-                    // draw
-                    draw_text(
-                        &c,
-                        g,
-                        glyphs,
-                        if config.options.white_theme {
-                            Color::BLACK
-                        } else {
-                            Color::WHITE
-                        },
-                        Pos { x: 50.0, y: 150.0 },
-                        &format!("Most numbers of Apples in a single Snake run: {}", highscores.scores.snake),
-                        22,
-                    );
-                }
+                // 3 => {
+                //     // HighScores tab
+                //     // draw
+                //     draw_text(
+                //         &c,
+                //         g,
+                //         glyphs,
+                //         if config.options.white_theme {
+                //             Color::BLACK
+                //         } else {
+                //             Color::WHITE
+                //         },
+                //         Pos { x: 50.0, y: 150.0 },
+                //         &format!("Most numbers of Apples in a single Snake run: {}", highscores.scores.snake),
+                //         22,
+                //     );
+                // }
                 _ => (),
             }
 
