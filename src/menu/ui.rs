@@ -1,6 +1,5 @@
 use crate::breakout::ui::BreakoutApp;
 use crate::puzzle15::ui::Puzzle15App;
-use crate::reddit_meme::ui::MemeApp;
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::twenty48::ui::Twenty48App;
@@ -19,7 +18,7 @@ use piston_window::*;
 
 pub const TOP_PAD: f64 = 104.0;
 
-const GAMES: usize = 7;
+const GAMES: usize = 6;
 pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
@@ -39,7 +38,6 @@ impl MainMenu {
                 Box::new(Twenty48App::new()),
                 Box::new(Puzzle15App::new()),
                 Box::new(BreakoutApp::new()),
-                Box::new(MemeApp::new()),
             ],
         }
     }

@@ -26,7 +26,7 @@ const GAP_BETWEEN_BRICKS: f32 = 50.0;
 const GAP_BETWEEN_BRICKS_AND_CEILING: f32 = 20.0;
 const GAP_BETWEEN_BRICKS_AND_SIDES: f32 = 20.0;
 
-use std::time::Instant;
+// use std::time::Instant;
 
 use rand::{distributions::Bernoulli, prelude::Distribution};
 

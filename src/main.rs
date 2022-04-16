@@ -12,7 +12,6 @@ mod breakout;
 mod components;
 mod menu;
 mod puzzle15;
-mod reddit_meme;
 mod snake;
 mod tictactoe;
 mod twenty48;
