@@ -154,15 +154,6 @@ impl MiniApp for MainMenu {
                 224.0,
                 56.0,
             ),
-            UIButton::new(
-                "Show Meme",
-                Color::CLEAR,
-                Color::BLACK,
-                24,
-                Pos { x: 40.0, y: 480.0 },
-                224.0,
-                56.0,
-            ),
         ];
 
         let mut config_buttons = [
