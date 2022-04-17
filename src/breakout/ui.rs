@@ -1,7 +1,7 @@
 use super::{Game, HorizontalMovement, BOTTOM_WALL, LEFT_WALL, RIGHT_WALL, TOP_WALL};
 use crate::components::application::MiniApp;
 use crate::components::{
-    button::{draw_text, Pos, UIButton},
+    button::{Pos, UIButton},
     color::Color,
 };
 use crate::menu::{config::Config, highscores::HighScores, ui::TOP_PAD};
@@ -35,7 +35,7 @@ impl MiniApp for BreakoutApp {
         event: &Event,
         glyphs: &mut Glyphs,
         config: &mut Config,
-        highscores: &mut HighScores,
+        _highscores: &mut HighScores,
     ) {
         if let Some([cx, cy]) = event.mouse_cursor_args() {
             self.hover_pos = [cx, cy];
@@ -91,21 +91,6 @@ impl MiniApp for BreakoutApp {
 
             // draw buttons
             reset_button.draw(&c, g, glyphs);
-
-            // draw highscores
-            draw_text(
-                &c,
-                g,
-                glyphs,
-                if config.options.white_theme {
-                    Color::BLACK
-                } else {
-                    Color::WHITE
-                },
-                Pos { x: 10.0, y: 400.0 },
-                &format!("Win streak: {}", highscores.scores.wordle),
-                28,
-            );
 
             let ctx = c.trans(0.0, TOP_PAD);
 
