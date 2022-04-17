@@ -1,9 +1,11 @@
 // use crate::breakout::ui::BreakoutApp;
 use crate::puzzle15::ui::Puzzle15App;
+use crate::reddit_meme::ui::{MemeApp, UPDATE};
 use crate::snake::ui::SnakeApp;
 use crate::tictactoe::ui::TicTacToeApp;
 use crate::twenty48::ui::Twenty48App;
 use crate::wordle::ui::WordleApp;
+
 use crate::{
     components::{
         application::MiniApp,
@@ -17,12 +19,14 @@ use super::{config::Config, highscores::HighScores};
 use piston_window::*;
 
 pub const TOP_PAD: f64 = 104.0;
+pub const TASKBAR_HEIGHT: f64 = 85.0;
 
-const GAMES: usize = 5;
+const GAMES: usize = 6;
 pub struct MainMenu {
     pub hover_pos: [f64; 2],
     pub tab: usize,
     pub apps: [Box<dyn MiniApp>; GAMES],
+    prev_tab: usize,
 }
 
 impl MainMenu {
@@ -37,8 +41,10 @@ impl MainMenu {
                 Box::new(SnakeApp::new()),
                 Box::new(Twenty48App::new()),
                 Box::new(Puzzle15App::new()),
+                Box::new(MemeApp::new()),
                 // Box::new(BreakoutApp::new()),
             ],
+            prev_tab: 69,
         }
     }
 }
@@ -88,15 +94,6 @@ impl MiniApp for MainMenu {
                 120.0,
                 84.0,
             ),
-            // UIButton::new(
-            //     " Highscores",
-            //     Color::CLEAR,
-            //     Color::BLACK,
-            //     24,
-            //     Pos { x: 365.0, y: 0.0 },
-            //     165.0,
-            //     84.0,
-            // ),
         ];
 
         let mut game_buttons = [
@@ -145,15 +142,15 @@ impl MiniApp for MainMenu {
                 224.0,
                 56.0,
             ),
-            // UIButton::new(
-            //     "Play Breakout",
-            //     Color::CLEAR,
-            //     Color::BLACK,
-            //     24,
-            //     Pos { x: 40.0, y: 420.0 },
-            //     224.0,
-            //     56.0,
-            // ),
+            UIButton::new(
+                "Show Meme",
+                Color::CLEAR,
+                Color::BLACK,
+                24,
+                Pos { x: 40.0, y: 420.0 },
+                224.0,
+                56.0,
+            ),
         ];
 
         let mut config_buttons = [
@@ -198,6 +195,7 @@ impl MiniApp for MainMenu {
             if button.is_over(self.hover_pos[0], self.hover_pos[1]) {
                 if left_click {
                     self.tab = index;
+                    self.prev_tab = 69;
                 } else {
                     button.color = rgb!(120, 120, 120, 0.35);
                 }
@@ -210,6 +208,7 @@ impl MiniApp for MainMenu {
                 if button.is_over(self.hover_pos[0], self.hover_pos[1]) {
                     if left_click {
                         self.tab = index + tabs.len();
+                        self.prev_tab = 69;
                     } else {
                         button.color = rgb!(120, 120, 120, 0.35);
                     }
@@ -261,8 +260,25 @@ impl MiniApp for MainMenu {
                         g,
                     );
                 });
+
+                // set update to true because tab is not meme app
+                unsafe {
+                    UPDATE = true;
+                }
+
+                // set window title
+                if self.prev_tab != self.tab {
+                    window.set_title(format!("UnoLife - {}", tabs[self.tab].text.clone().trim()));
+                }
             }
-            _ => self.apps[self.tab - tabs.len()].render(window, event, glyphs, config, highscores),
+            _ => {
+                self.apps[self.tab - tabs.len()].render(window, event, glyphs, config, highscores);
+
+                // set window title
+                if self.prev_tab != self.tab && self.tab != 8 {
+                    window.set_title(format!("UnoLife - {}", game_buttons[self.tab - tabs.len()].text.clone().trim()));
+                }
+            }
         };
 
         window.draw_2d(event, |c, g, device| {
@@ -326,23 +342,6 @@ impl MiniApp for MainMenu {
                         button.draw(&c, g, glyphs);
                     }
                 }
-                // 3 => {
-                //     // HighScores tab
-                //     // draw
-                //     draw_text(
-                //         &c,
-                //         g,
-                //         glyphs,
-                //         if config.options.white_theme {
-                //             Color::BLACK
-                //         } else {
-                //             Color::WHITE
-                //         },
-                //         Pos { x: 50.0, y: 150.0 },
-                //         &format!("Most numbers of Apples in a single Snake run: {}", highscores.scores.snake),
-                //         22,
-                //     );
-                // }
                 _ => (),
             }
 

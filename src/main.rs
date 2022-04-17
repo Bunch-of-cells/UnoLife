@@ -6,6 +6,7 @@ use crate::components::application::MiniApp;
 use lazy_static::lazy_static;
 use menu::{config::Config, highscores::HighScores, ui::MainMenu};
 use piston_window::*;
+use rand::Rng;
 use winit::window::Icon;
 
 mod breakout;
@@ -16,6 +17,7 @@ mod snake;
 mod tictactoe;
 mod twenty48;
 mod wordle;
+mod reddit_meme;
 
 lazy_static! {
     pub static ref ASSETS: PathBuf = find_folder::Search::ParentsThenKids(3, 3)
@@ -36,6 +38,14 @@ fn main() {
         components::application::DEFAULT_WIDTH,
         components::application::DEFAULT_HEIGHT,
     ]);
+
+    // Delete all old meme images
+    for entry in fs::read_dir(ASSETS.as_path()).unwrap() {
+        let path = entry.unwrap().path();
+        if path.is_file() && path.file_name().unwrap().to_str().unwrap().starts_with("meme") {
+            fs::remove_file(path).unwrap();
+        }
+    }
 
     // Set the Icon
     let file = ASSETS.join("unolife_logo.rgba");
