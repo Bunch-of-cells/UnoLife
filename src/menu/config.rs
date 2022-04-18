@@ -63,6 +63,6 @@ pub struct ConfigOptions {
 
 impl Default for ConfigOptions {
     fn default() -> Self {
-        ConfigOptions { white_theme: true }
+        ConfigOptions { white_theme: false }
     }
 }

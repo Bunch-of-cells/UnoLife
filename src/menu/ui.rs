@@ -94,6 +94,15 @@ impl MiniApp for MainMenu {
                 120.0,
                 84.0,
             ),
+            UIButton::new(
+                "About Us",
+                Color::CLEAR,
+                Color::BLACK,
+                24,
+                Pos { x: 370.0, y: 0.0 },
+                120.0,
+                84.0,
+            ),
         ];
 
         let mut game_buttons = [
@@ -269,6 +278,7 @@ impl MiniApp for MainMenu {
                 // set window title
                 if self.prev_tab != self.tab {
                     window.set_title(format!("UnoLife - {}", tabs[self.tab].text.clone().trim()));
+                    self.prev_tab = self.tab;
                 }
             }
             _ => {
@@ -276,7 +286,11 @@ impl MiniApp for MainMenu {
 
                 // set window title
                 if self.prev_tab != self.tab && self.tab != 8 {
-                    window.set_title(format!("UnoLife - {}", game_buttons[self.tab - tabs.len()].text.clone().trim()));
+                    window.set_title(format!(
+                        "UnoLife - {}",
+                        game_buttons[self.tab - tabs.len()].text.clone().trim()
+                    ));
+                    self.prev_tab = self.tab;
                 }
             }
         };
@@ -313,7 +327,7 @@ impl MiniApp for MainMenu {
             match self.tab {
                 0 => {
                     // HOME TAB
-                    // draw welcome text
+                    // draw text
                     draw_text(
                         &c,
                         g,
@@ -323,9 +337,76 @@ impl MiniApp for MainMenu {
                         } else {
                             Color::WHITE
                         },
-                        Pos { x: 50.0, y: 300.0 },
-                        "Welcome to the home tab!",
-                        32,
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 80.0,
+                        },
+                        "Welcome to UnoLife!",
+                        30,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 170.0,
+                        },
+                        "Click on the games tab to start playing dozens of games!",
+                        24,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 205.0,
+                        },
+                        "Click on the settings tab to change the theme and other settings!",
+                        24,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 240.0,
+                        },
+                        "Check out the about us tab for more information on the creators!",
+                        24,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 330.0,
+                        },
+                        "And most importantly, have fun!",
+                        24,
                     );
                 }
                 1 => {
@@ -341,6 +422,42 @@ impl MiniApp for MainMenu {
                     for button in config_buttons {
                         button.draw(&c, g, glyphs);
                     }
+                }
+                3 => {
+                    // ABOUS US TAB
+                    // draw
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 80.0,
+                        },
+                        "UnoLife is made by:",
+                        24,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 120.0,
+                        },
+                        "Fireplank",
+                        24,
+                    );
                 }
                 _ => (),
             }

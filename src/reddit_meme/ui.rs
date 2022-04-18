@@ -53,16 +53,20 @@ impl MiniApp for MemeApp {
                 _ => "ProgrammerHumor",
             };
 
-            let res =
-                Request::new(&Uri::try_from(format!("https://api.reddit.com/r/{}/random.json", subreddit).as_str()).unwrap())
-                    .header(
-                        "User-Agent",
-                        "windows:com.fireplank.unolife:v1.0.0 (by /u/fireplank)",
-                    )
-                    .read_timeout(Some(Duration::from_secs(5)))
-                    .write_timeout(Some(Duration::from_secs(5)))
-                    .timeout(Some(Duration::from_secs(5)))
-                    .send(&mut writer);
+            let res = Request::new(
+                &Uri::try_from(
+                    format!("https://api.reddit.com/r/{}/random.json", subreddit).as_str(),
+                )
+                .unwrap(),
+            )
+            .header(
+                "User-Agent",
+                "windows:com.fireplank.unolife:v1.0.0 (by /u/fireplank)",
+            )
+            .read_timeout(Some(Duration::from_secs(5)))
+            .write_timeout(Some(Duration::from_secs(5)))
+            .timeout(Some(Duration::from_secs(5)))
+            .send(&mut writer);
 
             // check if request was successful
             if res.is_err() {
@@ -155,6 +159,12 @@ impl MiniApp for MemeApp {
                     &TextureSettings::new(),
                 );
 
+                // delete meme file
+                std::fs::remove_file(ASSETS.join(format!("meme.{}", file_extension)))
+                    .unwrap_or_else(|err| {
+                        println!("Error when trying to delete meme: {}", err);
+                    });
+
                 // if texture is not loaded, skip
                 if texture.is_err() {
                     println!("Error: Could not load meme");
@@ -181,7 +191,12 @@ impl MiniApp for MemeApp {
                     .get_height()
                     .min(components::application::DEFAULT_HEIGHT);
 
-                let image = Image::new().rect([0.0, TASKBAR_HEIGHT, width as f64, height as f64 + TASKBAR_HEIGHT]);
+                let image = Image::new().rect([
+                    0.0,
+                    TASKBAR_HEIGHT,
+                    width as f64,
+                    height as f64 + TASKBAR_HEIGHT,
+                ]);
 
                 window.draw_2d(event, |c, g, _| {
                     clear([1.0; 4], g);
@@ -221,19 +236,35 @@ impl MiniApp for MemeApp {
                 return;
             }
 
-            let width = self.texture.as_ref().unwrap()
-                    .get_width()
-                    .min(components::application::DEFAULT_WIDTH);
-            let height = self.texture.as_ref().unwrap()
+            let width = self
+                .texture
+                .as_ref()
+                .unwrap()
+                .get_width()
+                .min(components::application::DEFAULT_WIDTH);
+            let height = self
+                .texture
+                .as_ref()
+                .unwrap()
                 .get_height()
                 .min(components::application::DEFAULT_HEIGHT);
 
-            let image = Image::new().rect([0.0, TASKBAR_HEIGHT, width as f64, height as f64 - TASKBAR_HEIGHT]);
+            let image = Image::new().rect([
+                0.0,
+                TASKBAR_HEIGHT,
+                width as f64,
+                height as f64 - TASKBAR_HEIGHT,
+            ]);
 
             window.draw_2d(event, |c, g, _| {
                 clear([1.0; 4], g);
                 // draw image with texture
-                image.draw(self.texture.as_ref().unwrap(), &DrawState::new_alpha(), c.transform, g);
+                image.draw(
+                    self.texture.as_ref().unwrap(),
+                    &DrawState::new_alpha(),
+                    c.transform,
+                    g,
+                );
             });
         }
     }
