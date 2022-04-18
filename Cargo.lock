@@ -1868,21 +1868,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "timathon"
-version = "0.1.0"
-dependencies = [
- "find_folder",
- "http_req",
- "lazy_static",
- "piston_window",
- "rand",
- "serde",
- "serde_json",
- "winit",
- "winres",
-]
-
-[[package]]
 name = "toml"
 version = "0.5.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1911,6 +1896,21 @@ name = "unicode-xid"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ccb82d61f80a663efe1f787a51b16b5a51e3314d6ac365b08639f52387b33f3"
+
+[[package]]
+name = "unolife"
+version = "0.1.0"
+dependencies = [
+ "find_folder",
+ "http_req",
+ "lazy_static",
+ "piston_window",
+ "rand",
+ "serde",
+ "serde_json",
+ "winit",
+ "winres",
+]
 
 [[package]]
 name = "vcpkg"
