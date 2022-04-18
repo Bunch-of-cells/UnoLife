@@ -437,10 +437,27 @@ impl MiniApp for MainMenu {
                         },
                         Pos {
                             x: 50.0,
-                            y: TASKBAR_HEIGHT + 80.0,
+                            y: TASKBAR_HEIGHT + 70.0,
                         },
-                        "UnoLife is made by:",
-                        24,
+                        "FirePlank",
+                        30,
+                    );
+
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 125.0,
+                        },
+                        "Hi! I'm a 16 yr old programmer, hacker, pentester and a chess enthusiast.",
+                        20,
                     );
                     draw_text(
                         &c,
@@ -453,10 +470,42 @@ impl MiniApp for MainMenu {
                         },
                         Pos {
                             x: 50.0,
-                            y: TASKBAR_HEIGHT + 120.0,
+                            y: TASKBAR_HEIGHT + 155.0,
                         },
-                        "Fireplank",
-                        24,
+                        "We made this app to test out GUI development in rust and learn more about it.",
+                        20,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 185.0,
+                        },
+                        "You can find my github as one of the contributors on the github page of UnoLife.",
+                        20,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 215.0,
+                        },
+                        "I hope you enjoy the app as it took a long time to make!",
+                        20,
                     );
                 }
                 _ => (),
