@@ -285,7 +285,7 @@ impl MiniApp for MainMenu {
                 self.apps[self.tab - tabs.len()].render(window, event, glyphs, config, highscores);
 
                 // set window title
-                if self.prev_tab != self.tab && self.tab != 8 {
+                if self.prev_tab != self.tab && self.tab != 9 {
                     window.set_title(format!(
                         "UnoLife - {}",
                         game_buttons[self.tab - tabs.len()].text.clone().trim()
