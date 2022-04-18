@@ -178,15 +178,10 @@ impl MiniApp for MemeApp {
                 // set window title to meme title
                 window.set_title(format!("UnoLife - {} (by /u/{})", meme_title, meme_author));
 
-                // show window
-                window.show();
-
                 let width = texture
-                    .get_width()
-                    .min(components::application::DEFAULT_WIDTH);
+                    .get_width();
                 let height = texture
-                    .get_height()
-                    .min(components::application::DEFAULT_HEIGHT);
+                    .get_height();
 
                 let image = Image::new().rect([
                     0.0,
@@ -196,9 +191,21 @@ impl MiniApp for MemeApp {
                 ]);
 
                 window.draw_2d(event, |c, g, _| {
-                    clear([1.0; 4], g);
+                    clear(
+                        if config.options.white_theme {
+                            Color::DARK_THEME_BG
+                        } else {
+                            Color::WHITE
+                        },
+                        g,
+                    );
                     // draw image with texture
-                    image.draw(&texture, &DrawState::new_alpha(), c.transform, g);
+                    image.draw(
+                        self.texture.as_ref().unwrap(),
+                        &DrawState::new_alpha(),
+                        c.transform,
+                        g,
+                    );
                 });
                 self.texture = Some(texture);
             } else {
@@ -244,9 +251,14 @@ impl MiniApp for MemeApp {
                 .as_ref()
                 .unwrap()
                 .get_height()
-                .min(components::application::DEFAULT_HEIGHT - TASKBAR_HEIGHT as u32);
+                .min(components::application::DEFAULT_HEIGHT);
 
-            let image = Image::new().rect([0.0, TASKBAR_HEIGHT, width as f64, height as f64]);
+            let image = Image::new().rect([
+                0.0,
+                TASKBAR_HEIGHT,
+                width as f64,
+                height as f64 - TASKBAR_HEIGHT,
+            ]);
 
             window.draw_2d(event, |c, g, _| {
                 clear(
