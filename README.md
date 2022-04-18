@@ -16,7 +16,8 @@ This is the perfect app for anyone looking to spice up their life! It has a bunc
 to help you make your everyday less ordinary by keeping you occupied with new and exiting games!
 
 You can try the app by downloading one of the prebuilt releases or building it from scratch using rust.
-It should work on all platforms, please don't hesitate to contact us and look at the faq if you have any issues or questions.
+If you are building from scratch, please run the exe or app from the root project folder as it might not find the assets folder otherwise.
+It should work on all platforms, please don't hesitate to contact us if you have any issues or questions.
 
 ## The idea
 
