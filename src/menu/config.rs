@@ -55,14 +55,8 @@ impl Config {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Default)]
 pub struct ConfigOptions {
     pub white_theme: bool,
     // TODO: add more config options
-}
-
-impl Default for ConfigOptions {
-    fn default() -> Self {
-        ConfigOptions { white_theme: false }
-    }
 }

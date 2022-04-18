@@ -1,9 +1,9 @@
-use crate::components::application::MiniApp;
+use crate::components::application::{MiniApp, DEFAULT_HEIGHT, DEFAULT_WIDTH};
 use crate::components::button::{draw_text, Pos};
 use crate::components::color::Color;
 use crate::menu::ui::TASKBAR_HEIGHT;
 use crate::menu::{config::Config, highscores::HighScores};
-use crate::{components, Event, ASSETS};
+use crate::{Event, ASSETS};
 use piston_window::*;
 use rand::Rng;
 use std::ffi::OsStr;
@@ -178,24 +178,48 @@ impl MiniApp for MemeApp {
                 // set window title to meme title
                 window.set_title(format!("UnoLife - {} (by /u/{})", meme_title, meme_author));
 
-                let width = texture
-                    .get_width();
-                let height = texture
-                    .get_height();
+                let mut width = texture.get_width();
+                let mut height = texture.get_height();
 
-                let image = Image::new().rect([
-                    0.0,
-                    TASKBAR_HEIGHT,
-                    width as f64,
-                    height as f64 + TASKBAR_HEIGHT,
-                ]);
+                match (
+                    height.cmp(&(DEFAULT_HEIGHT + TASKBAR_HEIGHT as u32)),
+                    width.cmp(&DEFAULT_WIDTH),
+                ) {
+                    (std::cmp::Ordering::Greater, std::cmp::Ordering::Greater) => {
+                        let h_diff = height - DEFAULT_HEIGHT - TASKBAR_HEIGHT as u32;
+                        let w_diff = width - DEFAULT_WIDTH;
+                        let diff = h_diff.max(w_diff);
+                        height -= diff;
+                        width -= diff;
+                    }
+                    (std::cmp::Ordering::Less, std::cmp::Ordering::Less) => {
+                        let h_diff = DEFAULT_HEIGHT + TASKBAR_HEIGHT as u32 - height;
+                        let w_diff = DEFAULT_WIDTH - width;
+                        let diff = h_diff.min(w_diff);
+                        height += diff;
+                        width += diff;
+                    }
+                    (std::cmp::Ordering::Greater, _) => {
+                        let diff = height - DEFAULT_HEIGHT - TASKBAR_HEIGHT as u32;
+                        height -= diff;
+                        width -= diff;
+                    }
+                    (_, std::cmp::Ordering::Greater) => {
+                        let diff = width - DEFAULT_HEIGHT;
+                        height -= diff;
+                        width -= diff;
+                    }
+                    (_, _) => (),
+                }
+
+                let image = Image::new().rect([0.0, TASKBAR_HEIGHT, width as f64, height as f64]);
 
                 window.draw_2d(event, |c, g, _| {
                     clear(
                         if config.options.white_theme {
-                            Color::DARK_THEME_BG
-                        } else {
                             Color::WHITE
+                        } else {
+                            Color::DARK_THEME_BG
                         },
                         g,
                     );
@@ -226,7 +250,14 @@ impl MiniApp for MemeApp {
             if self.texture == None {
                 // error occured, so show error message
                 window.draw_2d(event, |c, g, _| {
-                    clear([1.0; 4], g);
+                    clear(
+                        if config.options.white_theme {
+                            Color::WHITE
+                        } else {
+                            Color::DARK_THEME_BG
+                        },
+                        g,
+                    );
                     draw_text(
                         &c,
                         g,
@@ -240,32 +271,49 @@ impl MiniApp for MemeApp {
                 return;
             }
 
-            let width = self
-                .texture
-                .as_ref()
-                .unwrap()
-                .get_width()
-                .min(components::application::DEFAULT_WIDTH);
-            let height = self
-                .texture
-                .as_ref()
-                .unwrap()
-                .get_height()
-                .min(components::application::DEFAULT_HEIGHT);
+            let mut width = self.texture.as_ref().unwrap().get_width();
 
-            let image = Image::new().rect([
-                0.0,
-                TASKBAR_HEIGHT,
-                width as f64,
-                height as f64 - TASKBAR_HEIGHT,
-            ]);
+            let mut height = self.texture.as_ref().unwrap().get_height();
+
+            match (
+                height.cmp(&(DEFAULT_HEIGHT + TASKBAR_HEIGHT as u32)),
+                width.cmp(&DEFAULT_WIDTH),
+            ) {
+                (std::cmp::Ordering::Greater, std::cmp::Ordering::Greater) => {
+                    let h_diff = height - DEFAULT_HEIGHT - TASKBAR_HEIGHT as u32;
+                    let w_diff = width - DEFAULT_WIDTH;
+                    let diff = h_diff.max(w_diff);
+                    height -= diff;
+                    width -= diff;
+                }
+                (std::cmp::Ordering::Less, std::cmp::Ordering::Less) => {
+                    let h_diff = DEFAULT_HEIGHT + TASKBAR_HEIGHT as u32 - height;
+                    let w_diff = DEFAULT_WIDTH - width;
+                    let diff = h_diff.min(w_diff);
+                    height += diff;
+                    width += diff;
+                }
+                (std::cmp::Ordering::Greater, _) => {
+                    let diff = height - DEFAULT_HEIGHT - TASKBAR_HEIGHT as u32;
+                    height -= diff;
+                    width -= diff;
+                }
+                (_, std::cmp::Ordering::Greater) => {
+                    let diff = width - DEFAULT_HEIGHT;
+                    height -= diff;
+                    width -= diff;
+                }
+                (_, _) => (),
+            }
+
+            let image = Image::new().rect([0.0, TASKBAR_HEIGHT, width as f64, height as f64]);
 
             window.draw_2d(event, |c, g, _| {
                 clear(
                     if config.options.white_theme {
-                        Color::DARK_THEME_BG
-                    } else {
                         Color::WHITE
+                    } else {
+                        Color::DARK_THEME_BG
                     },
                     g,
                 );
