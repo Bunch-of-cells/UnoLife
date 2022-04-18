@@ -6,7 +6,6 @@ use crate::components::application::MiniApp;
 use lazy_static::lazy_static;
 use menu::{config::Config, highscores::HighScores, ui::MainMenu};
 use piston_window::*;
-use rand::Rng;
 use winit::window::Icon;
 
 mod breakout;

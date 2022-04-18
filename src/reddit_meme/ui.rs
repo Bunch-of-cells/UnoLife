@@ -2,11 +2,8 @@ use crate::components::application::MiniApp;
 use crate::components::button::{draw_text, Pos};
 use crate::components::color::Color;
 use crate::menu::ui::TASKBAR_HEIGHT;
-// use crate::menu::ui::TOP_PAD;
 use crate::menu::{config::Config, highscores::HighScores};
 use crate::{components, Event, ASSETS};
-// use http_req::response::{Headers, Response, Status, StatusCode};
-// use piston_window::rectangle::square;
 use piston_window::*;
 use rand::Rng;
 use std::ffi::OsStr;
@@ -247,17 +244,19 @@ impl MiniApp for MemeApp {
                 .as_ref()
                 .unwrap()
                 .get_height()
-                .min(components::application::DEFAULT_HEIGHT);
+                .min(components::application::DEFAULT_HEIGHT - TASKBAR_HEIGHT as u32);
 
-            let image = Image::new().rect([
-                0.0,
-                TASKBAR_HEIGHT,
-                width as f64,
-                height as f64 - TASKBAR_HEIGHT,
-            ]);
+            let image = Image::new().rect([0.0, TASKBAR_HEIGHT, width as f64, height as f64]);
 
             window.draw_2d(event, |c, g, _| {
-                clear([1.0; 4], g);
+                clear(
+                    if config.options.white_theme {
+                        Color::DARK_THEME_BG
+                    } else {
+                        Color::WHITE
+                    },
+                    g,
+                );
                 // draw image with texture
                 image.draw(
                     self.texture.as_ref().unwrap(),

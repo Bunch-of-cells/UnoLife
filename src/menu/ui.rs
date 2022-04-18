@@ -507,6 +507,88 @@ impl MiniApp for MainMenu {
                         "I hope you enjoy the app as it took a long time to make!",
                         20,
                     );
+
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 285.0,
+                        },
+                        "Bunch-of-cells",
+                        30,
+                    );
+
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 340.0,
+                        },
+                        "Hi! This is a 14yo Bunch-of-cells, who is made up of a bunch of cells (all cells ",
+                        20,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 370.0,
+                        },
+                        "aren't 14yo). I like programming and playing chess, my main programming language ",
+                        20,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 400.0,
+                        },
+                        "being Rust. Check out My Github for more such awesome projects. Enjoy! (This ",
+                        20,
+                    );
+                    draw_text(
+                        &c,
+                        g,
+                        glyphs,
+                        if config.options.white_theme {
+                            Color::BLACK
+                        } else {
+                            Color::WHITE
+                        },
+                        Pos {
+                            x: 50.0,
+                            y: TASKBAR_HEIGHT + 430.0,
+                        },
+                        "project took a lot of hard work)",
+                        20,
+                    );
                 }
                 _ => (),
             }
