@@ -20,10 +20,11 @@ It should work on all platforms, please don't hesitate to contact us and look at
 
 ## The idea
 
-The original idea was to make an app similar to Dekstop Goose where a goose is interuppting your everyday use.
+The original idea was to make an app similar to Dekstop Goose where a goose is interupting your everyday life by grapping hold of your mouse etc.
+</br>
 Here is a video showcasing that application: https://www.youtube.com/watch?v=EQx6fyrZDWM
 
-However due to complications with the UI library we were using and the lack of time we decided to settle on a more standard approach of a minigame collection.
+However due to difficulties with the UI library we were using and the lack of time we decided to settle on a more simple approach of a minigame collection.
 
 ## Installation and Setup
 
@@ -46,10 +47,10 @@ NOTE: If you are building the binary from scratch, please run the binary from th
 - TicTacToe: Play the classic game of tictactoe against a friend or AI that we made!
 - Wordle: Play the ever popular wordle game remastered using rust in our app!
 - Snake: Play the classic snake game and try to get a highscore!
-- 2048: Play 2058 while enjoying the nice looking graphics!
-- 15 Puzzle: Play fifteen puzzle the classic way!
+- 2048: Play 2048 while enjoying the nice looking graphics!
+- 15 Puzzle: Play fifteen puzzle the classical way!
 - Reddit meme: Get a random reddit meme from popular subreddits and view them right in the app!
-- Highscores: The app supports highscores for every game, so you will always have something to look forward to beating when playing!
+- Highscores: The app supports highscores for every game, so you will always have something to look forward to when playing!
 - Settings: You can customise the look and feel of the app by for example changing the theme!
 
 ## Contributions
